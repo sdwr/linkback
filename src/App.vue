@@ -5,19 +5,6 @@
 </template>
 
 <script>
-import VueRouter from 'vue-router';
-import HomePage from './components/HomePage.vue';
-import LandingPage from './components/LandingPage.vue';
-
-const routes = [
-  { path: '/link/:id', component: HomePage, name: 'homepage' },
-  { path: '/', component: LandingPage, name: 'landingpage' }
-];
-
-const router = new VueRouter({
-  routes,
-  mode: 'history'
-});
 
 export default {
   name: 'App',
