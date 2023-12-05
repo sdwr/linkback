@@ -1,8 +1,9 @@
 <template>
   <div class="linkpage">
+  <button @click="backToHome"> &lt; Back</button>
   <h1>{{currentLink}}</h1>
     <div class="content-preview">
-      <!-- Content preview here. This might use an iframe, an img tag, or other method to display the content. -->
+      <iframe v-if="currentLink" :src="currentLink" style="width:100%; height:600px; border:none;"></iframe>
     </div>
     <div class="main-content">
       <div class="comments">
@@ -15,44 +16,72 @@
         <!-- Form to add a new comment -->
       </div>
       <div class="other-links">
-        <h2>Other Links</h2>
+        <h2>Related Links</h2>
         <!-- List of other links here -->
-        <div v-for="link in links" :key="link.id">
+        <div v-for="link in otherLinks" :key="link.id">
           <!-- Link preview here -->
           <!-- Voting component for each link -->
         </div>
         <!-- Form to add a new link -->
       </div>
+      <div class="tags">
+        <h2>Tags</h2>
+        <!-- List of tags here -->
+        <div v-for="tag in tags" :key="tag.id">
+            {{ tag.name }}
+            <!-- Voting component for each tag -->
+            <VoteButton :tag-id="tag.id"></VoteButton>
+        </div>
+
+        <!-- Form to add a new tag -->
+        <form @submit.prevent="addTag">
+            <input type="text" v-model="newTagName" @keyup.enter="addTag" placeholder="Enter new tag name">
+            <button type="submit" @click="addTag">Add Tag</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import VoteButton from '@/components/VoteButton.vue'
+import api from '@/api';
+
 export default {
-  props: {
-    link: {
-      type: Object
-    }
+  components: {
+    VoteButton
   },
   data() {
     return {
-      currentLink: {},
+      link: null,
+      currentLink: null,
+      newTagName: '',
       comments: [],
-      otherLinks: []
+      otherLinks: [],
+      tags: [],
     }
   },
   methods: {
+    async addTag() {
+      if(this.newTagName && this.newTagName.length > 0) {
+        await api.mockAddTag(this.newTagName)
+        this.newTagName = ''
+        this.tags = await api.mockGetTags()
+      }
+      console.log(this.tags)
+    },
+    backToHome() {
+      this.$router.push({ path:"/"})
+    }
   },
   created() {
+    if(this.$route.query.link) {
+      this.link = JSON.parse(this.$route.query.link)
+      this.currentLink = this.link.url
+    } else if(this.$route.params.url) {
+      this.currentLink = this.$route.params.url
+    }
   },
   mounted() {
-    //if accessed via url
-    if(this.$route.params.url) {
-      this.currentLink = this.$route.params.link
-    }
-    //if accessed via link 
-    else if(this.link) {
-      this.currentLink = this.link.url
-    }
   }
 }
 </script>

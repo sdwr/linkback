@@ -1,5 +1,6 @@
 <template>
   <div class="landing-page">
+  <div id="g-signin2">Sign in with Google</div>
     <div class="add-link">
       <input v-model="newLink" @keyup.enter="addLink" type="url" placeholder="Paste a URL here..." />
       <button @click="addLink">Add Link</button>
@@ -35,14 +36,41 @@ export default {
     async getLinks() {
       api.mockGetLinks().then(links => {
         this.topLinks = {...links}
+        console.log(this.topLinks)
       })
     },
     goToLink(link) {
-      this.$router.push({ name: 'linkpage', params: { link}})
-    }
+      console.log(link)
+      this.$router.push({ name: 'linkpage', query: { link: JSON.stringify(link)}})
+    },
+    onSignIn(googleUser) {
+      console.log(googleUser)
+      var profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    },
+    onFailure(error) {
+      console.log(error)
+    },
   },
   created() {
     this.getLinks();
+  },
+  mounted() {
+    window.gapi.load('auth2', () => {
+      window.gapi.auth2.init({ client_id: '1078294452749-9a01cctu094i3v8p61u0uat7qk8ttu74.apps.googleusercontent.com' });
+      window.gapi.signin2.render('g-signin2', {
+          scope: 'profile email',
+          width: 240,
+          height: 50,
+          longtitle: true,
+          theme: 'dark',
+          onsuccess: this.onSignIn,
+          onfailure: this.onFailure
+      });
+    });
   }
 }
 </script>
