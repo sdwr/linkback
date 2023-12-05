@@ -1,18 +1,15 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomePage from './components/LinkPage'
+import { createRouter, createWebHistory } from 'vue-router'
+import LinkPage from './components/LinkPage'
 import LandingPage from './components/LandingPage'
-
-Vue.use(VueRouter)
 
 const routes = [
     { path: '/', component: LandingPage, name: 'landingpage' },
-    { path: '/link/:id', component: HomePage, name: 'linkpage' }
+    { path: '/link/:id', component: LinkPage, name: 'linkpage' }
 ]
 
-const router = new VueRouter({
-    routes,
-    mode: 'history'
+const router = createRouter({
+    routes: routes,
+    history: createWebHistory()
 })
 
 export default router

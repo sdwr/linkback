@@ -1,8 +1,8 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router' // import the router
+import { createApp } from 'vue';
+import router from './router';
+import LandingPage from './components/LandingPage';
 
-new Vue({
-  router, // use the router
-  render: h => h(App),
-}).$mount('#app')
+// Create the Vue app and use the router
+const app = createApp(LandingPage);
+app.use(router);
+app.mount('#app');

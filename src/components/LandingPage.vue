@@ -7,7 +7,7 @@
     <div class="top-links">
       <h2>Top Links</h2>
       <div v-for="link in topLinks" :key="link.id">
-        <a :href="link.url">{{link.url}}</a>
+        <a :href="`/link/${link.id}`" @click.prevent="goToLink(link.id)">{{link.url}}</a>
         <!-- Add a voting component here -->
         <!-- Add a link to the HomePage of this link here -->
       </div>
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import api from '@/api'
 export default {
   data() {
     return {
@@ -24,12 +25,23 @@ export default {
     }
   },
   methods: {
-    addLink() {
-      // Code to add the link
+    async addLink() {
+      if(this.newLink && this.newLink.length > 0) {
+        await api.mockAddLink(this.newLink)
+        await this.getLinks()
+      }
+    },
+    async getLinks() {
+      api.mockGetLinks().then(links => {
+        this.topLinks = links
+      })
+    },
+    goToLink(linkId) {
+      this.$router.push({path: `/link/${linkId}`})
     }
   },
   created() {
-    // Code to fetch the top links from the server
+    this.getLinks();
   }
 }
 </script>

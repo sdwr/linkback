@@ -25,6 +25,22 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      currentLink: {},
+      comments: [],
+      otherLinks: []
+    }
+  },
+  methods: {
+  },
+  created() {
+  }
+}
+</script>
+
 
 <style scoped>
 .linkpage {
