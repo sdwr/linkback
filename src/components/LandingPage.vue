@@ -1,13 +1,13 @@
 <template>
   <div class="landing-page">
     <div class="add-link">
-      <input v-model="newLink" type="url" placeholder="Paste a URL here..." />
+      <input v-model="newLink" @keyup.enter="addLink" type="url" placeholder="Paste a URL here..." />
       <button @click="addLink">Add Link</button>
     </div>
     <div class="top-links">
       <h2>Top Links</h2>
       <div v-for="link in topLinks" :key="link.id">
-        <a :href="`/link/${link.id}`" @click.prevent="goToLink(link.id)">{{link.url}}</a>
+        <a :href="`/link/${link.id}`" @click.prevent="goToLink(link)">{{link.url}}</a>
         <!-- Add a voting component here -->
         <!-- Add a link to the HomePage of this link here -->
       </div>
@@ -29,15 +29,16 @@ export default {
       if(this.newLink && this.newLink.length > 0) {
         await api.mockAddLink(this.newLink)
         await this.getLinks()
+        this.newLink = ''
       }
     },
     async getLinks() {
       api.mockGetLinks().then(links => {
-        this.topLinks = links
+        this.topLinks = {...links}
       })
     },
-    goToLink(linkId) {
-      this.$router.push({path: `/link/${linkId}`})
+    goToLink(link) {
+      this.$router.push({ name: 'linkpage', params: { link}})
     }
   },
   created() {

@@ -4,12 +4,20 @@ import LandingPage from './components/LandingPage'
 
 const routes = [
     { path: '/', component: LandingPage, name: 'landingpage' },
-    { path: '/link/:id', component: LinkPage, name: 'linkpage' }
+    { path: '/link', component: LinkPage, name: 'linkpage', props: true},
+    { path: '/link/:url',  component: LinkPage, name: 'linkpageurl'},
+    { path: '/link/:pathMatch(.*)*',  component: LinkPage, name: 'linkpageall'},
 ]
 
 const router = createRouter({
-    routes: routes,
-    history: createWebHistory()
+    history: createWebHistory(),
+    routes,
 })
+
+router.beforeEach((to, from, next) => {
+        console.log(`Navigating to ${to.path} from ${from.path}`);
+        next();
+    }
+);
 
 export default router

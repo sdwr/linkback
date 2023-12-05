@@ -1,5 +1,6 @@
 <template>
   <div class="linkpage">
+  <h1>{{currentLink}}</h1>
     <div class="content-preview">
       <!-- Content preview here. This might use an iframe, an img tag, or other method to display the content. -->
     </div>
@@ -27,6 +28,11 @@
 </template>
 <script>
 export default {
+  props: {
+    link: {
+      type: Object
+    }
+  },
   data() {
     return {
       currentLink: {},
@@ -37,6 +43,16 @@ export default {
   methods: {
   },
   created() {
+  },
+  mounted() {
+    //if accessed via url
+    if(this.$route.params.url) {
+      this.currentLink = this.$route.params.link
+    }
+    //if accessed via link 
+    else if(this.link) {
+      this.currentLink = this.link.url
+    }
   }
 }
 </script>
