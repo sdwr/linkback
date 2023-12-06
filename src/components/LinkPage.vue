@@ -28,7 +28,7 @@
         <h2>Tags</h2>
         <!-- List of tags here -->
         <div v-for="tag in tags" :key="tag.id">
-            {{ tag.name }}
+            <a :href="`/tag/${tag.name}`" @click.prevent="goToTag(tag)">{{tag.name}}</a>
             <!-- Voting component for each tag -->
             <VoteButton :tag-id="tag.id"></VoteButton>
         </div>
@@ -71,7 +71,11 @@ export default {
     },
     backToHome() {
       this.$router.push({ path:"/"})
-    }
+    },
+    goToTag(tag) {
+      console.log(tag)
+      this.$router.push({ path: `/tag/${tag.name}`})
+    },
   },
   created() {
     if(this.$route.query.link) {

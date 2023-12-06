@@ -21,6 +21,11 @@ const api = {
     mockTags.push(tag);
     return tag;
   },
+  async mockGetLinksByTag(tag){
+    if(tag) {
+      return mockLinks
+    }
+  },
 };
 
 export default api;
