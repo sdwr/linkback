@@ -1,6 +1,6 @@
 <template>
   <div class="landing-page">
-  <div id="g-signin2">Sign in with Google</div>
+    <div> <GoogleSignIn /> </div>
     <div class="add-link">
       <input v-model="newLink" @keyup.enter="addLink" type="url" placeholder="Paste a URL here..." />
       <button @click="addLink">Add Link</button>
@@ -18,7 +18,11 @@
 
 <script>
 import api from '@/api'
+import GoogleSignIn from '@/components/GoogleSignin.vue'
 export default {
+  components: {
+    GoogleSignIn,
+  },
   data() {
     return {
       newLink: '',
@@ -58,20 +62,6 @@ export default {
   created() {
     this.getLinks();
   },
-  mounted() {
-    window.gapi.load('auth2', () => {
-      window.gapi.auth2.init({ client_id: '1078294452749-9a01cctu094i3v8p61u0uat7qk8ttu74.apps.googleusercontent.com' });
-      window.gapi.signin2.render('g-signin2', {
-          scope: 'profile email',
-          width: 240,
-          height: 50,
-          longtitle: true,
-          theme: 'dark',
-          onsuccess: this.onSignIn,
-          onfailure: this.onFailure
-      });
-    });
-  }
 }
 </script>
 
