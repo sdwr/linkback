@@ -34,6 +34,7 @@ export default {
   data() {
     return {
       currentTagName: "",
+      newTagName: "",
       links: [],
     }
   },
@@ -46,14 +47,17 @@ export default {
       }
       console.log(this.tags)
     },
+    async loadLinks() {
+      this.links = await api.mockGetLinksByTag(this.currentTagName)
+    },
     backToHome() {
       this.$router.push({ path:"/"})
     }
   },
   created() {
-    if(this.$route.query.tag) {
-      this.currentTagName = JSON.parse(this.$route.query.tag)
-      this.links = api.mockGetLinksByTag(this.currentTagName)
+    if(this.$route.params.tag) {
+      this.currentTagName = this.$route.params.tag
+      this.loadLinks()
     }
   },
   mounted() {

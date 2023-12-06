@@ -1,6 +1,7 @@
 <template>
   <div class="landing-page">
     <div> <GoogleSignIn /> </div>
+    <div><a :href="`/user/test`">Test User</a></div>
     <div class="add-link">
       <input v-model="newLink" @keyup.enter="addLink" type="url" placeholder="Paste a URL here..." />
       <button @click="addLink">Add Link</button>
