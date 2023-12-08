@@ -10,3 +10,6 @@ LANDING PAGE
 
 LINK PAGE
 - get title from page somehow
+
+YOUTUBE PAGE
+- timestamped comments

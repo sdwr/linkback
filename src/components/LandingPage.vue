@@ -1,17 +1,25 @@
 <template>
   <div class="landing-page">
     <div> <GoogleSignIn /> </div>
-    <div><a :href="`/user/test`">Test User</a></div>
+    <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUser(user)">{{user.username}}</a></div>
     <div class="add-link">
       <input v-model="newLink" @keyup.enter="addLink" type="url" placeholder="Paste a URL here..." />
       <button @click="addLink">Add Link</button>
     </div>
-    <div class="top-links">
-      <h2>Top Links</h2>
-      <div v-for="link in topLinks" :key="link.id">
-        <a :href="`/link/${link.id}`" @click.prevent="goToLink(link)">{{link.url}}</a>
-        <!-- Add a voting component here -->
-        <!-- Add a link to the HomePage of this link here -->
+    <div class="links-container">
+      <div class="top-links">
+        <h2>Top Links</h2>
+        <div v-for="link in topLinks" :key="link.id">
+          <a :href="`/link/${link.id}`" @click.prevent="goToLink(link)">{{link.url}}</a>
+          <!-- Additional components here -->
+        </div>
+      </div>
+      <div class="recent-links">
+        <h2>Recent Links</h2>
+        <div v-for="link in recentLinks" :key="link.id">
+          <a :href="`/link/${link.id}`" @click.prevent="goToLink(link)">{{link.url}}</a>
+          <!-- Additional components here -->
+        </div>
       </div>
     </div>
   </div>
@@ -27,22 +35,47 @@ export default {
   data() {
     return {
       newLink: '',
-      topLinks: []
+      topLinks: [],
+      recentLinks: [],
+      user: null,
     }
   },
   methods: {
     async addLink() {
       if(this.newLink && this.newLink.length > 0) {
-        await api.mockAddLink(this.newLink)
-        await this.getLinks()
-        this.newLink = ''
+        try {
+          let link = {}
+          link.url = this.newLink;
+          if(this.user) {
+            link.userId = this.user.id;
+          }
+          await api.addLink(link);
+
+          this.newLink = '';
+          await this.getTopLinks();
+          await this.getNewLinks();
+        } catch (error) {
+          console.error('Error adding link:', error);
+        }
       }
     },
-    async getLinks() {
-      api.mockGetLinks().then(links => {
-        this.topLinks = {...links}
-        console.log(this.topLinks)
-      })
+    async getTopLinks() {
+      try {
+        const links = await api.getTopLinks();
+        this.topLinks = links;
+        this.currentTab = 'top';
+      } catch (error) {
+        console.error('Error fetching top links:', error);
+      }
+    },
+    async getNewLinks() {
+      try {
+        const links = await api.getNewLinks();
+        this.recentLinks = links;
+        this.currentTab = 'recent';
+      } catch (error) {
+        console.error('Error fetching new links:', error);
+      }
     },
     goToLink(link) {
       console.log(link)
@@ -51,6 +84,9 @@ export default {
       } else {
         this.$router.push({ name: 'linkpage', query: { link: JSON.stringify(link)}})
       }
+    },
+    goToUser(user) {
+      this.$router.push({ name: 'userpage', params: { id: user.userId } });
     },
     onSignIn(googleUser) {
       console.log(googleUser)
@@ -63,9 +99,16 @@ export default {
     onFailure(error) {
       console.log(error)
     },
+    checkUser() {
+      if(!this.user) {
+        this.user = api.mockUser;
+      }
+    }
   },
-  created() {
-    this.getLinks();
+  async created() {
+    this.checkUser();
+    await this.getTopLinks();
+    await this.getNewLinks();
   },
 }
 </script>
@@ -77,17 +120,27 @@ export default {
   align-items: center;
 }
 
+.user-link {
+  margin: 20px;
+}
+
 .add-link {
   margin: 20px;
   display: flex;
   justify-content: center;
 }
 
-.top-links {
-  width: 80%;
+.links-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
 
-.top-links > div {
+.top-links, .recent-links {
+  width: 45%;
+}
+
+.top-links > div, .recent-links > div {
   display: flex;
   justify-content: space-between;
   align-items: center;

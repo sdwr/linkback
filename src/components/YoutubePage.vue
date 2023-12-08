@@ -7,7 +7,7 @@
     <a :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
 
     <div class="content-preview">
-      <iframe v-if="currentLink" :src="currentLink" style="width:100%; height:600px; border:none;"></iframe>
+      <iframe v-if="currentLink" :src="currentLink" style="width:100%; height:800px; border:none;"></iframe>
     </div>
     <div v-if="isOriginalVideo">
       <input type="range" v-model="clipStart" min="0" :max="videoLength" step="1">
@@ -125,7 +125,7 @@ export default {
   margin: 20px;
   border: 1px solid #ccc;
   width: 80%;
-  height: 500px;
+  height: 800px;
   overflow: auto;
 }
 

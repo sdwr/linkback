@@ -6,44 +6,25 @@
       <div class="section">
         <h2>User History</h2>
         <ul>
-          <li v-for="action in user.history" :key="action.id">{{ action.description }}</li>
+          <li v-for="historyItem in userHistory" :key="historyItem.id">{{ historyItem.action }}</li>
         </ul>
       </div>
       <div class="section">
-        <h2>Additions</h2>
-        <div>
-          <h3>Submitted Links</h3>
-          <ul>
-            <li v-for="link in user.submittedLinks" :key="link.id">{{ link.title }}</li>
-          </ul>
-          <h3>Submitted Tags</h3>
-          <ul>
-            <li v-for="tag in user.submittedTags" :key="tag.id">{{ tag.name }}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="section">
-        <h2>Comments</h2>
+        <h2>Submitted Links</h2>
         <ul>
-          <li v-for="comment in user.comments" :key="comment.id">{{ comment.content }}</li>
+          <li v-for="link in submittedLinks" :key="link.id">{{ link.title }}</li>
         </ul>
       </div>
       <div class="section">
-        <h2>New</h2>
-        <div>
-          <h3>Recent Changes in Liked Links</h3>
-          <ul>
-            <li v-for="link in recentChanges.links" :key="link.id">{{ link.title }}</li>
-          </ul>
-          <h3>Recent Changes in Liked Tags</h3>
-          <ul>
-            <li v-for="tag in recentChanges.tags" :key="tag.id">{{ tag.name }}</li>
-          </ul>
-        </div>
+        <h2>Saved Links</h2>
+        <ul>
+          <li v-for="link in savedLinks" :key="link.id">{{ link.title }}</li>
+        </ul>
       </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import api from '@/api';
@@ -53,26 +34,27 @@ export default {
     return {
       user: {
         username: '',
-        history: [],
-        submittedLinks: [],
-        submittedTags: [],
-        comments: []
       },
-      recentChanges: {
-        links: [],
-        tags: []
-      }
+      userHistory: [],
+      submittedLinks: [],
+      savedLinks: [],
     }
   },
   async created() {
     // Fetch the user data from the API
     const id = this.$route.params.id;
-    const userData = await api.fetchUser(id);
-    this.user = userData;
+    console.log('id', id);
+    this.user = await api.getUser(id);
+    console.log(this.user)
+    // Fetch the user history
+    this.userHistory = await api.getUserHistory(id);
 
-    // Fetch recent changes
-    const recentChangesData = await api.fetchRecentChanges(this.user.id);
-    this.recentChanges = recentChangesData;
+    // Fetch the submitted links
+    this.submittedLinks = await api.getLinksByUser(id);
+
+    // Fetch the saved links
+    this.savedLinks = await api.getSavedLinksByUser(id);
+
   }
 }
 </script>

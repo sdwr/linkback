@@ -1,23 +1,72 @@
-export function createLinkDto(url) {
-    let domain = extractDomain(url);
+let globalId = 1;
 
+export function getNextId() {
+    return ++globalId;
+}
+
+export function createUserDto(data) {
     return {
-        url: url,
-        name: url,
-        domain: domain,
-        id: url,
+        userId: getNextId(),
+        username: data.username,
+        email: data.email
     };
 }
 
-export function createTagDto(name) {
+export function createLinkDto(data) {
+    let domain = extractDomain(data.url);
+
     return {
-        name: name,
+        linkId: getNextId(),
+        url: data.url,
+        domain: domain,
+        title: data.title,
+        description: data.description,
+        submitDate: new Date(),
+        userId: data.userId,
+        originalLinkId: data.originalLinkId || null
+    };
+}
+
+export function createVoteDto(data) {
+    return {
+        voteId: getNextId(),
+        linkId: data.linkId,
+        userId: data.userId,
+        voteType: data.voteType,
+        voteDate: new Date()
+    };
+}
+
+export function createCommentDto(data) {
+    return {
+        commentId: getNextId(),
+        content: data.content,
+        linkId: data.linkId,
+        userId: data.userId,
+        commentDate: new Date()
+    };
+}
+
+export function createSavedLinkDto(data) {
+    return {
+        savedLinkId: getNextId(),
+        userId: data.userId,
+        linkId: data.linkId,
+        saveDate: new Date()
+    };
+}
+
+export function createTagDto(data) {
+    return {
+        tagId: getNextId(),
+        name: data.name,
         upvotes: 0,
         downvotes: 0,
-        associatedLinkId: null,
-        id: name,
+        associatedLinkId: data.associatedLinkId || null
     };
 }
+
+
 
 export function extractDomain(url) {
     // Remove protocol (http://, https://) and www if present
