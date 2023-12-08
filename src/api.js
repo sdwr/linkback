@@ -1,5 +1,5 @@
 
-import { createLinkDto, createTagDto } from "@/utils"
+import { createLinkDto, createTagDto, processLink } from "@/utils"
 
 let mockLinks = [];
 let mockTags = [];
@@ -22,6 +22,8 @@ const api = {
     return mockLinks;
   },
   async mockAddLink(url){
+    url = processLink(url);
+    
     const link = createLinkDto(url);
     mockLinks.push(link);
     return link;

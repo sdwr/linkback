@@ -46,7 +46,11 @@ export default {
     },
     goToLink(link) {
       console.log(link)
-      this.$router.push({ name: 'linkpage', query: { link: JSON.stringify(link)}})
+      if(link.domain === 'youtube.com') {
+        this.$router.push({ name: 'youtubepage', query: { link: JSON.stringify(link)}})
+      } else {
+        this.$router.push({ name: 'linkpage', query: { link: JSON.stringify(link)}})
+      }
     },
     onSignIn(googleUser) {
       console.log(googleUser)
