@@ -7,7 +7,7 @@ import {
   createSavedLinkDto, 
   createTagDto, 
   
-  processLink } from "@/utils"
+} from "@/utils"
 
 let mockUsers = [];
 let mockLinks = [];
@@ -35,8 +35,6 @@ const api = {
   },
 
   addLink: async (data) => {
-    data.url = processLink(data.url);
-
     const link = createLinkDto(data);
     mockLinks.push(link);
     return link;

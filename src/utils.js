@@ -13,14 +13,12 @@ export function createUserDto(data) {
 }
 
 export function createLinkDto(data) {
-    let domain = extractDomain(data.url);
-    let contentId = extractContentId(data.url);
 
-    return {
+    let link = {
         linkId: getNextId(),
         url: data.url,
-        domain: domain,
-        contentId: contentId,
+        domain: null,
+        contentId: null,
         startTime: data.startTime || null,
         endTime: data.endTime || null,
         isClip: data.isClip || false,
@@ -30,6 +28,12 @@ export function createLinkDto(data) {
         userId: data.userId,
         originalLinkId: data.originalLinkId || null
     };
+    link = extractDomain(link);
+    link = extractContentId(link);
+    link = processLink(link);
+
+    return link;
+
 }
 
 export function createVoteDto(data) {
@@ -73,7 +77,8 @@ export function createTagDto(data) {
 
 
 
-export function extractDomain(url) {
+export function extractDomain(link) {
+    let url = link.url;
     // Remove protocol (http://, https://) and www if present
     let simplifiedUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
 
@@ -83,25 +88,42 @@ export function extractDomain(url) {
     // Remove any trailing slashes from the domain name
     domainName = domainName.replace(/\/$/, '');
 
-    return domainName;
+    link.domain = domainName;
+    return link;
 }
 
-export function extractContentId(url) {
+export function extractContentId(link) {
+    let url = link.url;
     // Regular expression to match different types of YouTube URLs
     const regExp = /^.*(youtu\.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
 
+    let contentId = null;
+
     if (match && match[2].length === 11) {
-        return match[2];
-    } else {
-        return null; // Return null if no valid ID is found
+        contentId = match[2];
     }
+
+    link.contentId = contentId;
+    return link;
 }
 
-export function processLink(url) {
+export function processLink(link) {
 
-    //if the url is to youtube, replace with the embed url
-    url = url.replace(/youtube\.com\/watch\?v=/, "youtube.com/embed/");
+    let domain = link.domain;
+    let url = link.url;
 
-    return url;
+    if(domain === "youtube.com" || domain === "youtu.be") {
+        //replace with the embed url
+        url = url.replace(/youtube\.com\/watch\?v=/, "youtube.com/embed/");
+        url = url.replace(/youtu\.be\//, "youtube.com/embed/");
+
+        //if the url is to youtube, add the start and end time
+        if(link.startTime && link.endTime) {
+            url = url + "?start=" + link.startTime + "&end=" + link.endTime;
+        }
+    }
+    
+    link.url = url;
+    return link
 }
