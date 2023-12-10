@@ -10,8 +10,18 @@
       <iframe v-if="currentLink" :src="currentLink" style="width:100%; height:800px; border:none;"></iframe>
     </div>
     <div v-if="isOriginalVideo">
-      <input type="range" v-model="clipStart" min="0" :max="videoLength" step="1">
-      <input type="range" v-model="clipEnd" :min="clipStart" :max="videoLength" step="1">
+      <!-- Range Sliders -->
+      <div>
+        <input type="range" v-model="clipStart" @input="adjustRanges" min="0" :max="videoLength" step="1">
+        <input type="range" v-model="clipEnd" @input="adjustRanges" :min="0" :max="videoLength" step="1">
+      </div>
+      
+      <!-- Text Inputs -->
+      <div>
+        <input type="text" v-model="clipStart">
+        <input type="text" v-model="clipEnd">
+      </div>
+
       <button @click="createClip">Create Clip</button>
     </div>
     <div class="main-content">
@@ -55,6 +65,7 @@
 <script>
 import VoteButton from '@/components/VoteButton.vue'
 import api from '@/api';
+import {fetchYoutubeDuration} from '@/youtubeapi';
 
 export default {
   components: {
@@ -62,6 +73,7 @@ export default {
   },
   data() {
     return {
+      user: null,
       link: null,
       currentLink: null,
       newTagName: '',
@@ -75,20 +87,44 @@ export default {
       clipStart: 0, // Start time for the clip
       clipEnd: 0, // End time for the clip
       videoLength: 0, // Length of the video
+      creatingClip: false, // Flag to check if the user is creating a clip
+      intervalId: null, // Interval ID for checking if the video has loaded
     }
   },
   methods: {
     saveToLinks() {
       // Method to save the current link to user's saved links
     },
-    createClip() {
-      // Method to create a clip and navigate to the new page with selected time settings
+    async createClip() {
+      this.creatingClip = true;
+      let clip = await api.addLink({
+        title: this.link.title,
+        url: this.link.url,
+        startTime: this.clipStart,
+        endTime: this.clipEnd,
+        isClip: true,
+        originalVideo: this.link.linkId,
+        userId: this.user.userId,
+      })
+      this.creatingClip = false;
+      this.$router.push({ path: `/link/${clip.linkId}`})
+
+    },
+    adjustRanges() {
+      if (parseInt(this.clipStart) > parseInt(this.clipEnd)) {
+        this.clipEnd = this.clipStart;
+      } else if (parseInt(this.clipEnd) < parseInt(this.clipStart)) {
+        this.clipStart = this.clipEnd;
+      }
     },
     async addTag() {
       if(this.newTagName && this.newTagName.length > 0) {
-        await api.mockAddTag(this.newTagName)
+        await api.addTag({
+          name: this.newTagName,
+          linkId: this.link.linkId,
+        })
         this.newTagName = ''
-        this.tags = await api.mockGetTags()
+        this.tags = await api.getTagsByLink(this.link.linkId)
       }
       console.log(this.tags)
     },
@@ -99,6 +135,11 @@ export default {
       console.log(tag)
       this.$router.push({ path: `/tag/${tag.name}`})
     },
+    async fetchVideoLength() {
+      let duration = await fetchYoutubeDuration(this.link.contentId)
+      this.videoLength = duration
+      console.log(this.videoLength)
+    },
   },
   created() {
     if(this.$route.query.link) {
@@ -107,6 +148,8 @@ export default {
     } else if(this.$route.params.url) {
       this.currentLink = this.$route.params.url
     }
+    this.user = api.getUser(1);
+    this.fetchVideoLength();
   },
   mounted() {
   }

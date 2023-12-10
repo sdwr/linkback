@@ -63,9 +63,12 @@ export default {
   methods: {
     async addTag() {
       if(this.newTagName && this.newTagName.length > 0) {
-        await api.mockAddTag(this.newTagName)
+        await api.addTag({
+          name: this.newTagName,
+          linkId: this.link.linkId
+        })
         this.newTagName = ''
-        this.tags = await api.mockGetTags()
+        this.tags = await api.getTagsByLink(this.link.linkId)
       }
       console.log(this.tags)
     },

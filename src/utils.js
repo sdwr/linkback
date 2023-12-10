@@ -14,11 +14,16 @@ export function createUserDto(data) {
 
 export function createLinkDto(data) {
     let domain = extractDomain(data.url);
+    let contentId = extractContentId(data.url);
 
     return {
         linkId: getNextId(),
         url: data.url,
         domain: domain,
+        contentId: contentId,
+        startTime: data.startTime || null,
+        endTime: data.endTime || null,
+        isClip: data.isClip || false,
         title: data.title,
         description: data.description,
         submitDate: new Date(),
@@ -62,7 +67,7 @@ export function createTagDto(data) {
         name: data.name,
         upvotes: 0,
         downvotes: 0,
-        associatedLinkId: data.associatedLinkId || null
+        linkId: data.linkId || null
     };
 }
 
@@ -79,6 +84,18 @@ export function extractDomain(url) {
     domainName = domainName.replace(/\/$/, '');
 
     return domainName;
+}
+
+export function extractContentId(url) {
+    // Regular expression to match different types of YouTube URLs
+    const regExp = /^.*(youtu\.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+
+    if (match && match[2].length === 11) {
+        return match[2];
+    } else {
+        return null; // Return null if no valid ID is found
+    }
 }
 
 export function processLink(url) {

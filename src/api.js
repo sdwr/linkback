@@ -96,6 +96,10 @@ const api = {
     return mockVotes.filter(vote => vote.linkId === linkId);
   },
 
+  getTagsByLink: async (linkId) => {
+    return mockTags.filter(tag => tag.linkId === linkId);
+  },
+
   getSavedLinksByUser: async (userId) => {
     return mockSavedLinks.filter(savedLink => savedLink.userId === userId);
   },
