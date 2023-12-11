@@ -1,3 +1,5 @@
+import { fetchYoutubeData } from "./youtubeapi";
+
 let globalId = 1;
 
 export function getNextId() {
@@ -12,7 +14,7 @@ export function createUserDto(data) {
     };
 }
 
-export function createLinkDto(data) {
+export async function createLinkDto(data) {
 
     let link = {
         linkId: getNextId(),
@@ -22,6 +24,7 @@ export function createLinkDto(data) {
         startTime: data.startTime || null,
         endTime: data.endTime || null,
         isClip: data.isClip || false,
+        loopClip: data.loopClip || false,
         title: data.title,
         description: data.description,
         submitDate: new Date(),
@@ -31,7 +34,8 @@ export function createLinkDto(data) {
     link = extractDomain(link);
     link = extractContentId(link);
     link = processLink(link);
-
+    
+    link = await addYoutubeData(link);
     return link;
 
 }
@@ -95,7 +99,7 @@ export function extractDomain(link) {
 export function extractContentId(link) {
     let url = link.url;
     // Regular expression to match different types of YouTube URLs
-    const regExp = /^.*(youtu\.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/;
+    const regExp = /^.*(youtu\.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/;
     const match = url.match(regExp);
 
     let contentId = null;
@@ -111,19 +115,47 @@ export function extractContentId(link) {
 export function processLink(link) {
 
     let domain = link.domain;
+    let contentId = link.contentId;
     let url = link.url;
 
     if(domain === "youtube.com" || domain === "youtu.be") {
         //replace with the embed url
-        url = url.replace(/youtube\.com\/watch\?v=/, "youtube.com/embed/");
-        url = url.replace(/youtu\.be\//, "youtube.com/embed/");
+        url = "https://www.youtube.com/embed/" + contentId;
+
+        let params = [];
+        
 
         //if the url is to youtube, add the start and end time
-        if(link.startTime && link.endTime) {
-            url = url + "?start=" + link.startTime + "&end=" + link.endTime;
+        if(link.startTime && link.endTime ) {
+            params.push("start=" + link.startTime);
+            params.push("end=" + link.endTime);
         }
+        if(link.loopClip) {
+            params.push("loop=1");
+        }
+
+        if(params.length > 0) {
+            url += "?" + params.join("&");
+        }
+        
     }
     
     link.url = url;
+    return link
+}
+
+export async function addYoutubeData(link) {
+    let domain = link.domain;
+    let contentId = link.contentId;
+
+    if(domain === "youtube.com" || domain === "youtu.be") {
+        let data = await fetchYoutubeData(contentId);
+        if(data) {
+            link.title = data.title;
+            link.description = data.description;
+            link.duration = data.duration;
+        }
+    }
+    
     return link
 }

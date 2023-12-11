@@ -7,9 +7,9 @@
     <a :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
 
     <div class="content-preview">
-      <iframe v-if="currentLink" :src="currentLink" style="width:100%; height:800px; border:none;"></iframe>
+      <iframe class="iframe" v-if="currentLink" :src="currentLink"></iframe>
     </div>
-    <div v-if="isOriginalVideo">
+    <div v-if="!isClip">
       <!-- Range Sliders -->
       <div>
         <input type="range" v-model="clipStart" @input="adjustRanges" min="0" :max="videoLength" step="1">
@@ -20,6 +20,12 @@
       <div>
         <input type="text" v-model="clipStart">
         <input type="text" v-model="clipEnd">
+      </div>
+
+      <!-- Loop Input-->
+      <div>
+        <input type="checkbox" v-model="loopClip">
+        <label for="loop">Loop</label>
       </div>
 
       <button @click="createClip">Create Clip</button>
@@ -65,7 +71,6 @@
 <script>
 import VoteButton from '@/components/VoteButton.vue'
 import api from '@/api';
-import {fetchYoutubeDuration} from '@/youtubeapi';
 
 export default {
   components: {
@@ -83,12 +88,18 @@ export default {
       authorName: '', // Author's name
       authorLink: '', // URL to author's homepage
       originalVideoLink: '', // URL to the original video
-      isOriginalVideo: true, // Flag to check if it's the original video
+      isClip: false, // Flag to check if it's the original video
       clipStart: 0, // Start time for the clip
       clipEnd: 0, // End time for the clip
       videoLength: 0, // Length of the video
+      loopClip: false, // Flag to check if the clip should loop
       creatingClip: false, // Flag to check if the user is creating a clip
       intervalId: null, // Interval ID for checking if the video has loaded
+    }
+  },
+  watch: {
+    $route() {
+      this.parseLink();
     }
   },
   methods: {
@@ -103,11 +114,12 @@ export default {
         startTime: this.clipStart,
         endTime: this.clipEnd,
         isClip: true,
+        loopClip: this.loopClip,
         originalVideo: this.link.linkId,
         userId: this.user.userId,
       })
       this.creatingClip = false;
-      this.$router.push({ path: `/link/${clip.linkId}`})
+      this.$router.push({ name: 'youtubepage', query: { link: JSON.stringify(clip)}})
 
     },
     adjustRanges() {
@@ -135,21 +147,21 @@ export default {
       console.log(tag)
       this.$router.push({ path: `/tag/${tag.name}`})
     },
-    async fetchVideoLength() {
-      let duration = await fetchYoutubeDuration(this.link.contentId)
-      this.videoLength = duration
-      console.log(this.videoLength)
+    parseLink() {
+      if(this.$route.query.link) {
+        this.link = JSON.parse(this.$route.query.link)
+        this.currentLink = this.link.url
+      } else if(this.$route.params.url) {
+        this.currentLink = this.$route.params.url
+      }
+      if(this.link.duration) {
+        this.videoLength = this.link.duration;
+      }
     },
   },
   created() {
-    if(this.$route.query.link) {
-      this.link = JSON.parse(this.$route.query.link)
-      this.currentLink = this.link.url
-    } else if(this.$route.params.url) {
-      this.currentLink = this.$route.params.url
-    }
+    this.parseLink();
     this.user = api.getUser(1);
-    this.fetchVideoLength();
   },
   mounted() {
   }
@@ -169,7 +181,12 @@ export default {
   border: 1px solid #ccc;
   width: 80%;
   height: 800px;
-  overflow: auto;
+  overflow: hidden;
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
 }
 
 .main-content {
@@ -191,6 +208,17 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 80px;
+}
+
+@media (max-width: 600px) { /* For mobile devices */
+  .linkpage {
+    width: 100%;
+  }
+  .content-preview {
+    margin: 0;
+    width: 100%;
+    height: 400px;
+  }
 }
 </style>
 

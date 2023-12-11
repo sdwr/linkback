@@ -44,12 +44,16 @@ export default {
     async addLink() {
       if(this.newLink && this.newLink.length > 0) {
         try {
-          let link = {}
-          link.url = this.newLink;
-          if(this.user) {
-            link.userId = this.user.id;
-          }
-          await api.addLink(link);
+          await api.addLink({
+            title: null,
+            url: this.newLink,
+            startTime: 0,
+            endTime: 0,
+            isClip: false,
+            loopClip: false,
+            originalVideo: null,
+            userId: this.user.userId,
+          })
 
           this.newLink = '';
           await this.getTopLinks();
@@ -145,5 +149,14 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+    .links-container {
+        flex-direction: column;
+    }
+    .top-links, .recent-links {
+        /* Additional styling for mobile layout */
+    }
 }
 </style>

@@ -35,7 +35,20 @@ const api = {
   },
 
   addLink: async (data) => {
-    const link = createLinkDto(data);
+    const link = await createLinkDto(data);
+    let duplicateUrl, duplicateContent;
+    //dont add link if its a duplicate (same url or same contentId + domain)
+    if(!link.isClip) {
+      duplicateUrl = mockLinks.find(l => l.url === link.url);
+      duplicateContent = mockLinks.find(l => l.contentId === link.contentId && l.domain === link.domain);
+    } else {
+      // allow duplicate clips for now
+    }
+
+    if (duplicateUrl || duplicateContent) {
+      console.log('duplicate link', link);
+      return null;
+    }
     mockLinks.push(link);
     return link;
   },
@@ -66,8 +79,8 @@ const api = {
 
   //API gets
   getUser: async (userId) => {
-    console.log(mockUsers, 'mockUsers')
-    return mockUsers.find(user => user.userId === userId);
+    let user = mockUsers.find(user => user.userId === userId);
+    return user;
   },
 
   getUsers: async () => {

@@ -42,10 +42,9 @@ export default {
   },
   async created() {
     // Fetch the user data from the API
-    const id = this.$route.params.id;
-    console.log('id', id);
+    let id = this.$route.params.id;
+    id = parseInt(id);
     this.user = await api.getUser(id);
-    console.log(this.user)
     // Fetch the user history
     this.userHistory = await api.getUserHistory(id);
 

@@ -1,8 +1,8 @@
 import { YOUTUBE_API_KEY } from './.secrets.js';
 
-export async function fetchYoutubeDuration(videoId) {
+export async function fetchYoutubeData(videoId) {
 
-  const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${YOUTUBE_API_KEY}`;
+  const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails,snippet&key=${YOUTUBE_API_KEY}`;
 
   try {
       const response = await fetch(url);
@@ -11,10 +11,15 @@ export async function fetchYoutubeDuration(videoId) {
       if (!data.items || data.items.length === 0) {
           throw new Error('Video not found');
       }
-
+      const title = data.items[0].snippet.title;
+      const description = data.items[0].snippet.description;
       const duration = data.items[0].contentDetails.duration;
 
-      return convertTimeToSeconds(duration);
+      data.title = title;
+      data.description = description;
+      data.duration = convertTimeToSeconds(duration);
+
+      return data;
 
   } catch (error) {
       console.error('Error fetching YouTube data:', error);
