@@ -1,6 +1,6 @@
 import { fetchYoutubeData } from "./youtubeapi";
 
-let globalId = 1;
+let globalId = 10;
 
 export function getNextId() {
     return ++globalId;

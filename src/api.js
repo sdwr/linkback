@@ -9,6 +9,11 @@ import {
   
 } from "@/utils"
 
+import {
+  mockLinkData,
+  mockUserData,
+} from "@/mockData";
+
 let mockUsers = [];
 let mockLinks = [];
 let mockVotes = [];
@@ -22,7 +27,8 @@ let mockUser = {
   email: "test@test.com",
 }
 
-mockUsers.push(mockUser);
+mockLinks = mockLinkData;
+mockUsers = mockUserData;
 
 const api = {
   mockUser: mockUser,
@@ -92,6 +98,7 @@ const api = {
   },
 
   getLinks: async () => {
+    console.log('getLinks', mockLinks)
     return mockLinks;
   },
 
@@ -122,6 +129,7 @@ const api = {
   },
 
   getTopLinks: async (limit = 10) => {
+    console.log('getTopLinks', mockLinks, mockVotes)
     const linkVotes = mockLinks.map(link => {
       const votes = mockVotes.filter(vote => vote.linkId === link.linkId);
       const upvotes = votes.filter(vote => vote.voteType === 'upvote').length;

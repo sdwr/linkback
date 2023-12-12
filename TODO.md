@@ -18,11 +18,24 @@ LINK PAGE
 
 YOUTUBE PAGE
 - fix "create clip" to actually make a new link DONE
-- fix mobile layout (video wider, less black bars on top/bottom)
+- fix multiple sets of url params in the link DONE
+- add a "restart" button for clips, remove loop flag (can't auto-loop)
 - fix "original video" button
-- fix youtube looping, and multiple sets of url params in the link
+- fix author vs submitter
+- fix mobile layout (video wider, less black bars on top/bottom)
+- 
 - timestamped comments
 
 USER PAGE
 - lists not displaying
 - add history 
+
+API
+- add test data that covers all the main cases
+- video vs video clip
+- other person submitted vs you
+
+
+
+
+different uses of clip page:

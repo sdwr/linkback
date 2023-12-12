@@ -94,7 +94,6 @@ export default {
       videoLength: 0, // Length of the video
       loopClip: false, // Flag to check if the clip should loop
       creatingClip: false, // Flag to check if the user is creating a clip
-      intervalId: null, // Interval ID for checking if the video has loaded
     }
   },
   watch: {
@@ -159,9 +158,9 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
     this.parseLink();
-    this.user = api.getUser(1);
+    this.user = await api.getUser(1);
   },
   mounted() {
   }
