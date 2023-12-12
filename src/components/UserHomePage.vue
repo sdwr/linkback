@@ -11,9 +11,9 @@
       </div>
       <div class="section">
         <h2>Submitted Links</h2>
-        <ul>
-          <li v-for="link in submittedLinks" :key="link.id">{{ link.title }}</li>
-        </ul>
+        <div v-for="link in submittedLinks" :key="link.id">
+          <LinkItem :link="link" @onClick="goToLink(link)"></LinkItem>
+        </div>
       </div>
       <div class="section">
         <h2>Saved Links</h2>
@@ -28,6 +28,7 @@
 
 <script>
 import api from '@/api';
+import LinkItem from '@/components/LinkItem.vue';
 
 export default {
   data() {
@@ -39,6 +40,19 @@ export default {
       submittedLinks: [],
       savedLinks: [],
     }
+  },
+  components: {
+    LinkItem,
+  },
+  methods: {
+    goToLink(link) {
+      console.log(link)
+      if(link.domain === 'youtube.com') {
+        this.$router.push({ name: 'youtubepage', query: { link: JSON.stringify(link)}})
+      } else {
+        this.$router.push({ name: 'linkpage', query: { link: JSON.stringify(link)}})
+      }
+    },
   },
   async created() {
     // Fetch the user data from the API

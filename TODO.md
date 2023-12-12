@@ -9,7 +9,7 @@
 LANDING PAGE
 - don't allow duplicate links DONE
 - strip params from link (at least for youtube) DONE
-- fix mock link lists
+- fix mock link lists DONE
 - verify that links go somewhere
 - get rid of link object from URL (use store?)
 
@@ -31,11 +31,14 @@ USER PAGE
 - add history 
 
 API
-- add test data that covers all the main cases
+- add test data that covers all the main cases KINDA
 - video vs video clip
 - other person submitted vs you
+- sanity check the duration data - start time, end time
 
 
 
 
-different uses of clip page:
+FEATURES
+- link items on landing/user page (title, url, duration, votes)
+

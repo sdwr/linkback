@@ -10,14 +10,14 @@
       <div class="top-links">
         <h2>Top Links</h2>
         <div v-for="link in topLinks" :key="link.id">
-          <a :href="`/link/${link.id}`" @click.prevent="goToLink(link)">{{link.url}}</a>
+          <LinkItem :link="link" @onClick="goToLink(link)"></LinkItem>
           <!-- Additional components here -->
         </div>
       </div>
       <div class="recent-links">
         <h2>Recent Links</h2>
         <div v-for="link in recentLinks" :key="link.id">
-          <a :href="`/link/${link.id}`" @click.prevent="goToLink(link)">{{link.url}}</a>
+          <LinkItem :link="link" @onClick="goToLink(link)"></LinkItem>
           <!-- Additional components here -->
         </div>
       </div>
@@ -28,9 +28,12 @@
 <script>
 import api from '@/api'
 import GoogleSignIn from '@/components/GoogleSignin.vue'
+import LinkItem from '@/components/LinkItem.vue'
+
 export default {
   components: {
     GoogleSignIn,
+    LinkItem,
   },
   data() {
     return {
