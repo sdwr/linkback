@@ -6,7 +6,7 @@
       <div class="section">
         <h2>User History</h2>
         <ul>
-          <li v-for="historyItem in userHistory" :key="historyItem.id">{{ historyItem.action }}</li>
+          <li v-for="historyItem in userHistory" :key="historyItem.userActionId">{{ historyItem.actionType }}</li>
         </ul>
       </div>
       <div class="section">
@@ -17,9 +17,9 @@
       </div>
       <div class="section">
         <h2>Saved Links</h2>
-        <ul>
-          <li v-for="link in savedLinks" :key="link.id">{{ link.title }}</li>
-        </ul>
+        <div v-for="link in savedLinks" :key="link.id">
+          <LinkItem :link="link" @onClick="goToLink(link)"></LinkItem>
+        </div>
       </div>
     </div>
   </div>
@@ -60,7 +60,7 @@ export default {
     id = parseInt(id);
     this.user = await api.getUser(id);
     // Fetch the user history
-    this.userHistory = await api.getUserHistory(id);
+    this.userHistory = await api.getUserActions(id);
 
     // Fetch the submitted links
     this.submittedLinks = await api.getLinksByUser(id);

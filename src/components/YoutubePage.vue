@@ -3,11 +3,16 @@
     <button @click="backToHome"> &lt; Back</button>
     <h1>{{currentLink}}</h1>
     <h2>Author: <a :href="authorLink">{{authorName}}</a></h2> <!-- Author credit -->
-    <button @click="saveToLinks">Save to My Links</button> <!-- Save to links button -->
+    <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
+    <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave from My Links</button> <!-- Saved button -->
     <a :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
 
     <div class="content-preview">
-      <iframe class="iframe" v-if="currentLink" :src="currentLink"></iframe>
+      <iframe class="iframe" id="iframe" v-if="currentLink" :src="currentLink"></iframe>
+    </div>
+    <!-- Restart Button-->
+    <div class="restart-button">
+      <button @click="refreshIframe()">Restart</button>
     </div>
     <div v-if="!isClip">
       <!-- Range Sliders -->
@@ -93,7 +98,8 @@ export default {
       clipEnd: 0, // End time for the clip
       videoLength: 0, // Length of the video
       loopClip: false, // Flag to check if the clip should loop
-      creatingClip: false, // Flag to check if the user is creating a clip
+      creatingClip: false, // Flag to check if the user is creating a clip,
+      userSavedLink: false, // Flag to check if the user has saved the link
     }
   },
   watch: {
@@ -102,9 +108,20 @@ export default {
     }
   },
   methods: {
-    saveToLinks() {
-      // Method to save the current link to user's saved links
+    async saveToLinks() {
+      let result = await api.saveLink(this.user.userId, this.link.linkId);
+      if(result) {
+        this.userSavedLink = true;
+      }
     },
+    
+    async unsaveToLinks() {
+      let result = await api.unsaveLink(this.user.userId, this.link.linkId);
+      if(result) {
+        this.userSavedLink = false;
+      }
+    },
+
     async createClip() {
       this.creatingClip = true;
       let clip = await api.addLink({
@@ -127,6 +144,13 @@ export default {
       } else if (parseInt(this.clipEnd) < parseInt(this.clipStart)) {
         this.clipStart = this.clipEnd;
       }
+    },
+    async refreshIframe() {
+      let iframe = document.getElementById('iframe');
+      let temp = iframe.src;
+      iframe.src = '';
+      iframe.src = temp;
+      iframe.click();
     },
     async addTag() {
       if(this.newTagName && this.newTagName.length > 0) {
@@ -161,6 +185,7 @@ export default {
   async created() {
     this.parseLink();
     this.user = await api.getUser(1);
+    this.userSavedLink = await api.checkUserSavedLink(this.user.userId, this.link.linkId);
   },
   mounted() {
   }

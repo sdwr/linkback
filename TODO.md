@@ -19,7 +19,7 @@ LINK PAGE
 YOUTUBE PAGE
 - fix "create clip" to actually make a new link DONE
 - fix multiple sets of url params in the link DONE
-- add a "restart" button for clips, remove loop flag (can't auto-loop)
+- add a "restart" button for clips, remove loop flag (can't auto-loop) DONE
 - fix "original video" button
 - fix author vs submitter
 - fix mobile layout (video wider, less black bars on top/bottom)
@@ -27,18 +27,25 @@ YOUTUBE PAGE
 - timestamped comments
 
 USER PAGE
-- lists not displaying
-- add history 
+- lists not displaying DONE
+- add history DONE
+- make history look nice
 
 API
 - add test data that covers all the main cases KINDA
-- video vs video clip
-- other person submitted vs you
+- video vs video clip DONE
+- other person submitted vs you DONE
+
+- non-youtube sites (embeddable and not-embeddable)
 - sanity check the duration data - start time, end time
 
 
-
-
 FEATURES
-- link items on landing/user page (title, url, duration, votes)
+- link items on landing/user page (title, url, duration, votes) DONE
+
+- check if videos are already saved, show save / unsave icon
+- add votes
+- add tags
+
+- add small toast on user action (success / fail)
 

@@ -1,3 +1,4 @@
+import externalApi from "./externalapi";
 
 import { 
   createUserDto, 
@@ -5,9 +6,18 @@ import {
   createVoteDto,
   createCommentDto, 
   createSavedLinkDto, 
-  createTagDto, 
+  createTagDto,
+  createUserActionDto,
   
 } from "@/utils"
+
+import { 
+  ACTION_SUBMIT,
+  ACTION_SAVE,
+  ACTION_UNSAVE,
+  ACTION_TAG,
+
+ } from "@/consts"
 
 import {
   mockLinkData,
@@ -20,6 +30,7 @@ let mockVotes = [];
 let mockComments = [];
 let mockSavedLinks = [];
 let mockTags = [];
+let mockUserActions = [];
 
 let mockUser = {
   userId: 1,
@@ -41,7 +52,9 @@ const api = {
   },
 
   addLink: async (data) => {
-    const link = await createLinkDto(data);
+    let link = await createLinkDto(data);
+    link = await externalApi.addSiteData(link);
+    
     let duplicateUrl, duplicateContent;
     //dont add link if its a duplicate (same url or same contentId + domain)
     if(!link.isClip) {
@@ -55,7 +68,10 @@ const api = {
       console.log('duplicate link', link);
       return null;
     }
+
     mockLinks.push(link);
+    await api.addUserAction({ userId: link.userId, actionType: ACTION_SUBMIT, itemId: link.linkId });
+
     return link;
   },
 
@@ -73,14 +89,51 @@ const api = {
 
   addSavedLink: async (data) => {
     const savedLink = createSavedLinkDto(data);
+
     mockSavedLinks.push(savedLink);
+    await api.addUserAction({ userId: savedLink.userId, actionType: ACTION_SAVE, itemId: savedLink.linkId });
+
+
     return savedLink;
   },
 
   addTag: async (data) => {
     const tag = createTagDto(data);
+
     mockTags.push(tag);
+    await api.addUserAction({ userId: tag.userId, actionType: ACTION_TAG, itemId: tag.tagId });
+
     return tag;
+  },
+
+  addUserAction: async (data) => {
+    const userAction = createUserActionDto(data);
+    mockUserActions.push(userAction);
+    return userAction;
+  },
+
+  //complex adds
+  saveLink: async (userId, linkId) => {
+    // check if user has already saved link
+    const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
+    if (savedLink) {
+      return savedLink;
+    }
+    const newSavedLink = await api.addSavedLink({ userId, linkId });
+
+    return newSavedLink;
+  },
+
+  unsaveLink: async (userId, linkId) => {
+    const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
+    if (savedLink) {
+      
+      mockSavedLinks = mockSavedLinks.filter(savedLink => savedLink.userId !== userId && savedLink.linkId !== linkId);
+      await api.addUserAction({ userId, actionType: ACTION_UNSAVE, itemId: linkId });
+
+      return true;
+    }
+    return false;
   },
 
   //API gets
@@ -98,7 +151,6 @@ const api = {
   },
 
   getLinks: async () => {
-    console.log('getLinks', mockLinks)
     return mockLinks;
   },
 
@@ -118,18 +170,24 @@ const api = {
     return mockTags.filter(tag => tag.linkId === linkId);
   },
 
-  getSavedLinksByUser: async (userId) => {
-    return mockSavedLinks.filter(savedLink => savedLink.userId === userId);
+  getUserActions: async (userId) => {
+    return mockUserActions.filter(userAction => userAction.userId === userId);
   },
 
   // Complex Endpoints
+
+  getSavedLinksByUser: async (userId) => {
+    let savedLinks = mockSavedLinks.filter(savedLink => savedLink.userId === userId).map(savedLink => savedLink.linkId);
+    let links = mockLinks.filter(link => savedLinks.includes(link.linkId));
+    return links;
+  },
+
 
   getNewLinks: async (limit = 10) => {
     return mockLinks.sort((a, b) => b.submitDate - a.submitDate).slice(0, limit);
   },
 
   getTopLinks: async (limit = 10) => {
-    console.log('getTopLinks', mockLinks, mockVotes)
     const linkVotes = mockLinks.map(link => {
       const votes = mockVotes.filter(vote => vote.linkId === link.linkId);
       const upvotes = votes.filter(vote => vote.voteType === 'upvote').length;
@@ -139,11 +197,11 @@ const api = {
     return linkVotes.sort((a, b) => b.voteCount - a.voteCount).slice(0, limit);
   },
 
-  getUserHistory: async (userId) => {
-    const userLinks = mockLinks.filter(link => link.userId === userId);
-    const userComments = mockComments.filter(comment => comment.userId === userId);
-    return { links: userLinks, comments: userComments };
-  },
+  //check if user has saved link
+  checkUserSavedLink: async (userId, linkId) => {
+    const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
+    return savedLink ? savedLink : false;
+  }
 
 
 };

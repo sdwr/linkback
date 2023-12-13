@@ -22,6 +22,11 @@
     <div class="duration" style="flex-shrink: 0; padding: 0 10px;">
       length: {{ duration }}s
     </div>
+
+    <!-- Save Link -->
+    <div class="save-link" style="flex-shrink: 0; padding: 0 10px;">
+      <button @click="saveLink" v-if="!isSaved">💾</button>
+    </div>
   </div>
 </template>
 <script>
@@ -31,6 +36,10 @@ export default {
     link: {
       type: Object,
       required: true,
+    },
+    isSaved: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({
@@ -52,6 +61,9 @@ export default {
     },
     downvote() {
       // Implement downvote functionality
+    },
+    saveLink() {
+      this.$emit('on-save', this.link)
     },
     clickLink() {
       this.$emit('on-click', this.link)

@@ -1,4 +1,3 @@
-import { fetchYoutubeData } from "./youtubeapi";
 
 let globalId = 10;
 
@@ -10,11 +9,12 @@ export function createUserDto(data) {
     return {
         userId: getNextId(),
         username: data.username,
-        email: data.email
+        email: data.email,
+        date: new Date()
     };
 }
 
-export async function createLinkDto(data) {
+export function createLinkDto(data) {
 
     let link = {
         linkId: getNextId(),
@@ -27,7 +27,7 @@ export async function createLinkDto(data) {
         loopClip: data.loopClip || false,
         title: data.title,
         description: data.description,
-        submitDate: new Date(),
+        date: new Date(),
         userId: data.userId,
         originalLinkId: data.originalLinkId || null
     };
@@ -35,7 +35,6 @@ export async function createLinkDto(data) {
     link = extractContentId(link);
     link = processLink(link);
     
-    link = await addYoutubeData(link);
     return link;
 
 }
@@ -45,8 +44,8 @@ export function createVoteDto(data) {
         voteId: getNextId(),
         linkId: data.linkId,
         userId: data.userId,
-        voteType: data.voteType,
-        voteDate: new Date()
+        voteValue: data.voteValue,
+        date: new Date()
     };
 }
 
@@ -56,7 +55,7 @@ export function createCommentDto(data) {
         content: data.content,
         linkId: data.linkId,
         userId: data.userId,
-        commentDate: new Date()
+        date: new Date()
     };
 }
 
@@ -65,7 +64,7 @@ export function createSavedLinkDto(data) {
         savedLinkId: getNextId(),
         userId: data.userId,
         linkId: data.linkId,
-        saveDate: new Date()
+        date: new Date()
     };
 }
 
@@ -75,11 +74,24 @@ export function createTagDto(data) {
         name: data.name,
         upvotes: 0,
         downvotes: 0,
-        linkId: data.linkId || null
+        linkId: data.linkId || null,
+        date: new Date()
+    };
+}
+
+export function createUserActionDto(data) {
+    return {
+        userActionId: getNextId(),
+        userId: data.userId,
+        itemId: data.itemId,
+        actionType: data.actionType,
+        date: new Date()
     };
 }
 
 
+
+// bonus processing functions
 
 export function extractDomain(link) {
     let url = link.url;
@@ -144,18 +156,3 @@ export function processLink(link) {
     return link
 }
 
-export async function addYoutubeData(link) {
-    let domain = link.domain;
-    let contentId = link.contentId;
-
-    if(domain === "youtube.com" || domain === "youtu.be") {
-        let data = await fetchYoutubeData(contentId);
-        if(data) {
-            link.title = data.title;
-            link.description = data.description;
-            link.duration = data.duration;
-        }
-    }
-    
-    return link
-}
