@@ -52,14 +52,16 @@ const api = {
   },
 
   addLink: async (data) => {
-    let link = await createLinkDto(data);
+    let link = createLinkDto(data);
     link = await externalApi.addSiteData(link);
-    
+
     let duplicateUrl, duplicateContent;
     //dont add link if its a duplicate (same url or same contentId + domain)
     if(!link.isClip) {
       duplicateUrl = mockLinks.find(l => l.url === link.url);
-      duplicateContent = mockLinks.find(l => l.contentId === link.contentId && l.domain === link.domain);
+      if(link.contentId && link.domain) {
+        duplicateContent = mockLinks.find(l => l.contentId === link.contentId && l.domain === link.domain);
+      }
     } else {
       // allow duplicate clips for now
     }
@@ -147,7 +149,9 @@ const api = {
   },
 
   getLink: async (linkId) => {
-    return mockLinks.find(link => link.linkId === linkId);
+    linkId = parseInt(linkId);
+    let result = mockLinks.find(link => link.linkId === linkId);
+    return result;
   },
 
   getLinks: async () => {

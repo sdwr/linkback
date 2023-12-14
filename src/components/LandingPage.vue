@@ -87,9 +87,9 @@ export default {
     goToLink(link) {
       console.log(link)
       if(link.domain === 'youtube.com') {
-        this.$router.push({ name: 'youtubepage', query: { link: JSON.stringify(link)}})
+        this.$router.push({ path: `/tube/${link.linkId}`})
       } else {
-        this.$router.push({ name: 'linkpage', query: { link: JSON.stringify(link)}})
+        this.$router.push({ path: `/link/${link.linkId}`})
       }
     },
     goToUser(user) {

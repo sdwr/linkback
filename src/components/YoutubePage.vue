@@ -1,14 +1,14 @@
 <template>
   <div class="linkpage">
     <button @click="backToHome"> &lt; Back</button>
-    <h1>{{currentLink}}</h1>
+    <h1 v-if="link">{{link.title || link.url}}</h1>
     <h2>Author: <a :href="authorLink">{{authorName}}</a></h2> <!-- Author credit -->
     <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
     <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave from My Links</button> <!-- Saved button -->
     <a :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
 
     <div class="content-preview">
-      <iframe class="iframe" id="iframe" v-if="currentLink" :src="currentLink"></iframe>
+      <iframe class="iframe" id="iframe" v-if="link" :src="link.url"></iframe>
     </div>
     <!-- Restart Button-->
     <div class="restart-button">
@@ -17,8 +17,8 @@
     <div v-if="!isClip">
       <!-- Range Sliders -->
       <div>
-        <input type="range" v-model="clipStart" @input="adjustRanges" min="0" :max="videoLength" step="1">
-        <input type="range" v-model="clipEnd" @input="adjustRanges" :min="0" :max="videoLength" step="1">
+        <input type="range" v-model="clipStart" @input="adjustRanges" min="0" :max="link.duration" step="1">
+        <input type="range" v-model="clipEnd" @input="adjustRanges" :min="0" :max="link.duration" step="1">
       </div>
       
       <!-- Text Inputs -->
@@ -84,8 +84,17 @@ export default {
   data() {
     return {
       user: null,
-      link: null,
-      currentLink: null,
+      link: {
+        title: '',
+        url: '',
+        startTime: 0,
+        endTime: 0,
+        duration: 0,
+        isClip: false,
+        loopClip: false,
+        originalVideo: null,
+        userId: null,
+      },
       newTagName: '',
       comments: [],
       otherLinks: [],
@@ -96,15 +105,9 @@ export default {
       isClip: false, // Flag to check if it's the original video
       clipStart: 0, // Start time for the clip
       clipEnd: 0, // End time for the clip
-      videoLength: 0, // Length of the video
       loopClip: false, // Flag to check if the clip should loop
       creatingClip: false, // Flag to check if the user is creating a clip,
       userSavedLink: false, // Flag to check if the user has saved the link
-    }
-  },
-  watch: {
-    $route() {
-      this.parseLink();
     }
   },
   methods: {
@@ -114,7 +117,7 @@ export default {
         this.userSavedLink = true;
       }
     },
-    
+
     async unsaveToLinks() {
       let result = await api.unsaveLink(this.user.userId, this.link.linkId);
       if(result) {
@@ -135,8 +138,15 @@ export default {
         userId: this.user.userId,
       })
       this.creatingClip = false;
-      this.$router.push({ name: 'youtubepage', query: { link: JSON.stringify(clip)}})
+      this.goToLink(clip);
 
+    },
+    goToLink(link) {
+      if(link.domain === 'youtube.com') {
+        this.$router.push({ path: `/tube/${link.linkId}`})
+      } else {
+        this.$router.push({ path: `/link/${link.linkId}`})
+      }
     },
     adjustRanges() {
       if (parseInt(this.clipStart) > parseInt(this.clipEnd)) {
@@ -161,29 +171,21 @@ export default {
         this.newTagName = ''
         this.tags = await api.getTagsByLink(this.link.linkId)
       }
-      console.log(this.tags)
     },
     backToHome() {
       this.$router.push({ path:"/"})
     },
     goToTag(tag) {
-      console.log(tag)
       this.$router.push({ path: `/tag/${tag.name}`})
     },
-    parseLink() {
-      if(this.$route.query.link) {
-        this.link = JSON.parse(this.$route.query.link)
-        this.currentLink = this.link.url
-      } else if(this.$route.params.url) {
-        this.currentLink = this.$route.params.url
-      }
-      if(this.link.duration) {
-        this.videoLength = this.link.duration;
-      }
-    },
+    async loadLink(linkId) {
+      let link = await api.getLink(linkId);
+      return link
+    }
   },
   async created() {
-    this.parseLink();
+    let id = this.$route.params.id;
+    this.link = await this.loadLink(id);
     this.user = await api.getUser(1);
     this.userSavedLink = await api.checkUserSavedLink(this.user.userId, this.link.linkId);
   },

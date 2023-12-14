@@ -1,9 +1,9 @@
 <template>
   <div class="linkpage">
   <button @click="backToHome"> &lt; Back</button>
-  <h1>{{currentLink}}</h1>
+  <h1 v-if="link">{{link.url}}</h1>
     <div class="content-preview">
-      <iframe v-if="currentLink" :src="currentLink" style="width:100%; height:600px; border:none;"></iframe>
+      <iframe v-if="link" :src="link.url" style="width:100%; height:600px; border:none;"></iframe>
     </div>
     <div class="main-content">
       <div class="comments">
@@ -52,8 +52,17 @@ export default {
   },
   data() {
     return {
-      link: null,
-      currentLink: null,
+      link: {
+        title: '',
+        url: '',
+        startTime: 0,
+        endTime: 0,
+        duration: 0,
+        isClip: false,
+        loopClip: false,
+        originalVideo: null,
+        userId: null,
+      },
       newTagName: '',
       comments: [],
       otherLinks: [],
@@ -79,14 +88,14 @@ export default {
       console.log(tag)
       this.$router.push({ path: `/tag/${tag.name}`})
     },
+    async loadLink(linkId) {
+      let link = await api.getLink(linkId)
+      console.log(link)
+      this.link = link
+    },
   },
-  created() {
-    if(this.$route.query.link) {
-      this.link = JSON.parse(this.$route.query.link)
-      this.currentLink = this.link.url
-    } else if(this.$route.params.url) {
-      this.currentLink = this.$route.params.url
-    }
+  async created() {
+    this.link = await this.loadLink(this.$route.params.id)
   },
   mounted() {
   }

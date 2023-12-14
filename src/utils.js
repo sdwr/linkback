@@ -5,7 +5,21 @@ export function getNextId() {
     return ++globalId;
 }
 
+function assertHasProperties(obj, properties) {
+    let missingProperties = [];
+    properties.forEach(property => {
+        if (!Object.prototype.hasOwnProperty.call(obj, property)) {
+            missingProperties.push(property);
+        }
+    });
+    if (missingProperties.length > 0) {
+        console.log(`${obj} is missing properties: ${missingProperties.join(', ')}`);
+        throw new Error(`Missing properties: ${missingProperties.join(', ')}`);
+    }
+}
+
 export function createUserDto(data) {
+    assertHasProperties(data, ['username', 'email']);
     return {
         userId: getNextId(),
         username: data.username,
@@ -15,7 +29,7 @@ export function createUserDto(data) {
 }
 
 export function createLinkDto(data) {
-
+    assertHasProperties(data, ['url', 'userId']);
     let link = {
         linkId: getNextId(),
         url: data.url,
@@ -25,8 +39,8 @@ export function createLinkDto(data) {
         endTime: data.endTime || null,
         isClip: data.isClip || false,
         loopClip: data.loopClip || false,
-        title: data.title,
-        description: data.description,
+        title: data.title || "",
+        description: data.description | "",
         date: new Date(),
         userId: data.userId,
         originalLinkId: data.originalLinkId || null
@@ -40,6 +54,7 @@ export function createLinkDto(data) {
 }
 
 export function createVoteDto(data) {
+    assertHasProperties(data, ['linkId', 'userId', 'voteValue']);
     return {
         voteId: getNextId(),
         linkId: data.linkId,
@@ -50,6 +65,7 @@ export function createVoteDto(data) {
 }
 
 export function createCommentDto(data) {
+    assertHasProperties(data, ['content', 'userId', 'linkId']);
     return {
         commentId: getNextId(),
         content: data.content,
@@ -60,6 +76,7 @@ export function createCommentDto(data) {
 }
 
 export function createSavedLinkDto(data) {
+    assertHasProperties(data, ['userId', 'linkId']);
     return {
         savedLinkId: getNextId(),
         userId: data.userId,
@@ -69,17 +86,17 @@ export function createSavedLinkDto(data) {
 }
 
 export function createTagDto(data) {
+    assertHasProperties(data, ['name', 'userId']);
     return {
         tagId: getNextId(),
         name: data.name,
-        upvotes: 0,
-        downvotes: 0,
         linkId: data.linkId || null,
         date: new Date()
     };
 }
 
 export function createUserActionDto(data) {
+    assertHasProperties(data, ['userId', 'actionType', 'itemId']);
     return {
         userActionId: getNextId(),
         userId: data.userId,

@@ -6,6 +6,8 @@
 
 -make youtube pages based on contentId instead of URL
 
+-trim title/url based on length
+
 LANDING PAGE
 - don't allow duplicate links DONE
 - strip params from link (at least for youtube) DONE
@@ -49,3 +51,23 @@ FEATURES
 
 - add small toast on user action (success / fail)
 
+REAL STUFF:
+- get thumbnails of content
+
+- check if pages load
+  - either server-side + add flag to DTO
+  - or client side by watching iframe
+  - and open in ARCHIVE if they do not
+
+
+
+DB TABLES THAT DEPEND ON EACH OTHER:
+
+- links, tags, comments, have votes
+------------------------------------
+  PLAN:
+    keep a user-vote or user-history table to prevent re-voting
+
+    use materialized views (?) to efficiently fetch the vote count per item
+
+  
