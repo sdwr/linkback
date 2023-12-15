@@ -10,7 +10,11 @@
       <div class="top-links">
         <h2>Top Links</h2>
         <div v-for="link in topLinks" :key="link.id">
-          <LinkItem :link="link" @onClick="goToLink(link)"></LinkItem>
+          <LinkItem :link="link" 
+            @onClick="goToLink"
+            @onSave="saveLink"
+            @onUnsave="unsaveLink"
+          ></LinkItem>
           <!-- Additional components here -->
         </div>
       </div>
@@ -18,9 +22,9 @@
         <h2>Recent Links</h2>
         <div v-for="link in recentLinks" :key="link.id">
           <LinkItem :link="link" 
-            @onClick="goToLink(link)"
-            @onSave="saveLink(link)"
-            @onUnsave="unsaveLink(link)"
+            @onClick="goToLink"
+            @onSave="saveLink"
+            @onUnsave="unsaveLink"
           ></LinkItem>
           <!-- Additional components here -->
         </div>
@@ -71,17 +75,20 @@ export default {
       }
     },
     async getTopLinks() {
+      this.topLinks = [];
       try {
-        const links = await api.getLinksForUser(1);
+        const links = await api.getTopLinksWithUserData(this.user.userId);
         this.topLinks = links;
         this.currentTab = 'top';
+        
       } catch (error) {
         console.error('Error fetching top links:', error);
       }
     },
     async getNewLinks() {
+      this.newLinks = [];
       try {
-        const links = await api.getNewLinks();
+        const links = await api.getNewLinksWithUserData(this.user.userId);
         this.recentLinks = links;
         this.currentTab = 'recent';
       } catch (error) {
@@ -89,7 +96,6 @@ export default {
       }
     },
     goToLink(link) {
-      console.log(link)
       if(link.domain === 'youtube.com') {
         this.$router.push({ path: `/tube/${link.linkId}`})
       } else {
@@ -97,14 +103,12 @@ export default {
       }
     },
     async saveLink(link) {
-      console.log("saving link", link, this.user.userId)
       await api.saveLink(this.user.userId, link.linkId);
-      await this.getTopLinks();
+      await this.loadLinks();
     },
     async unsaveLink(link) {
-      console.log("unsaving link", link, this.user.userId)
       await api.unsaveLink(this.user.userId, link.linkId);
-      await this.getTopLinks();
+      await this.loadLinks();
     },
     goToUser(user) {
       this.$router.push({ name: 'userpage', params: { id: user.userId } });
@@ -124,12 +128,15 @@ export default {
       if(!this.user) {
         this.user = api.mockUser;
       }
+    },
+    async loadLinks() {
+      await this.getTopLinks();
+      await this.getNewLinks();
     }
   },
   async created() {
     this.checkUser();
-    await this.getTopLinks();
-    await this.getNewLinks();
+    await this.loadLinks();
   },
 }
 </script>

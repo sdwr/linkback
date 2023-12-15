@@ -152,7 +152,7 @@ const api = {
     const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
     if (savedLink) {
       
-      mockSavedLinks = mockSavedLinks.filter(savedLink => savedLink.userId !== userId && savedLink.linkId !== linkId);
+      mockSavedLinks = mockSavedLinks.filter(savedLink => savedLink.userId !== userId || savedLink.linkId !== linkId);
       await api.addUserAction({ userId, actionType: ACTION_UNSAVE, itemId: linkId });
 
       return true;
@@ -180,10 +180,12 @@ const api = {
     return mockLinks;
   },
 
-  getLinksForUser: async (userId) => {
-    let links = mockLinks;
+  //copy to avoid modifying original data
+  addUserDataToLinks: async (userId, links) => {
     let savedLinks = mockSavedLinks.filter(savedLink => savedLink.userId === userId).map(savedLink => savedLink.linkId);
-    links = links.map(link => {
+    let linksCopy = JSON.parse(JSON.stringify(links));
+
+    links = linksCopy.map(link => {
       if (savedLinks.includes(link.linkId)) {
         link.saved = true;
       }
@@ -233,6 +235,20 @@ const api = {
     });
 
     return linkVotes.sort((a, b) => b.voteCount - a.voteCount).slice(0, limit);
+  },
+
+  getTopLinksWithUserData: async (userId) => {
+    let topLinks = await api.getTopLinks();
+    topLinks = await api.addUserDataToLinks(userId, topLinks);
+
+    return topLinks;
+  },
+
+  getNewLinksWithUserData: async (userId) => {
+    let newLinks = await api.getNewLinks();
+    newLinks = await api.addUserDataToLinks(userId, newLinks);
+
+    return newLinks;
   },
 
   //check if user has saved link

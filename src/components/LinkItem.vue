@@ -29,8 +29,8 @@
 
     <!-- Save Link -->
     <div class="save-link" style="flex-shrink: 0; padding: 0 10px;">
-      <button @click="saveLink()" v-if="!link.saved">💾</button>
-      <button @click="unsaveLink()" v-else>❌</button>
+      <button type="button" @click="saveLink()" v-if="!link.saved">💾</button>
+      <button type="button" @click="unsaveLink()" v-else>❌</button>
     </div>
   </div>
 </template>
@@ -43,6 +43,8 @@ export default {
       required: true,
     },
   },
+  emits: 
+    ['save', 'unsave', 'on-click'],
   data: () => ({
   }),
   computed: {
@@ -65,7 +67,6 @@ export default {
     },
     saveLink() {
       this.$emit('on-save', this.link)
-      console.log("saveLink in LinkItem.vue", this.link)
     },
     unsaveLink() {
       this.$emit('on-unsave', this.link)
