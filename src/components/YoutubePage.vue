@@ -188,6 +188,7 @@ export default {
     this.link = await this.loadLink(id);
     this.user = await api.getUser(1);
     this.userSavedLink = await api.checkUserSavedLink(this.user.userId, this.link.linkId);
+
   },
   mounted() {
   }

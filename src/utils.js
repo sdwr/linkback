@@ -18,6 +18,7 @@ function assertHasProperties(obj, properties) {
     }
 }
 
+// create DTOs
 export function createUserDto(data) {
     assertHasProperties(data, ['username', 'email']);
     return {
@@ -39,6 +40,7 @@ export function createLinkDto(data) {
         endTime: data.endTime || null,
         isClip: data.isClip || false,
         loopClip: data.loopClip || false,
+        embeddable: data.embeddable || false,
         title: data.title || "",
         description: data.description | "",
         date: new Date(),
@@ -106,7 +108,12 @@ export function createUserActionDto(data) {
     };
 }
 
-
+// create link to archive.is
+export function createArchiveLink(link) {
+    let url = link.url;
+    let archiveUrl = "https://archive.is/newest/" + url;
+    return archiveUrl;
+}
 
 // bonus processing functions
 

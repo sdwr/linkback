@@ -17,6 +17,7 @@ LANDING PAGE
 
 LINK PAGE
 - get title from page somehow
+- make title editable?
 
 YOUTUBE PAGE
 - fix "create clip" to actually make a new link DONE

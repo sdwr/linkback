@@ -1,9 +1,15 @@
 <template>
   <div class="linkpage">
   <button @click="backToHome"> &lt; Back</button>
-  <h1 v-if="link">{{link.url}}</h1>
+  <h1 v-if="link">{{link.title || link.url}}</h1>
     <div class="content-preview">
-      <iframe v-if="link" :src="link.url" style="width:100%; height:600px; border:none;"></iframe>
+      <iframe v-if="link && link.embeddable" :src="link.url" style="width:100%; height:600px; border:none;"></iframe>
+      <div class="not-embeddable-warning" v-else-if="link && !link.embeddable">
+        <h2>Link not embeddable</h2>
+        <a :href="link.url" target="_blank" rel="noopener noreferrer">Click here to go to link</a>
+        <div class="embed-spacer"></div>
+        <a :href="archiveLink" target="_blank" rel="noopener noreferrer">Click here to go to archive link</a>
+      </div>
     </div>
     <div class="main-content">
       <div class="comments">
@@ -45,6 +51,7 @@
 <script>
 import VoteButton from '@/components/VoteButton.vue'
 import api from '@/api';
+import { createArchiveLink } from '@/utils'
 
 export default {
   components: {
@@ -67,6 +74,12 @@ export default {
       comments: [],
       otherLinks: [],
       tags: [],
+    }
+  },
+  computed: {
+    archiveLink() {
+      if(!this.link) return null;
+      return createArchiveLink(this.link);
     }
   },
   methods: {
@@ -95,7 +108,7 @@ export default {
     },
   },
   async created() {
-    this.link = await this.loadLink(this.$route.params.id)
+    await this.loadLink(this.$route.params.id)
   },
   mounted() {
   }
@@ -116,6 +129,19 @@ export default {
   width: 80%;
   height: 500px;
   overflow: auto;
+}
+
+.not-embeddable-warning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: orange;
+}
+
+.embed-spacer {
+  height: 20px;
 }
 
 .main-content {

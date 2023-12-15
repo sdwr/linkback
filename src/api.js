@@ -1,4 +1,4 @@
-import externalApi from "./externalapi";
+import externalApi from "./externalApi";
 
 import { 
   createUserDto, 
@@ -75,6 +75,28 @@ const api = {
     await api.addUserAction({ userId: link.userId, actionType: ACTION_SUBMIT, itemId: link.linkId });
 
     return link;
+  },
+
+  updateLink: async (data) => {
+    let linkId = parseInt(data.linkId);
+    if(!linkId) {
+      console.log("updateLink: invalid linkId", linkId, data)
+      return null;
+    }
+
+    let linkIndex = mockLinks.findIndex(link => link.linkId === linkId);
+
+    //reuse old linkId (create fn will generate new one)
+    let link = createLinkDto(data);
+    link.linkId = linkId
+
+    if(linkIndex !== -1) {
+      mockLinks[linkIndex] = link;
+      return link;
+    } else {
+      console.log("updateLink: link not found", linkId, data)
+      return null;
+    }
   },
 
   addVote: async (data) => {

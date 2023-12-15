@@ -1,25 +1,29 @@
 <template>
   <div class="link-item" style="display: flex; align-items: center; height: 100px; width: 100%;">
     <!-- Voting Section -->
-    <div class="voting" style="flex-shrink: 0; padding: 0 10px;">
+    <div class="voting">
       <button @click="upvote">🔼</button>
       <div>{{ link.votes }}</div>
       <button @click="downvote">🔽</button>
     </div>
 
     <!-- Thumbnail -->
-    <div class="thumbnail" style="flex-shrink: 0; padding: 0 10px;">
+    <div class="thumbnail">
       <img :src="thumbnail" alt="thumbnail" style="height: 80px;">
     </div>
 
     <!-- Link Details -->
-    <a :href=link.url class="details" style="flex-grow: 1;" @click.prevent="clickLink()">
-      <div class="title" style="font-size: 1.2em; font-weight: bold;">{{ link.title }}</div>
+    <a :href=link.url class="details" @click.prevent="clickLink()">
+      <div class="title" style="font-size: 1.2em; font-weight: bold;">{{ link.title || "No title" }}</div>
       <div class="url" style="font-size: 0.8em;">{{ link.url }}</div>
     </a>
 
+    <!-- Spacer-->
+    <div class="spacer">
+    </div>
+
     <!-- Duration -->
-    <div class="duration" style="flex-shrink: 0; padding: 0 10px;">
+    <div v-if="duration" class="duration" style="flex-shrink: 0; padding: 0 10px;">
       length: {{ duration }}s
     </div>
 
@@ -75,30 +79,36 @@ export default {
 .link-item {
   display: flex;
   align-items: center;
+  overflow: hidden;
   border: 1px solid #ccc;
   height: 100px;
   width: 100%;
 }
 .voting {
-  flex-shrink: 0;
   padding: 0 10px;
 }
 .thumbnail {
-  flex-shrink: 0;
   padding: 0 10px;
   img {
     height: 80px;
   }
 }
 .details {
-  flex-grow: 1;
+  width: 50%;
+  padding: 0px 30px;
   .title {
     font-size: 1.2em;
     font-weight: bold;
   }
   .url {
     font-size: 0.8em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+}
+.spacer {
+  flex-grow: 1;
 }
 .duration {
   flex-shrink: 0;
