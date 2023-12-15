@@ -9,13 +9,13 @@
 
     <!-- Thumbnail -->
     <div class="thumbnail">
-      <img :src="thumbnail" alt="thumbnail" style="height: 80px;">
+      <img class="thumbnail-img" :src="thumbnail" alt="thumbnail" style="height: 80px;">
     </div>
 
     <!-- Link Details -->
     <a :href=link.url class="details" @click.prevent="clickLink()">
-      <div class="title" style="font-size: 1.2em; font-weight: bold;">{{ link.title || "No title" }}</div>
-      <div class="url" style="font-size: 0.8em;">{{ link.url }}</div>
+      <div class="detail-title" style="font-size: 1.2em; font-weight: bold;">{{ link.title || "No title" }}</div>
+      <div class="details-url" style="font-size: 0.8em;">{{ link.url }}</div>
     </a>
 
     <!-- Spacer-->
@@ -29,7 +29,8 @@
 
     <!-- Save Link -->
     <div class="save-link" style="flex-shrink: 0; padding: 0 10px;">
-      <button @click="saveLink" v-if="!isSaved">💾</button>
+      <button @click="saveLink()" v-if="!link.saved">💾</button>
+      <button @click="unsaveLink()" v-else>❌</button>
     </div>
   </div>
 </template>
@@ -40,10 +41,6 @@ export default {
     link: {
       type: Object,
       required: true,
-    },
-    isSaved: {
-      type: Boolean,
-      default: false,
     },
   },
   data: () => ({
@@ -68,6 +65,10 @@ export default {
     },
     saveLink() {
       this.$emit('on-save', this.link)
+      console.log("saveLink in LinkItem.vue", this.link)
+    },
+    unsaveLink() {
+      this.$emit('on-unsave', this.link)
     },
     clickLink() {
       this.$emit('on-click', this.link)
@@ -89,23 +90,23 @@ export default {
 }
 .thumbnail {
   padding: 0 10px;
-  img {
-    height: 80px;
-  }
+}
+.thumbnail-img {
+  height: 80px;
 }
 .details {
   width: 50%;
   padding: 0px 30px;
-  .title {
-    font-size: 1.2em;
-    font-weight: bold;
-  }
-  .url {
-    font-size: 0.8em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+}
+.details-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.details-url {
+  font-size: 0.8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .spacer {
   flex-grow: 1;

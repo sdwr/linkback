@@ -3,8 +3,8 @@
   <button @click="backToHome"> &lt; Back</button>
   <h1 v-if="link">{{link.title || link.url}}</h1>
     <div class="content-preview">
-      <iframe v-if="link && link.embeddable" :src="link.url" style="width:100%; height:600px; border:none;"></iframe>
-      <div class="not-embeddable-warning" v-else-if="link && !link.embeddable">
+      <iframe v-if="link" :src="embedLink" style="width:100%; height:600px; border:none;"></iframe>
+      <div class="not-embeddable-warning" v-else>
         <h2>Link not embeddable</h2>
         <a :href="link.url" target="_blank" rel="noopener noreferrer">Click here to go to link</a>
         <div class="embed-spacer"></div>
@@ -77,6 +77,10 @@ export default {
     }
   },
   computed: {
+    embedLink() {
+      if(!this.link) return null;
+      return this.link.embeddable ? this.link.url : this.archiveLink;
+    },
     archiveLink() {
       if(!this.link) return null;
       return createArchiveLink(this.link);

@@ -180,6 +180,18 @@ const api = {
     return mockLinks;
   },
 
+  getLinksForUser: async (userId) => {
+    let links = mockLinks;
+    let savedLinks = mockSavedLinks.filter(savedLink => savedLink.userId === userId).map(savedLink => savedLink.linkId);
+    links = links.map(link => {
+      if (savedLinks.includes(link.linkId)) {
+        link.saved = true;
+      }
+      return link;
+    });
+    return links;
+  },
+
   getLinksByUser: async (userId) => {
     return mockLinks.filter(link => link.userId === userId);
   },

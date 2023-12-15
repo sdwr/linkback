@@ -17,7 +17,11 @@
       <div class="recent-links">
         <h2>Recent Links</h2>
         <div v-for="link in recentLinks" :key="link.id">
-          <LinkItem :link="link" @onClick="goToLink(link)"></LinkItem>
+          <LinkItem :link="link" 
+            @onClick="goToLink(link)"
+            @onSave="saveLink(link)"
+            @onUnsave="unsaveLink(link)"
+          ></LinkItem>
           <!-- Additional components here -->
         </div>
       </div>
@@ -68,7 +72,7 @@ export default {
     },
     async getTopLinks() {
       try {
-        const links = await api.getTopLinks();
+        const links = await api.getLinksForUser(1);
         this.topLinks = links;
         this.currentTab = 'top';
       } catch (error) {
@@ -91,6 +95,16 @@ export default {
       } else {
         this.$router.push({ path: `/link/${link.linkId}`})
       }
+    },
+    async saveLink(link) {
+      console.log("saving link", link, this.user.userId)
+      await api.saveLink(this.user.userId, link.linkId);
+      await this.getTopLinks();
+    },
+    async unsaveLink(link) {
+      console.log("unsaving link", link, this.user.userId)
+      await api.unsaveLink(this.user.userId, link.linkId);
+      await this.getTopLinks();
     },
     goToUser(user) {
       this.$router.push({ name: 'userpage', params: { id: user.userId } });
