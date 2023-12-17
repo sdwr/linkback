@@ -3,7 +3,7 @@
   <button @click="backToHome"> &lt; Back</button>
   <h1 v-if="link">{{link.title || link.url}}</h1>
     <div class="content-preview">
-      <iframe v-if="link" :src="embedLink" style="width:100%; height:600px; border:none;"></iframe>
+      <iframe v-if="link" class="iframe" :src="embedLink"></iframe>
       <div class="not-embeddable-warning" v-else>
         <h2>Link not embeddable</h2>
         <a :href="link.url" target="_blank" rel="noopener noreferrer">Click here to go to link</a>
@@ -131,8 +131,14 @@ export default {
   margin: 20px;
   border: 1px solid #ccc;
   width: 80%;
-  height: 500px;
+  height: 800px;
   overflow: auto;
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 .not-embeddable-warning {

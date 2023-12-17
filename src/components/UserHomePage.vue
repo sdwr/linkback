@@ -1,6 +1,6 @@
 <template>
   <div class="user-home">
-    <div><a :href="`/`">Back to Home</a></div>
+    <div><a :href="`/`" @click.prevent="goToHome">Back to Home</a></div>
     <h1>{{ user.username }}</h1>
     <div class="sections">
       <div class="section">
@@ -53,6 +53,9 @@ export default {
         this.$router.push({ path: `/link/${link.linkId}`})
       }
     },
+    goToHome() {
+      this.$router.push({ path: "/"})
+    }
   },
   async created() {
     // Fetch the user data from the API
