@@ -149,7 +149,6 @@ const api = {
       .find(taggedLink => taggedLink.linkId === taggedLink.linkId);
 
     if (oldTaggedLink) {
-      console.log("addTaggedLink: taggedLink already exists", oldTaggedLink);
       return oldTaggedLink;
     }
 
@@ -254,11 +253,35 @@ const api = {
   },
 
   getTagsByLink: async (linkId) => {
-    return mockTaggedLinks.filter(taggedLink => taggedLink.linkId === linkId) || [];
+    let results = mockTaggedLinks.filter(taggedLink => taggedLink.linkId === linkId) || [];
+    results = results.map(taggedLink => taggedLink.tagId);
+    //get tag data
+    let tags = mockTags.filter(tag => results.includes(tag.tagId));
+    return tags;
   },
 
-  getUserActions: async (userId) => {
+  getTaggedLinks: async () => {
+    return mockTaggedLinks;
+  },
+
+  getSavedLinks: async () => {
+    return mockSavedLinks;
+  },
+
+  getUserActions: async () => {
+    return mockUserActions;
+  },
+
+  getUserActionsByUser: async (userId) => {
     return mockUserActions.filter(userAction => userAction.userId === userId) || [];
+  },
+
+  getComments: async () => {
+    return mockComments;
+  },
+
+  getVotes: async () => {
+    return mockVotes;
   },
 
   // Complex Endpoints

@@ -63,7 +63,7 @@ export default {
     id = parseInt(id);
     this.user = await api.getUser(id);
     // Fetch the user history
-    this.userHistory = await api.getUserActions(id);
+    this.userHistory = await api.getUserActionsByUser(id);
 
     // Fetch the submitted links
     this.submittedLinks = await api.getLinksByUser(id);

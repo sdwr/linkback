@@ -1,5 +1,6 @@
 <template>
   <div class="landing-page">
+    <div> <button @click="goToDebug">Debug Page </button> </div>
     <div> <GoogleSignIn /> </div>
     <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUser(user)">{{user.username}}</a></div>
     <div class="add-link">
@@ -101,6 +102,9 @@ export default {
       } else {
         this.$router.push({ path: `/link/${link.linkId}`})
       }
+    },
+    goToDebug() {
+      this.$router.push({ path: `/debug`})
     },
     async saveLink(link) {
       await api.saveLink(this.user.userId, link.linkId);

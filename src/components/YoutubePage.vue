@@ -166,6 +166,7 @@ export default {
       if(this.newTagName && this.newTagName.length > 0) {
         await api.addTagToLink(this.user.uesrId, this.link.linkId, this.newTagName);
         this.tags = await api.getTagsByLink(this.link.linkId)
+
       }
     },
     backToHome() {
@@ -184,7 +185,7 @@ export default {
     this.link = await this.loadLink(id);
     this.user = await api.getUser(1);
     this.userSavedLink = await api.checkUserSavedLink(this.user.userId, this.link.linkId);
-
+    this.tags = await api.getTagsByLink(this.link.linkId);
   },
   mounted() {
   }

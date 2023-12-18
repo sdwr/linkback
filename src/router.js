@@ -5,12 +5,16 @@ import TagPage from './components/TagPage'
 import UserHomePage from './components/UserHomePage'
 import YoutubePage from './components/YoutubePage'
 
+import DebugPage from './components/DebugPage'
+
 const routes = [
     { path: '/', component: LandingPage, name: 'landingpage' },
     { path: '/link/:id',  component: LinkPage, name: 'linkpageid'},
     { path: '/tube/:id', component: YoutubePage, name: 'youtubepageid'},
     { path: '/tag/:id', component: TagPage, name: 'tagpage'},
     { path: '/user/:id', component: UserHomePage, name: 'userpage'},
+    
+    { path: '/debug', component: DebugPage, name: 'debugpage'},
 ]
 
 const router = createRouter({
