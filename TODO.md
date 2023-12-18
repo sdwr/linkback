@@ -4,12 +4,12 @@ PROJECT:
 
 - types, typescript?
 - cache links locally (store?), am regetting right now every page load
+- fix mobile layout (video wider, less black bars on top/bottom)
 
 FEATURES:
 
-- check if videos are already saved, show save / unsave icon
+- check if videos are already saved, show save / unsave icon (for all pages... better way?)
 - add votes
-- add tags
 - allow importing bookmarks
 
 - make google sign-in work (callback instead of domain? localhost isn't working)
@@ -32,14 +32,15 @@ LINK PAGE:
 YOUTUBE PAGE:
 - fix "original video" button
 - fix author vs submitter
-- fix mobile layout (video wider, less black bars on top/bottom)
 - 
 - timestamped comments
 
 USER PAGE: 
+- make save / unsave icons work like landing page
 - make history look nice
 
 API
+- save DB state as file, to import as test data
 - verify data doesn't already exist in DB 
   - link is checked already
   - as is savedlink
@@ -74,8 +75,12 @@ USER PAGE
 - lists not displaying DONE
 - add history DONE
 
+TAG PAGE:
+  - show list of links DONE
+
 API
 - add test data that covers all the main cases (need to redo with new db fields)
+- debug page that shows DB data DONE
 - video vs video clip DONE
 - other person submitted vs you DONE
 - non-youtube sites (embeddable and not-embeddable) DONE
@@ -83,6 +88,7 @@ API
 
 FEATURES
 - link items on landing/user page (title, url, duration, votes) DONE
+- add tags DONE
 
 
 REAL STUFF:
@@ -100,6 +106,21 @@ DB TABLES THAT DEPEND ON EACH OTHER:
   PLAN:
     keep a user-vote or user-history table to prevent re-voting
 
-    use materialized views (?) to efficiently fetch the vote count per item
+    index by all the IDs, so searching for ex. all tags for a link is pretty fast
+
+    use materialized views (?) to efficiently fetch the vote count per item ?
+
+
+  CURRENT APPROACH:
+    link tables (taggedLink), GET over multiple tables
+
+    ex. to populate the save / unsave button
+
+      - get list of saved links for the user
+
+      - merge with list of links being displayed
+
+
+    
 
   

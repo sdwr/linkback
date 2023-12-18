@@ -103,6 +103,7 @@ export function createTagLinkDto(data) {
         linkTagId: getNextId(),
         linkId: data.linkId,
         tagId: data.tagId,
+        userId: data.userId || null,
         date: new Date()
     };
 }

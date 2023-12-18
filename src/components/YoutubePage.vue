@@ -1,6 +1,7 @@
 <template>
   <div class="linkpage">
     <button @click="backToHome"> &lt; Back</button>
+    <div> <button @click="goToDebug">Debug Page </button> </div>
     <h1 v-if="link">{{link.title || link.url}}</h1>
     <h2>Author: <a :href="authorLink">{{authorName}}</a></h2> <!-- Author credit -->
     <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
@@ -148,6 +149,9 @@ export default {
         this.$router.push({ path: `/link/${link.linkId}`})
       }
     },
+    goToDebug() {
+      this.$router.push({ path: `/debug`})
+    },
     adjustRanges() {
       if (parseInt(this.clipStart) > parseInt(this.clipEnd)) {
         this.clipEnd = this.clipStart;
@@ -164,7 +168,7 @@ export default {
     },
     async addTag() {
       if(this.newTagName && this.newTagName.length > 0) {
-        await api.addTagToLink(this.user.uesrId, this.link.linkId, this.newTagName);
+        await api.addTagToLink(this.user.userId, this.link.linkId, this.newTagName);
         this.tags = await api.getTagsByLink(this.link.linkId)
 
       }
@@ -173,7 +177,7 @@ export default {
       this.$router.push({ path:"/"})
     },
     goToTag(tag) {
-      this.$router.push({ path: `/tag/${tag.name}`})
+      this.$router.push({ path: `/tag/${tag.tagId}`})
     },
     async loadLink(linkId) {
       let link = await api.getLink(linkId);

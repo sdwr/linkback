@@ -1,64 +1,67 @@
 <template>
   <div class="linkpage">
-  <button @click="backToHome"> &lt; Back</button>
-  <h1>{{currentTagName}}</h1>
+  <button @click="goBack()"> &lt; Go Back</button>
+  <h1 class="tag-title">{{tag.name}}</h1>
     <div class="main-content">
       <div class="links">
-        <h2>Links</h2>
-        <!-- List of links here -->
         <div v-for="link in links" :key="link.id">
-          {{link.url}}
-          <VoteButton :link-id="link.id"></VoteButton>
-          <!-- Voting component for each link -->
+          <LinkItem :link="link" 
+            @onClick="goToLink"
+            @onSave="saveLink"
+            @onUnsave="unsaveLink"
+          ></LinkItem>
         </div>
-      </div>
-      <div class="other-links">
-        <h2>Add a link</h2>
-        <!-- Form to add a new link to the tag -->
-        <form @submit.prevent="addTag">
-            <input type="text" v-model="newTagName" @keyup.enter="addTag" placeholder="Enter new tag name">
-            <button type="submit" @click="addTag">Add Tag</button>
-        </form>
       </div>
     </div>
   </div>
 </template>
 <script>
-import VoteButton from '@/components/VoteButton.vue'
 import api from '@/api';
+import LinkItem from '@/components/LinkItem.vue';
 
 export default {
   components: {
-    VoteButton
+    LinkItem,
   },
   data() {
     return {
-      currentTagName: "",
-      newTagName: "",
+      tagId: null,
+      tag: {name: ""},
       links: [],
     }
   },
   methods: {
-    async addTag() {
-      if(this.newTagName && this.newTagName.length > 0) {
-        await api.mockAddTag(this.newTagName)
-        this.newTagName = ''
-        this.tags = await api.mockGetTags()
+    goToLink(link) {
+      if(link.domain === 'youtube.com') {
+        this.$router.push({ path: `/tube/${link.linkId}`})
+      } else {
+        this.$router.push({ path: `/link/${link.linkId}`})
       }
-      console.log(this.tags)
+    },
+    saveLink() {
+      //todo
+    },
+    unsaveLink() {
+      //todo
+    },
+    async loadTag() {
+      this.tag = await api.getTag(this.tagId)
     },
     async loadLinks() {
-      this.links = await api.mockGetLinksByTag(this.currentTagName)
+      this.links = await api.getLinksByTag(this.tag)
     },
-    backToHome() {
-      this.$router.push({ path:"/"})
+    goBack() {
+      this.$router.go(-1);
     }
   },
-  created() {
-    if(this.$route.params.tag) {
-      this.currentTagName = this.$route.params.tag
-      this.loadLinks()
-    }
+  async created() {
+    let id = this.$route.params.id;
+    id = parseInt(id);
+    this.tagId = id;
+
+    await this.loadTag();
+    await this.loadLinks();
+
   },
   mounted() {
   }
@@ -73,34 +76,16 @@ export default {
   align-items: center;
 }
 
-.content-preview {
-  margin: 20px;
-  border: 1px solid #ccc;
-  width: 80%;
-  height: 500px;
-  overflow: auto;
-}
-
 .main-content {
   display: flex;
   width: 80%;
-  justify-content: space-between;
+  justify-content: center;
 }
 
-.comments, .other-links {
-  border: 1px solid #ccc;
-  padding: 10px;
-  width: 45%;
-  height: auto;
-  overflow: auto;
+.tag-title {
+  
 }
 
-.vote-button {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 80px;
-}
 </style>
 
 

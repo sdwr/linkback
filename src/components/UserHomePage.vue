@@ -46,7 +46,6 @@ export default {
   },
   methods: {
     goToLink(link) {
-      console.log(link)
       if(link.domain === 'youtube.com') {
         this.$router.push({ path: `/tube/${link.linkId}`})
       } else {

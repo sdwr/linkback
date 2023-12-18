@@ -143,12 +143,13 @@ const api = {
   addTaggedLink: async (data) => {
     const taggedLink = createTagLinkDto(data);
     //check if tag already exists, after creating dto (for validation)
-    let tagsByLink = await api.getTagsByLink(data.linkId);
-    let oldTaggedLink = tagsByLink
-      .filter(taggedLink => taggedLink.tagId === taggedLink.tagId)
-      .find(taggedLink => taggedLink.linkId === taggedLink.linkId);
+    let taggedLinks = await api.getTaggedLinks();
+    let oldTaggedLink = taggedLinks
+      .filter(t => t.tagId === taggedLink.tagId)
+      .find(t => t.linkId === taggedLink.linkId);
 
     if (oldTaggedLink) {
+      console.log("addTaggedLink: tagged link already exists", oldTaggedLink);
       return oldTaggedLink;
     }
 
@@ -327,6 +328,12 @@ const api = {
     return savedLink ? savedLink : false;
   },
 
+  getTag: async (tagId) => {
+    tagId = parseInt(tagId);
+    let result = mockTags.find(tag => tag.tagId === tagId);
+    return result;
+  },
+  
   getTags: async () => {
     return mockTags;
   },
