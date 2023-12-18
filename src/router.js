@@ -9,7 +9,7 @@ const routes = [
     { path: '/', component: LandingPage, name: 'landingpage' },
     { path: '/link/:id',  component: LinkPage, name: 'linkpageid'},
     { path: '/tube/:id', component: YoutubePage, name: 'youtubepageid'},
-    { path: '/tag/:tag', component: TagPage, name: 'tagpage'},
+    { path: '/tag/:id', component: TagPage, name: 'tagpage'},
     { path: '/user/:id', component: UserHomePage, name: 'userpage'},
 ]
 

@@ -9,6 +9,7 @@ export const ACTION_SAVE = 'save';
 export const ACTION_UNSAVE = 'unsave';
 export const ACTION_TAG = 'tag';
 export const ACTION_UNTAG = 'untag';
+export const ACTION_CREATETAG = 'createTag';
 
 export const ACTION_TYPES = {
     ACTION_SUBMIT,
@@ -21,4 +22,5 @@ export const ACTION_TYPES = {
     ACTION_UNSAVE,
     ACTION_TAG,
     ACTION_UNTAG,
+    ACTION_CREATETAG,
 };

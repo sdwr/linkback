@@ -40,6 +40,10 @@ USER PAGE:
 - make history look nice
 
 API
+- verify data doesn't already exist in DB 
+  - link is checked already
+  - as is savedlink
+  - but not clip, tag, user
 - sanity check the duration data - start time, end time
 - add try/catch for all the api calls
 

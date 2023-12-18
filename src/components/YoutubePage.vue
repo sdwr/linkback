@@ -57,10 +57,10 @@
       <div class="tags">
         <h2>Tags</h2>
         <!-- List of tags here -->
-        <div v-for="tag in tags" :key="tag.id">
+        <div v-for="tag in tags" :key="tag.tagId">
             <a :href="`/tag/${tag.name}`" @click.prevent="goToTag(tag)">{{tag.name}}</a>
             <!-- Voting component for each tag -->
-            <VoteButton :tag-id="tag.id"></VoteButton>
+            <VoteButton :tag-id="tag.tagId"></VoteButton>
         </div>
 
         <!-- Form to add a new tag -->
@@ -164,11 +164,7 @@ export default {
     },
     async addTag() {
       if(this.newTagName && this.newTagName.length > 0) {
-        await api.addTag({
-          name: this.newTagName,
-          linkId: this.link.linkId,
-        })
-        this.newTagName = ''
+        await api.addTagToLink(this.user.uesrId, this.link.linkId, this.newTagName);
         this.tags = await api.getTagsByLink(this.link.linkId)
       }
     },

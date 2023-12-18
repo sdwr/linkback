@@ -92,7 +92,17 @@ export function createTagDto(data) {
     return {
         tagId: getNextId(),
         name: data.name,
-        linkId: data.linkId || null,
+        userId: data.userId,
+        date: new Date()
+    };
+}
+
+export function createTagLinkDto(data) {
+    assertHasProperties(data, ['linkId', 'tagId']);
+    return {
+        linkTagId: getNextId(),
+        linkId: data.linkId,
+        tagId: data.tagId,
         date: new Date()
     };
 }

@@ -8,6 +8,7 @@ import {
   createSavedLinkDto, 
   createTagDto,
   createUserActionDto,
+  createTagLinkDto,
   
 } from "@/utils"
 
@@ -16,6 +17,7 @@ import {
   ACTION_SAVE,
   ACTION_UNSAVE,
   ACTION_TAG,
+  ACTION_CREATETAG,
 
  } from "@/consts"
 
@@ -30,6 +32,7 @@ let mockVotes = [];
 let mockComments = [];
 let mockSavedLinks = [];
 let mockTags = [];
+let mockTaggedLinks = [];
 let mockUserActions = [];
 
 let mockUser = {
@@ -112,6 +115,7 @@ const api = {
   },
 
   addSavedLink: async (data) => {
+    //TODO: check if savedLink already exists
     const savedLink = createSavedLinkDto(data);
 
     mockSavedLinks.push(savedLink);
@@ -122,12 +126,37 @@ const api = {
   },
 
   addTag: async (data) => {
+    //tag names must be unique, check if tag already exists
+    const oldTag = mockTags.find(tag => tag.name === data.name);
+    if (oldTag) {
+      console.log("addTag: tag already exists", oldTag);
+      return oldTag;
+    }
     const tag = createTagDto(data);
 
     mockTags.push(tag);
-    await api.addUserAction({ userId: tag.userId, actionType: ACTION_TAG, itemId: tag.tagId });
+    await api.addUserAction({ userId: tag.userId, actionType: ACTION_CREATETAG, itemId: tag.tagId });
 
     return tag;
+  },
+
+  addTaggedLink: async (data) => {
+    const taggedLink = createTagLinkDto(data);
+    //check if tag already exists, after creating dto (for validation)
+    let tagsByLink = await api.getTagsByLink(data.linkId);
+    let oldTaggedLink = tagsByLink
+      .filter(taggedLink => taggedLink.tagId === taggedLink.tagId)
+      .find(taggedLink => taggedLink.linkId === taggedLink.linkId);
+
+    if (oldTaggedLink) {
+      console.log("addTaggedLink: taggedLink already exists", oldTaggedLink);
+      return oldTaggedLink;
+    }
+
+    mockTaggedLinks.push(taggedLink);
+    await api.addUserAction({ userId: taggedLink.userId, actionType: ACTION_TAG, itemId: taggedLink.linkId });
+    
+    return taggedLink;
   },
 
   addUserAction: async (data) => {
@@ -137,6 +166,7 @@ const api = {
   },
 
   //complex adds
+  //save / unsave link
   saveLink: async (userId, linkId) => {
     // check if user has already saved link
     const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
@@ -159,6 +189,23 @@ const api = {
     }
     return false;
   },
+
+  //add tag to link - complexity here is that we need to create a new tag if it doesnt exist
+  //means name must be unique
+  addTagToLink: async (userId, linkId, tagName) => {
+    let tag = mockTags.find(tag => tag.name === tagName);
+    if (!tag) {
+      tag = await api.addTag({ userId, name: tagName });
+    }
+    if (!tag) {
+      console.log("addTagToLink: failed to create tag", tagName);
+      return null;
+    }
+    const taggedLink = await api.addTaggedLink({ userId, linkId, tagId: tag.tagId });
+    return taggedLink;
+  },
+
+
 
   //API gets
   getUser: async (userId) => {
@@ -195,23 +242,23 @@ const api = {
   },
 
   getLinksByUser: async (userId) => {
-    return mockLinks.filter(link => link.userId === userId);
+    return mockLinks.filter(link => link.userId === userId) || [];
   },
 
   getCommentsByLink: async (linkId) => {
-    return mockComments.filter(comment => comment.linkId === linkId);
+    return mockComments.filter(comment => comment.linkId === linkId) || [];
   },
 
   getVotesByLink: async (linkId) => {
-    return mockVotes.filter(vote => vote.linkId === linkId);
+    return mockVotes.filter(vote => vote.linkId === linkId) || [];
   },
 
   getTagsByLink: async (linkId) => {
-    return mockTags.filter(tag => tag.linkId === linkId);
+    return mockTaggedLinks.filter(taggedLink => taggedLink.linkId === linkId) || [];
   },
 
   getUserActions: async (userId) => {
-    return mockUserActions.filter(userAction => userAction.userId === userId);
+    return mockUserActions.filter(userAction => userAction.userId === userId) || [];
   },
 
   // Complex Endpoints
@@ -255,7 +302,17 @@ const api = {
   checkUserSavedLink: async (userId, linkId) => {
     const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
     return savedLink ? savedLink : false;
-  }
+  },
+
+  getTags: async () => {
+    return mockTags;
+  },
+
+  getLinksByTag: async (data) => {
+    let links = mockTaggedLinks.filter(taggedLink => taggedLink.tagId === data.tagId).map(taggedLink => taggedLink.linkId);
+    links = mockLinks.filter(link => links.includes(link.linkId));
+    return links;
+  },
 
 
 };
