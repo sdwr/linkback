@@ -87,7 +87,7 @@ export default {
       }
     },
     async getNewLinks() {
-      this.newLinks = [];
+      this.recentLinks = [];
       try {
         const links = await api.getNewLinksWithUserData(this.user.userId);
         this.recentLinks = links;

@@ -1,6 +1,9 @@
 <template>
   <div>
     <button @click="goBack">Back</button>
+    <h1>Debug Page</h1>
+    <button @click="dumpData">Dump Data</button>
+    <button @click="restoreData">Restore Data</button>
     <div class="table-container" id="debug-table-container">
 
     </div>
@@ -26,8 +29,37 @@ export default {
     };
   },
   methods: {
+    async dumpData() {
+      await api.createDBDump();
+    },
+    async restoreData() {
+      await api.restoreDBDump();
+      await this.loadData();
+      this.buildTables();
+    },
+    async loadData() {
+      // Fetch the data from the API
+      this.apiData.links = await api.getLinks();
+      this.apiData.tags = await api.getTags();
+      this.apiData.savedLinks = await api.getSavedLinks();
+      this.apiData.taggedLinks = await api.getTaggedLinks();
+      this.apiData.users = await api.getUsers();
+      this.apiData.userActions = await api.getUserActions();
+      this.apiData.comments = await api.getComments();
+      this.apiData.votes = await api.getVotes();
+    },
     goBack() {
       this.$router.go(-1);
+    },
+    buildTables() {
+      // Clear the table container
+      document.getElementById('debug-table-container').innerHTML = '';
+
+      // Create a table for each data type
+      Object.keys(this.apiData).forEach(key => {
+        if(this.apiData[key].length === 0) return;
+        this.createTable(key, this.apiData[key]);
+      });
     },
     createTable(name, data) {
       // Create a container for the table and title
@@ -74,21 +106,9 @@ export default {
     },
   },
   async created() {
-    // Fetch the data from the API
-    this.apiData.links = await api.getLinks();
-    this.apiData.tags = await api.getTags();
-    this.apiData.savedLinks = await api.getSavedLinks();
-    this.apiData.taggedLinks = await api.getTaggedLinks();
-    this.apiData.users = await api.getUsers();
-    this.apiData.userActions = await api.getUserActions();
-    this.apiData.comments = await api.getComments();
-    this.apiData.votes = await api.getVotes();
-
-    // Create a table for each data type
-    Object.keys(this.apiData).forEach(key => {
-      if(this.apiData[key].length === 0) return;
-      this.createTable(key, this.apiData[key]);
-    });
+    await this.loadData();
+    this.buildTables();
+    
   }
 };
 </script>

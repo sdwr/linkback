@@ -46,6 +46,38 @@ mockUsers = mockUserData;
 
 const api = {
   mockUser: mockUser,
+  //debug
+  createDBDump: async () => {
+    let dump = {
+      mockUsers,
+      mockLinks,
+      mockVotes,
+      mockComments,
+      mockSavedLinks,
+      mockTags,
+      mockTaggedLinks,
+      mockUserActions,
+    }
+    let json = JSON.stringify(dump);
+    localStorage.setItem('dbDump', json);
+    console.log('db dump created');
+  },
+
+  restoreDBDump: async () => {
+    let json = localStorage.getItem('dbDump');
+    let dump = JSON.parse(json);
+
+    console.log("restoring db dump", dump)
+
+    mockUsers = dump.mockUsers;
+    mockLinks = dump.mockLinks;
+    mockVotes = dump.mockVotes;
+    mockComments = dump.mockComments;
+    mockSavedLinks = dump.mockSavedLinks;
+    mockTags = dump.mockTags;
+    mockTaggedLinks = dump.mockTaggedLinks;
+    mockUserActions = dump.mockUserActions;
+  },
 
   //API adds
   addUser: async (data) => {
@@ -295,7 +327,7 @@ const api = {
 
 
   getNewLinks: async (limit = 10) => {
-    return mockLinks.sort((a, b) => b.submitDate - a.submitDate).slice(0, limit);
+    return mockLinks.sort((a, b) => b.date - a.date).slice(0, limit);
   },
 
   getTopLinks: async (limit = 10) => {
