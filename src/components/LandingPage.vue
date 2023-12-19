@@ -44,12 +44,17 @@ export default {
     GoogleSignIn,
     LinkItem,
   },
+  computed() {
+    return {
+      user: this.$store.getters.getUser
+    
+    }
+  },
   data() {
     return {
       newLink: '',
       topLinks: [],
       recentLinks: [],
-      user: null,
     }
   },
   methods: {
@@ -129,9 +134,6 @@ export default {
       console.log(error)
     },
     checkUser() {
-      if(!this.user) {
-        this.user = api.mockUser;
-      }
     },
     async loadLinks() {
       await this.getTopLinks();
@@ -139,7 +141,6 @@ export default {
     }
   },
   async created() {
-    this.checkUser();
     await this.loadLinks();
   },
 }

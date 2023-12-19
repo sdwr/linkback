@@ -5,6 +5,7 @@ PROJECT:
 - types, typescript?
 - cache links locally (store?), am regetting right now every page load
 - fix mobile layout (video wider, less black bars on top/bottom)
+- fix mock data, exporting from localStorage to file
 
 FEATURES:
 
@@ -13,6 +14,7 @@ FEATURES:
 - allow importing bookmarks
 - add search?
 - how should recommended work
+- add logged-in user
 
 
 - make google sign-in work (callback instead of domain? localhost isn't working)
@@ -35,12 +37,12 @@ LINK PAGE:
 
 YOUTUBE PAGE:
 - fix "original video" button
-- fix author vs submitter
 - 
 - timestamped comments
 
 USER PAGE: 
 - make history look nice
+- make save/unsave/history for user looked at, not current user
 
 API
 - save DB state as file, to import as test data
@@ -72,6 +74,7 @@ YOUTUBE PAGE:
 - fix "create clip" to actually make a new link DONE
 - fix multiple sets of url params in the link DONE
 - add a "restart" button for clips, remove loop flag (can't auto-loop) DONE
+- fix author vs submitter DONE
 
 
 USER PAGE

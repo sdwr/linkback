@@ -3,7 +3,7 @@
     <button @click="backToHome"> &lt; Back</button>
     <div> <button @click="goToDebug">Debug Page </button> </div>
     <h1 v-if="link">{{link.title || link.url}}</h1>
-    <h2>Author: <a :href="authorLink">{{authorName}}</a></h2> <!-- Author credit -->
+    <h2>Added by: <a :href="`/user`" @click.prevent="goToUser(submittingUser.userId)">{{submittingUser.username}}</a></h2> <!-- Author credit -->
     <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
     <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave from My Links</button> <!-- Saved button -->
     <a :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
@@ -100,8 +100,10 @@ export default {
       comments: [],
       otherLinks: [],
       tags: [],
-      authorName: '', // Author's name
-      authorLink: '', // URL to author's homepage
+      submittingUser: {
+        username: '',
+        userId: null,
+      },
       originalVideoLink: '', // URL to the original video
       isClip: false, // Flag to check if it's the original video
       clipStart: 0, // Start time for the clip
@@ -149,6 +151,9 @@ export default {
         this.$router.push({ path: `/link/${link.linkId}`})
       }
     },
+    goToUser(id) {
+      this.$router.push({ path: `/user/${id}`})
+    },
     goToDebug() {
       this.$router.push({ path: `/debug`})
     },
@@ -187,6 +192,7 @@ export default {
   async created() {
     let id = this.$route.params.id;
     this.link = await this.loadLink(id);
+    this.submittingUser = await api.getUser(this.link.userId);
     this.user = await api.getUser(1);
     this.userSavedLink = await api.checkUserSavedLink(this.user.userId, this.link.linkId);
     this.tags = await api.getTagsByLink(this.link.linkId);

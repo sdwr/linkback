@@ -13,15 +13,28 @@
       data-shape="rectangular"
       data-logo_alignment="left">
   </div>
+  <div>
+    <input type="text" v-model="username" placeholder="Enter your username" />
+    <button @click="fakeGoogleSignin(username)">Test Sign In</button>
+  </div>
 </template>
 
 <script>
+import api from '@/api';
+
 export default {
   data() {
     return {
+      username: '',
     }
   },
   methods: {
+    async fakeGoogleSignin(username) {
+      let userData = {username: username, email: "test@test.com"}
+      let user = await api.addUser(userData)
+
+      this.$store.commit('setUser', user);
+    },
     handleCredentialResponse(response) {
       console.log(response)
     },
