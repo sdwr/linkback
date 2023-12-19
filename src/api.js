@@ -308,20 +308,6 @@ const api = {
     return linkVotes.sort((a, b) => b.voteCount - a.voteCount).slice(0, limit);
   },
 
-  getTopLinksWithUserData: async (userId) => {
-    let topLinks = await api.getTopLinks();
-    topLinks = await api.addUserDataToLinks(userId, topLinks);
-
-    return topLinks;
-  },
-
-  getNewLinksWithUserData: async (userId) => {
-    let newLinks = await api.getNewLinks();
-    newLinks = await api.addUserDataToLinks(userId, newLinks);
-
-    return newLinks;
-  },
-
   //check if user has saved link
   checkUserSavedLink: async (userId, linkId) => {
     const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
@@ -343,6 +329,45 @@ const api = {
     links = mockLinks.filter(link => links.includes(link.linkId));
     return links;
   },
+
+  //get with user data (saved)
+
+  getTopLinksWithUserData: async (userId) => {
+    let topLinks = await api.getTopLinks();
+    topLinks = await api.addUserDataToLinks(userId, topLinks);
+
+    return topLinks;
+  },
+
+  getNewLinksWithUserData: async (userId) => {
+    let newLinks = await api.getNewLinks();
+    newLinks = await api.addUserDataToLinks(userId, newLinks);
+
+    return newLinks;
+  },
+
+  getLinksByTagWithUserData: async (userId, data) => {
+    let links = await api.getLinksByTag(data);
+    links = await api.addUserDataToLinks(userId, links);
+
+    return links;
+  },
+
+  getSavedLinksWithUserData: async (userId) => {
+    let savedLinks = await api.getSavedLinksByUser(userId);
+    savedLinks = await api.addUserDataToLinks(userId, savedLinks);
+
+    return savedLinks;
+  },
+
+  getSubmittedLinksWithUserData: async (userId) => {
+    let submittedLinks = await api.getLinksByUser(userId);
+    submittedLinks = await api.addUserDataToLinks(userId, submittedLinks);
+
+    return submittedLinks;
+  }
+
+
 
 
 };

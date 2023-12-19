@@ -38,17 +38,19 @@ export default {
         this.$router.push({ path: `/link/${link.linkId}`})
       }
     },
-    saveLink() {
-      //todo
+    async saveLink(link) {
+      await api.saveLink(this.user.userId, link.linkId);
+      await this.loadLinks();
     },
-    unsaveLink() {
-      //todo
+    async unsaveLink(link) {
+      await api.unsaveLink(this.user.userId, link.linkId);
+      await this.loadLinks();
     },
     async loadTag() {
       this.tag = await api.getTag(this.tagId)
     },
     async loadLinks() {
-      this.links = await api.getLinksByTag(this.tag)
+      this.links = await api.getLinksByTagWithUserData(this.user.userId, this.tag)
     },
     goBack() {
       this.$router.go(-1);
@@ -58,7 +60,8 @@ export default {
     let id = this.$route.params.id;
     id = parseInt(id);
     this.tagId = id;
-
+    this.user = await api.getUser(1);
+    
     await this.loadTag();
     await this.loadLinks();
 

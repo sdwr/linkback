@@ -8,9 +8,12 @@ PROJECT:
 
 FEATURES:
 
-- check if videos are already saved, show save / unsave icon (for all pages... better way?)
 - add votes
+- archive URL if doesn't load, submit archive URL if doesn't already exist
 - allow importing bookmarks
+- add search?
+- how should recommended work
+
 
 - make google sign-in work (callback instead of domain? localhost isn't working)
 - make back button go to previous page instead of home page
@@ -26,6 +29,7 @@ LANDING PAGE:
 
 
 LINK PAGE:
+- feature parity with youtube page
 - get title from page somehow
 - make title editable
 
@@ -36,7 +40,6 @@ YOUTUBE PAGE:
 - timestamped comments
 
 USER PAGE: 
-- make save / unsave icons work like landing page
 - make history look nice
 
 API
@@ -72,6 +75,7 @@ YOUTUBE PAGE:
 
 
 USER PAGE
+- make save / unsave icons work like landing page DONE
 - lists not displaying DONE
 - add history DONE
 
@@ -88,6 +92,7 @@ API
 
 FEATURES
 - link items on landing/user page (title, url, duration, votes) DONE
+- check if videos are already saved, show save / unsave icon DONE
 - add tags DONE
 
 

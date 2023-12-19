@@ -1,6 +1,6 @@
 <template>
   <div class="user-home">
-    <div><a :href="`/`" @click.prevent="goToHome">Back to Home</a></div>
+    <div><a :href="`/`" @click.prevent="goBack">Go back</a></div>
     <h1>{{ user.username }}</h1>
     <div class="sections">
       <div class="section">
@@ -12,13 +12,21 @@
       <div class="section">
         <h2>Submitted Links</h2>
         <div v-for="link in submittedLinks" :key="link.id">
-          <LinkItem :link="link" @onClick="goToLink(link)"></LinkItem>
+          <LinkItem :link="link" 
+            @onClick="goToLink"
+            @onSave="saveLink"
+            @onUnsave="unsaveLink"
+          ></LinkItem>
         </div>
       </div>
       <div class="section">
         <h2>Saved Links</h2>
         <div v-for="link in savedLinks" :key="link.id">
-          <LinkItem :link="link" @onClick="goToLink(link)"></LinkItem>
+          <LinkItem :link="link" 
+            @onClick="goToLink"
+            @onSave="saveLink"
+            @onUnsave="unsaveLink"
+          ></LinkItem>
         </div>
       </div>
     </div>
@@ -45,6 +53,14 @@ export default {
     LinkItem,
   },
   methods: {
+    async saveLink(link) {
+      await api.saveLink(this.user.userId, link.linkId);
+      await this.loadLinks();
+    },
+    async unsaveLink(link) {
+      await api.unsaveLink(this.user.userId, link.linkId);
+      await this.loadLinks();
+    },
     goToLink(link) {
       if(link.domain === 'youtube.com') {
         this.$router.push({ path: `/tube/${link.linkId}`})
@@ -52,9 +68,14 @@ export default {
         this.$router.push({ path: `/link/${link.linkId}`})
       }
     },
-    goToHome() {
-      this.$router.push({ path: "/"})
-    }
+    goBack() {
+      this.$router.go(-1)
+    },
+    async loadLinks() {
+      this.userHistory = await api.getUserActionsByUser(this.user.userId);
+      this.submittedLinks = await api.getSubmittedLinksWithUserData(this.user.userId);
+      this.savedLinks = await api.getSavedLinksWithUserData(this.user.userId);
+    },
   },
   async created() {
     // Fetch the user data from the API
@@ -62,13 +83,8 @@ export default {
     id = parseInt(id);
     this.user = await api.getUser(id);
     // Fetch the user history
-    this.userHistory = await api.getUserActionsByUser(id);
 
-    // Fetch the submitted links
-    this.submittedLinks = await api.getLinksByUser(id);
-
-    // Fetch the saved links
-    this.savedLinks = await api.getSavedLinksByUser(id);
+    await this.loadLinks();
 
   }
 }
