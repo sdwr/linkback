@@ -16,16 +16,20 @@ export default createStore({
             try {
                 // Load user data from localStorage
                 const userData = localStorage.getItem('user');
+                let user = {}
                 if (userData) {
-                    const user = JSON.parse(userData);
-
-                    // TODO: Check if user is expired
-                    commit('setUser', user);
+                    user = JSON.parse(userData);
+                } else {
+                    user = createMockUser();
                 }
+
+                // TODO: Check if user is expired
+                commit('setUser', user);
 
             } catch (error) {
                 console.error('load user failed:', error);
             }
+            console.log('user', this.state.user)
         },
         async saveUser({ commit }, user) {
             try {
@@ -44,3 +48,11 @@ export default createStore({
         }
     }
 });
+
+function createMockUser() {
+    return {
+        userId: 1,
+        name: 'John Doe',
+        email: 'test@test.com',
+    }
+}

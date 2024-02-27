@@ -44,11 +44,10 @@ export default {
     GoogleSignIn,
     LinkItem,
   },
-  computed() {
-    return {
-      user: this.$store.getters.getUser
-    
-    }
+  computed: {
+      user () {
+        return this.$store.getters.getUser
+      } 
   },
   data() {
     return {
@@ -141,6 +140,7 @@ export default {
     }
   },
   async created() {
+    await this.$store.dispatch('loadUser');
     await this.loadLinks();
   },
 }
