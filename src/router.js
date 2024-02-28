@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LinkPage from './components/LinkPage'
-import LandingPage from './components/LandingPage'
-import TagPage from './components/TagPage'
-import UserHomePage from './components/UserHomePage'
-import YoutubePage from './components/YoutubePage'
+import LinkPage from './components/LinkPage.vue'
+import LandingPage from './components/LandingPage.vue'
+import TagPage from './components/TagPage.vue'
+import UserHomePage from './components/UserHomePage.vue'
+import YoutubePage from './components/YoutubePage.vue'
 
-import DebugPage from './components/DebugPage'
+import DebugPage from './components/DebugPage.vue'
 
 const routes = [
     { path: '/', component: LandingPage, name: 'landingpage' },

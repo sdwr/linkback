@@ -35,6 +35,8 @@
   </div>
 </template>
 <script>
+import defaultThumbnail from '@/assets/tiny-default-thumbnail.png';
+
 export default {
   name: 'LinkItem',
   props: {
@@ -49,7 +51,7 @@ export default {
   }),
   computed: {
     thumbnail() {
-      return this.link.thumbnail || require('@/assets/tiny-default-thumbnail.png')
+      return this.link.thumbnail || defaultThumbnail;
     },
     duration() {
       return this.link.startTime && this.link.endTime
