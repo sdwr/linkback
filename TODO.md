@@ -1,6 +1,14 @@
 TODO:
 -------------
-PROJECT:
+HOSTING:
+- ssh into server
+- install vue, postgres, backend(?)
+- add domain
+
+BACKEND:
+- ??
+
+FRONTEND:
 
 - types, typescript?
 - cache links locally (store?), am regetting right now every page load
