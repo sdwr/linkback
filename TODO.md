@@ -1,9 +1,13 @@
 TODO:
 -------------
 HOSTING:
-- ssh into server
-- install vue, postgres, backend(?)
 - add domain
+- install postgres
+- install backend (?)
+
+USER:
+  - authenticate user
+  - have log in page?
 
 BACKEND:
 - ??
@@ -18,14 +22,14 @@ FRONTEND:
 FEATURES:
 
 - add votes
+- add comments
 - archive URL if doesn't load, submit archive URL if doesn't already exist
 - allow importing bookmarks
 - add search?
 - how should recommended work
 - add logged-in user
-
-
 - make google sign-in work (callback instead of domain? localhost isn't working)
+    add hosted site to whitelist
 - make back button go to previous page instead of home page
 
 - add small toast on user action (success / fail)
@@ -64,6 +68,13 @@ API
 
 DONE:
 -----------
+
+HOSTING:
+- ssh into server DONE 
+- install vue DONE
+- fix vue dependencies DONE
+  (replace cli with vite for vue3)
+
 
 PROJECT:
 
