@@ -7,7 +7,13 @@ add export const YOUTUBE_API_KEY="<KEY_HERE>" to the file
 
 create a .env file to /backend, copied from .env.example
 
-  set DB connection: ??
+  DB_CONNECTION=pg
+  DB_HOST=127.0.0.1
+  DB_PORT=5432
+  DB_USER=postgres
+  DB_PASSWORD=
+  DB_DATABASE=linkback
+  SESSION_DRIVER=cookie
 
 
 ## Frontend setup
@@ -52,16 +58,37 @@ node ace serve --watch
 
 node ace build
 
+## status of migration scripts
+
+node ace migration:status
+
+## run migration scripts
+
+node ace migration:run
+
+
 
 ## Running the DB
 ## ----------------
 
-install postgres
+## install postgres
 
-configure user as ??
-configure DB as ?? (can be done automatically in ORM?)
+  sudo apt install postgresql postgresql-contrib
 
-confirm DB running with ??
+## make sure its running 
 
+  sudo systemctl status postgresql
+
+## create new DB with
+
+  createdb linkback
+
+## confirm by logging in as default user
+
+  psql linkback -U postgres
+
+## while the backend is running, run migration scripts with
+
+  node ace migration:run
 
 

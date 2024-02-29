@@ -76,7 +76,7 @@
 </template>
 <script>
 import VoteButton from '@/components/VoteButton.vue'
-import api from '@/api.js';
+import api from '@/api';
 
 export default {
   components: {
