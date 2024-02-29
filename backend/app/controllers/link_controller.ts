@@ -1,4 +1,5 @@
 import LinkService from '#services/link_service';
+import { createLinkValidator } from '#validators/link_validator';
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class LinkController {
@@ -16,12 +17,17 @@ export default class LinkController {
   }
 
   async create({ request }: HttpContext) {
-    let link = await this.linkService.createLink(request.body());
+    const payload = await request.validateUsing(createLinkValidator);
+    let link = await this.linkService.createLink(payload);
+    
     return link;
   }
 
   async update({ request }: HttpContext) {
-    let link = await this.linkService.updateLink(request.param('id'), request.body());
+    const data = request.all();
+    const payload = await createLinkValidator.validate(data);
+
+    let link = await this.linkService.updateLink(payload);
     return link;
   }
 

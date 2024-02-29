@@ -1,5 +1,5 @@
 import Link from '#models/link';
-
+import { ILink } from '#types';
 export default class LinkService {
 
   async getAllLinks() {
@@ -12,7 +12,7 @@ export default class LinkService {
     return link;
   }
 
-  async createLink(data: any) {
+  async createLink(data: ILink) {
     let link = new Link();
     link.url = data.url;
     link.title = data.title;
@@ -21,20 +21,21 @@ export default class LinkService {
     return link;
   }
 
-  async updateLink(id: number, data: any) {
-    let link = await Link.find(id);
-    link.url = data.url;
-    link.title = data.title;
-    link.description = data.description;
-    link.save();
+  async updateLink(data: Link) {
+    data.save();
+
+    return data;
+  }
+
+  async deleteLink(data: Link) {
+    let link = await Link.find(data.id);
+    if(link) {
+      link.delete();
+    } else {
+      throw new Error('Link not found');
+    }
     return link;
   }
 
-  async deleteLink(id: number) {
-    let link = await Link.find(id);
-    link.delete();
-    return link;
-  }
 
-  
 }

@@ -45,7 +45,7 @@ export default class Link extends BaseModel {
   declare originalLinkId: number | null
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare createdAt: DateTime
+  declare createdAt: DateTime | null
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
