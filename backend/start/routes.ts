@@ -8,6 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import OpenGraphController from '#controllers/open_graph_controller'
 import UserController from '#controllers/user_controller'
 import LinkController from '#controllers/link_controller'
 
@@ -16,6 +17,9 @@ router.get('/', async () => {
     hello: 'world',
   }
 })
+
+// opengraph routers
+router.get('/opengraph/fetchImage', [OpenGraphController, 'fetchImage'])
 
 // user routes
 router.get('/users', [UserController, 'index'])

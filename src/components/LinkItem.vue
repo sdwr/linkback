@@ -9,7 +9,7 @@
 
     <!-- Thumbnail -->
     <div class="thumbnail">
-      <img class="thumbnail-img" :src="thumbnail" alt="thumbnail" style="height: 80px;">
+      <img class="thumbnail-img" :src="thum_thumbnail" alt="thumbnail" style="height: 80px;">
     </div>
 
     <!-- Link Details -->
@@ -50,6 +50,10 @@ export default {
   data: () => ({
   }),
   computed: {
+    thum_thumbnail() {
+      let thum = "//image.thum.io/get/width/80/" + this.link.url;
+      return thum;
+    },
     thumbnail() {
       return this.link.thumbnail || defaultThumbnail;
     },

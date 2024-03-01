@@ -1,9 +1,5 @@
 TODO:
 -------------
-HOSTING:
-- add domain
-- install postgres
-- install backend (?)
 
 USER:
   - authenticate user
@@ -36,6 +32,15 @@ FEATURES:
 
 REAL STUFF:
 - get thumbnails of content
+  -temporarily serving (only to sdwr.ca) with thum.io free trial
+  -options:
+    1 scrape image from actual page
+    2 make user scrape image first time page is embedded
+    3 load OpenGraph image
+      - save thumbnail on server
+      - set up CORS proxy on the server, so the client can fetch thumbnail without hitting CORS DONE
+    - pay for a service to do 1 or 3
+  - done CORS OG passthrough, will hook up when server is hooked up
 
 
 LANDING PAGE:
@@ -74,6 +79,9 @@ HOSTING:
 - install vue DONE
 - fix vue dependencies DONE
   (replace cli with vite for vue3)
+- add domain DONE
+- install postgres DONE
+- install backend DONE
 
 
 PROJECT:

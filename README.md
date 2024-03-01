@@ -5,6 +5,9 @@
 create a .secrets.js file in /src
 add export const YOUTUBE_API_KEY="<KEY_HERE>" to the file
 
+add an .env.js file in /src
+add export const BACKEND_URL="URL:port" to the file
+
 create a .env file to /backend, copied from .env.example
 
   DB_CONNECTION=pg

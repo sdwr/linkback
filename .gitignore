@@ -8,6 +8,7 @@ package-lock.json
 .env.*.local
 .secrets.*
 .hosting.*
+.env.js
 
 # Log files
 npm-debug.log*

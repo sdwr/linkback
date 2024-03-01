@@ -9,6 +9,8 @@ import {
   createTagDto,
   createUserActionDto,
   createTagLinkDto,
+
+  encodeURIComponent,
   
 } from "@/utils"
 
@@ -25,6 +27,10 @@ import {
   mockLinkData,
   mockUserData,
 } from "@/mockData";
+
+import {
+  BACKEND_URL
+} from "@/.env";
 
 let mockUsers = [];
 let mockLinks = [];
@@ -43,6 +49,43 @@ let mockUser = {
 
 mockLinks = mockLinkData;
 mockUsers = mockUserData;
+
+const backend_api = {
+  url: BACKEND_URL,
+
+  openGraphPath: "/opengraph",
+
+  //open graph requests
+  fetchImage: async (inputUrl) => {
+    const url = `${backend_api.url}${backend_api.openGraphPath}/fetch-image?url=${encodeURIComponent(inputUrl)}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch the OG image, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.image;
+    } catch (error) {
+      console.error('Error fetching OG image:', error.message);
+      return null;
+    }
+  },
+
+  //API adds
+  addUser: async (data) => {
+    const response = await fetch(`${backend_api.url}/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const user = await response.json();
+    return user;
+  }
+
+};
+
 
 const api = {
   mockUser: mockUser,
