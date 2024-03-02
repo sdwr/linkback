@@ -6,7 +6,12 @@ USER:
   - have log in page?
 
 BACKEND:
-- ??
+- consistency:
+  - date different types - vine.date in validator, any in interface, dateTime coming from frontend
+  - primary id named "id" on backend, "linkId", "userId", etc on frontend
+  - vote has "linkId" but should be generic for tags etc
+
+  - should there be copies of tags by user? is it a global thing or a "subscribe to" kind of thing
 
 FRONTEND:
 
