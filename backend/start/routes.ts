@@ -20,10 +20,15 @@ import TagLinkController from '#controllers/tagLink_controller'
 import SavedLinkController from '#controllers/savedLink_controller'
 
 router.get('/', async () => {
-  return {
-    hello: 'world',
-  }
-})
+  return `<html>
+    <head><title>Server Status</title></head>
+    <body>
+      <h1>Server Online</h1>
+      <p>Hello, World! The server is up and running.</p>
+    </body>
+  </html>`;
+});
+
 
 // opengraph routers
 router.get('/opengraph/fetchImage', [OpenGraphController, 'fetchImage'])
