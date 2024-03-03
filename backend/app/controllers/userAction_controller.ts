@@ -21,6 +21,14 @@ export default class UserActionController {
     return response.json(userAction)
   }
 
+  async getUserActionsByUser({ request, response }: HttpContext) {
+    const userId = request.param('userId')
+
+    const userActions = await UserAction.findBy('userId', userId)
+
+    return response.json(userActions)
+  }
+
   async create({ request, response }: HttpContext) {
     const validatedData = await request.validateUsing(createUserActionValidator)
     const iUserAction = validatedData as IUserAction

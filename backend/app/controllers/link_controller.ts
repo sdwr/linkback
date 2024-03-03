@@ -23,6 +23,14 @@ export default class LinkController {
     return response.ok(link);
   }
 
+  async getLinksByUser({ request, response }: HttpContext) {
+    const userId = request.param('userId');
+
+    const links = await Link.findBy('userId', userId)
+
+    return response.ok(links);
+  }
+
   async create({ request, response }: HttpContext) {
     const validatedLink = await request.validateUsing(createLinkValidator);
     const iLink = validatedLink as ILink;

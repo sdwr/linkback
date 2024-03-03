@@ -22,6 +22,14 @@ export default class LinkController {
     return response.ok(comment);
   }
 
+  async getCommentsByUser({ request, response }: HttpContext) {
+    const userId = request.param('userId');
+
+    const comments = await Comment.findBy('userId', userId)
+
+    return response.ok(comments);
+  }
+
   async getCommentsByLink({ request, response }: HttpContext) {
     const linkId = request.param('linkId');
 
