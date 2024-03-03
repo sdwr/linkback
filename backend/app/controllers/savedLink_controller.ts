@@ -37,6 +37,22 @@ export default class SavedLinkController {
     const savedLink = await SavedLink.create(iSavedLink);
 
     return response.ok(savedLink);
+  },
+
+  async deleteByUserAndLink({ request, response }: HttpContext) {
+    const userId = request.param('userId');
+    const linkId = request.param('linkId');
+
+    const savedLink = await SavedLink.query()
+      .where('userId', userId)
+      .andWhere('linkId', linkId)
+      .firstOrFail()
+
+    if (savedLink) {
+      await savedLink.delete();
+    }
+
+    return response.ok(savedLink);
   }
 
   async update({ request, response }: HttpContext) {

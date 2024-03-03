@@ -6,6 +6,8 @@ USER:
   - have log in page?
 
 BACKEND:
+- check return types on DELETE endpoints. what is expected? boolean? the deleted record? null in case of failure?
+- move user action to inside the backend controller/service
 - consistency:
   - date different types - vine.date in validator, any in interface, dateTime coming from frontend
   - primary id named "id" on backend, "linkId", "userId", etc on frontend

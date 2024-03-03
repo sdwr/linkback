@@ -1,4 +1,5 @@
 import externalApi from "./externalApi";
+import backendApi from "@/api/backendApi";
 
 import { 
   createUserDto, 
@@ -20,6 +21,9 @@ import {
   ACTION_UNSAVE,
   ACTION_TAG,
   ACTION_CREATETAG,
+  ACTION_VOTE,
+  ACTION_COMMENT,
+  ACTION_UNCOMMENT,
 
  } from "@/consts"
 
@@ -50,42 +54,16 @@ let mockUser = {
 mockLinks = mockLinkData;
 mockUsers = mockUserData;
 
-const backend_api = {
-  url: BACKEND_URL,
-
-  openGraphPath: "/opengraph",
-
-  //open graph requests
-  fetchImage: async (inputUrl) => {
-    const url = `${backend_api.url}${backend_api.openGraphPath}/fetch-image?url=${encodeURIComponent(inputUrl)}`;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch the OG image, status code: ${response.status}`);
-      }
-      const data = await response.json();
-      return data.image;
-    } catch (error) {
-      console.error('Error fetching OG image:', error.message);
-      return null;
-    }
-  },
-
-  //API adds
-  addUser: async (data) => {
-    const response = await fetch(`${backend_api.url}/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    const user = await response.json();
-    return user;
-  }
-
-};
-
+//TODO: check that all id names going to backend are correct 
+//  - just id for primary key, linkId, userId, tagId, etc for foreign keys
+//TODO: check that deletes return what is expected from backend
+// - deleted item or null
+//TODO: move adding user actions to backend
+//TODO: move checking for duplicates to backend (including returning the duplicate)
+// - check if link already exists
+// - check if tag already exists
+// - check if tagged link already exists
+// - check if saved link already exists
 
 const api = {
   mockUser: mockUser,
@@ -130,27 +108,33 @@ const api = {
   },
 
   addLink: async (data) => {
-    let link = createLinkDto(data);
-    link = await externalApi.addSiteData(link);
+    let linkDto = createLinkDto(data);
+    linkDto = await externalApi.addSiteData(linkDto);
 
     let duplicateUrl, duplicateContent;
     //dont add link if its a duplicate (same url or same contentId + domain)
-    if(!link.isClip) {
-      duplicateUrl = mockLinks.find(l => l.url === link.url);
-      if(link.contentId && link.domain) {
-        duplicateContent = mockLinks.find(l => l.contentId === link.contentId && l.domain === link.domain);
-      }
-    } else {
-      // allow duplicate clips for now
-    }
+    //TODO: MOVE TO BACKEND
+    // if(!link.isClip) {
+    //   duplicateUrl = mockLinks.find(l => l.url === link.url);
+    //   if(link.contentId && link.domain) {
+    //     duplicateContent = mockLinks.find(l => l.contentId === link.contentId && l.domain === link.domain);
+    //   }
+    // } else {
+    //   // allow duplicate clips for now
+    // }
 
     if (duplicateUrl || duplicateContent) {
-      console.log('duplicate link', link);
+      console.log('duplicate link', linkDto);
       return null;
     }
 
-    mockLinks.push(link);
-    await api.addUserAction({ userId: link.userId, actionType: ACTION_SUBMIT, itemId: link.linkId });
+    let link = await backendApi.createLink(linkDto);
+    if (!link) {
+      console.log("addLink: failed to create link", link);
+      return null;
+    }
+
+    await api.addUserAction({ userId: link.userId, actionType: ACTION_SUBMIT, itemId: link.id });
 
     return link;
   },
@@ -162,38 +146,48 @@ const api = {
       return null;
     }
 
-    let linkIndex = mockLinks.findIndex(link => link.linkId === linkId);
+    let linkDto = createLinkDto(data);
+    linkDto.linkId = linkId;
 
-    //reuse old linkId (create fn will generate new one)
-    let link = createLinkDto(data);
-    link.linkId = linkId
-
-    if(linkIndex !== -1) {
-      mockLinks[linkIndex] = link;
-      return link;
-    } else {
-      console.log("updateLink: link not found", linkId, data)
-      return null;
-    }
+    let link = await backendApi.updateLink(data);
+    return link;
   },
 
   addVote: async (data) => {
-    const vote = createVoteDto(data);
-    mockVotes.push(vote);
+    const voteDto = createVoteDto(data);
+
+    let vote = await backendApi.createVote(voteDto);
+    if (!vote) {
+      console.log("addVote: failed to create vote", vote);
+      return null;
+    }
+    await api.addUserAction({ userId: vote.userId, actionType: ACTION_VOTE, itemId: vote.linkId });
+
     return vote;
   },
 
   addComment: async (data) => {
-    const comment = createCommentDto(data);
-    mockComments.push(comment);
+    const commentDto = createCommentDto(data);
+
+    let comment = await backendApi.createComment(commentDto);
+    if (!comment) {
+      console.log("addComment: failed to create comment", comment);
+      return null;
+    }
+    await api.addUserAction({ userId: comment.userId, actionType: ACTION_COMMENT, itemId: comment.linkId });
+
     return comment;
   },
 
   addSavedLink: async (data) => {
     //TODO: check if savedLink already exists
-    const savedLink = createSavedLinkDto(data);
+    const savedLinkDto = createSavedLinkDto(data);
 
-    mockSavedLinks.push(savedLink);
+    let savedLink = await backendApi.createSavedLink(savedLinkDto);
+    if (!savedLink) {
+      console.log("addSavedLink: failed to create saved link", savedLink);
+      return null;
+    }
     await api.addUserAction({ userId: savedLink.userId, actionType: ACTION_SAVE, itemId: savedLink.linkId });
 
 
@@ -201,82 +195,95 @@ const api = {
   },
 
   addTag: async (data) => {
+    //TODO: move to backend
     //tag names must be unique, check if tag already exists
-    const oldTag = mockTags.find(tag => tag.name === data.name);
-    if (oldTag) {
-      console.log("addTag: tag already exists", oldTag);
-      return oldTag;
-    }
-    const tag = createTagDto(data);
+    // const oldTag = mockTags.find(tag => tag.name === data.name);
+    // if (oldTag) {
+    //   console.log("addTag: tag already exists", oldTag);
+    //   return oldTag;
+    // }
+    const tagDto = createTagDto(data);
 
-    mockTags.push(tag);
+    let tag = await backendApi.createTag(tagDto);
+    if (!tag) {
+      console.log("addTag: failed to create tag", tag);
+      return null;
+    }
     await api.addUserAction({ userId: tag.userId, actionType: ACTION_CREATETAG, itemId: tag.tagId });
 
     return tag;
   },
 
   addTaggedLink: async (data) => {
-    const taggedLink = createTagLinkDto(data);
+    const taggedLinkDto = createTagLinkDto(data);
+    //TODO: move to backend
     //check if tag already exists, after creating dto (for validation)
-    let taggedLinks = await api.getTaggedLinks();
-    let oldTaggedLink = taggedLinks
-      .filter(t => t.tagId === taggedLink.tagId)
-      .find(t => t.linkId === taggedLink.linkId);
+    // let taggedLinks = await api.getTaggedLinks();
+    // let oldTaggedLink = taggedLinks
+    //   .filter(t => t.tagId === taggedLink.tagId)
+    //   .find(t => t.linkId === taggedLink.linkId);
 
-    if (oldTaggedLink) {
-      console.log("addTaggedLink: tagged link already exists", oldTaggedLink);
-      return oldTaggedLink;
+    // if (oldTaggedLink) {
+    //   console.log("addTaggedLink: tagged link already exists", oldTaggedLink);
+    //   return oldTaggedLink;
+    // }
+
+    let taggedLink = await backendApi.createTaggedLink(taggedLinkDto);
+    if (!taggedLink) {
+      console.log("addTaggedLink: failed to create tagged link", taggedLink);
+      return null;
     }
-
-    mockTaggedLinks.push(taggedLink);
     await api.addUserAction({ userId: taggedLink.userId, actionType: ACTION_TAG, itemId: taggedLink.linkId });
     
     return taggedLink;
   },
 
   addUserAction: async (data) => {
-    const userAction = createUserActionDto(data);
-    mockUserActions.push(userAction);
+    const userActionDto = createUserActionDto(data);
+
+    let userAction = await backendApi.createUserAction(userActionDto);
+    
     return userAction;
   },
 
   //complex adds
   //save / unsave link
   saveLink: async (userId, linkId) => {
-    // check if user has already saved link
-    const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
-    if (savedLink) {
-      return savedLink;
-    }
+    //TODO: move to backend
+    //TODO: remove after moving to backend, unnecessary
+    // // check if user has already saved link
+    // const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
+    // if (savedLink) {
+    //   return savedLink;
+    // }
     const newSavedLink = await api.addSavedLink({ userId, linkId });
 
     return newSavedLink;
   },
 
   unsaveLink: async (userId, linkId) => {
-    const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
-    if (savedLink) {
-      
-      mockSavedLinks = mockSavedLinks.filter(savedLink => savedLink.userId !== userId || savedLink.linkId !== linkId);
-      await api.addUserAction({ userId, actionType: ACTION_UNSAVE, itemId: linkId });
 
-      return true;
+    let savedLink = backendApi.deleteSavedLinkByUserAndLinkId(userId, linkId);
+    if (!savedLink) {
+      console.log("unsaveLink: failed to unsave link", savedLink);
+      return false;
     }
-    return false;
+    await api.addUserAction({ userId, actionType: ACTION_UNSAVE, itemId: linkId });
+
+    return true;
   },
 
   //add tag to link - complexity here is that we need to create a new tag if it doesnt exist
   //means name must be unique
   addTagToLink: async (userId, linkId, tagName) => {
-    let tag = mockTags.find(tag => tag.name === tagName);
-    if (!tag) {
-      tag = await api.addTag({ userId, name: tagName });
-    }
+    // create tag should return existing tag if it already exists
+    let tag = await api.addTag({ userId, name: tagName });
     if (!tag) {
       console.log("addTagToLink: failed to create tag", tagName);
       return null;
     }
     const taggedLink = await api.addTaggedLink({ userId, linkId, tagId: tag.tagId });
+    
     return taggedLink;
   },
 

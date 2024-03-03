@@ -30,7 +30,17 @@ import {
 import {
   BACKEND_URL
 } from "@/.env";
-import { OPEN_GRAPH_PATH, USERS_PATH } from "./api_routes";
+import { 
+  OPEN_GRAPH_PATH, 
+  USERS_PATH,
+  USER_ACTIONS_PATH,
+  COMMENTS_PATH,
+  LINKS_PATH,
+  TAGS_PATH,
+  VOTES_PATH,
+  TAG_LINKS_PATH,
+  SAVED_LINKS_PATH,
+   } from "./api_routes";
   
 
 
@@ -49,7 +59,7 @@ let mockUser = {
   email: "test@test.com",
 }
 
-const api = {
+const backendApi = {
 
   // Open Graph
   fetchImage: async (url) => {
@@ -935,7 +945,24 @@ const api = {
       return null;
     }
   },
-
+  deleteSavedLinkByUserAndLinkId: async (userId, linkId) => {
+    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/delete`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to delete saved link, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error deleting saved link:', error.message);
+      return null;
+    }
+  },
 
 
 }
+
+export default backendApi;
