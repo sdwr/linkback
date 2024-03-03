@@ -14,8 +14,8 @@ export default class Comment extends BaseModel {
   @column()
   declare userId: number
 
-  @column.dateTime({ autoCreate: true })
-  declare date: DateTime
+  @column()
+  declare date: string
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare createdAt: DateTime

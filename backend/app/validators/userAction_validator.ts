@@ -7,7 +7,7 @@ export const createUserActionValidator = vine.compile(
     itemId: vine.number().positive().withoutDecimals(),
     actionType: vine.string().trim(),
 
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )
 
@@ -18,6 +18,6 @@ export const updateUserActionValidator = vine.compile(
     itemId: vine.number().positive().withoutDecimals(),
     actionType: vine.string().trim(),
 
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )

@@ -76,6 +76,10 @@ node ace migration:status
 
 node ace migration:run
 
+## rollback migration scripts
+
+node ace migration:rollback
+
 
 
 ## Running the DB

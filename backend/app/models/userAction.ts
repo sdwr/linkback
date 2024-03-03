@@ -14,8 +14,8 @@ export default class UserAction extends BaseModel {
   @column()
   declare itemId: number
 
-  @column.dateTime({ autoCreate: true })
-  declare date: DateTime
+  @column()
+  declare date: string
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare createdAt: DateTime

@@ -107,7 +107,9 @@ const api = {
   },
 
   addLink: async (data) => {
+    console.log(data)
     let linkDto = createLinkDto(data);
+    console.log(linkDto, "after createLinkDto")
     linkDto = await externalApi.addSiteData(linkDto);
 
     let duplicateUrl, duplicateContent;

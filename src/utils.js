@@ -1,8 +1,17 @@
+import { DateTime } from 'luxon';
 
 let globalId = 10;
 
 export function getNextId() {
     return ++globalId;
+}
+
+export function getDateTimeStringNow() {
+    return DateTime.now().toFormat('yyyy-MM-dd HH:mm:ss');
+}
+
+export function getDateTimeString(date) {
+    return DateTime.fromJSDate(date).toFormat('yyyy-MM-dd HH:mm:ss');
 }
 
 function assertHasProperties(obj, properties) {
@@ -25,7 +34,7 @@ export function createUserDto(data) {
         userId: getNextId(),
         username: data.username,
         email: data.email,
-        date: new Date()
+        date: getDateTimeStringNow()
     };
 }
 
@@ -41,9 +50,9 @@ export function createLinkDto(data) {
         isClip: data.isClip || false,
         loopClip: data.loopClip || false,
         embeddable: data.embeddable || false,
-        title: data.title || "",
-        description: data.description | "",
-        date: new Date(),
+        title: data.title || "New Link",
+        description: data.description || "Description here",
+        date: getDateTimeStringNow(),
         userId: data.userId,
         originalLinkId: data.originalLinkId || null
     };
@@ -62,7 +71,7 @@ export function createVoteDto(data) {
         linkId: data.linkId,
         userId: data.userId,
         voteValue: data.voteValue,
-        date: new Date()
+        date: getDateTimeStringNow()
     };
 }
 
@@ -73,7 +82,7 @@ export function createCommentDto(data) {
         content: data.content,
         linkId: data.linkId,
         userId: data.userId,
-        date: new Date()
+        date: getDateTimeStringNow()
     };
 }
 
@@ -83,7 +92,7 @@ export function createSavedLinkDto(data) {
         savedLinkId: getNextId(),
         userId: data.userId,
         linkId: data.linkId,
-        date: new Date()
+        date: getDateTimeStringNow()
     };
 }
 
@@ -93,7 +102,7 @@ export function createTagDto(data) {
         tagId: getNextId(),
         name: data.name,
         userId: data.userId,
-        date: new Date()
+        date: getDateTimeStringNow()
     };
 }
 
@@ -104,7 +113,7 @@ export function createTagLinkDto(data) {
         linkId: data.linkId,
         tagId: data.tagId,
         userId: data.userId || null,
-        date: new Date()
+        date: getDateTimeStringNow()
     };
 }
 
@@ -115,7 +124,7 @@ export function createUserActionDto(data) {
         userId: data.userId,
         itemId: data.itemId,
         actionType: data.actionType,
-        date: new Date()
+        date: getDateTimeStringNow()
     };
 }
 

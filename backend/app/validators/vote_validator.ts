@@ -9,7 +9,8 @@ export const createVoteValidator = vine.compile(
     linkId: vine.number().positive().withoutDecimals(),
     userId: vine.number().positive().withoutDecimals(),
     voteValue: vine.number().withoutDecimals(),
-    date: vine.date(),
+
+    date: vine.string().trim(),
   })
 )
 
@@ -22,6 +23,7 @@ export const updateVoteValidator = vine.compile(
     linkId: vine.number().positive().withoutDecimals(),
     userId: vine.number().positive().withoutDecimals(),
     voteValue: vine.number().withoutDecimals(),
-    date: vine.date(),
+    
+    date: vine.string().trim(),
   })
 )

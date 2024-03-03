@@ -25,7 +25,7 @@ export const createLinkValidator = vine.compile(
     embeddable: vine.boolean(),
     title: vine.string().trim(),
     description: vine.string().trim(),
-    date: vine.date(),
+    date: vine.string().trim(),
     userId: vine.number().positive().withoutDecimals(),
     originalLinkId: vine.number().positive().withoutDecimals().optional(),
     createdAt: vine.date().optional(),
@@ -46,7 +46,7 @@ export const updateLinkValidator = vine.compile(
     embeddable: vine.boolean(),
     title: vine.string().trim(),
     description: vine.string().trim(),
-    date: vine.date(),
+    date: vine.string().trim(),
     userId: vine.number().positive().withoutDecimals(),
     originalLinkId: vine.number().positive().withoutDecimals().optional(),
   })

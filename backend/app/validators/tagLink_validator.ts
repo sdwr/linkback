@@ -9,7 +9,7 @@ export const createTagLinkValidator = vine.compile(
     tagId: vine.number().positive().withoutDecimals(),
     linkId: vine.number().positive().withoutDecimals(),
     userId: vine.number().positive().withoutDecimals().optional(),
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )
 
@@ -22,6 +22,6 @@ export const updateTagLinkValidator = vine.compile(
     tagId: vine.number().positive().withoutDecimals(),
     linkId: vine.number().positive().withoutDecimals(),
     userId: vine.number().positive().withoutDecimals().optional(),
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )

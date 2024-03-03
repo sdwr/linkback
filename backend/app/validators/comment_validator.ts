@@ -10,7 +10,7 @@ export const createCommentValidator = vine.compile(
     linkId: vine.number().positive().withoutDecimals(),
     userId: vine.number().positive().withoutDecimals(),
 
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )
 
@@ -22,6 +22,6 @@ export const updateCommentValidator = vine.compile(
     linkId: vine.number().positive().withoutDecimals(),
     userId: vine.number().positive().withoutDecimals(),
 
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )

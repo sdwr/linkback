@@ -35,8 +35,8 @@ export default class Link extends BaseModel {
   @column()
   declare description: string
 
-  @column.dateTime({ autoCreate: true })
-  declare date: DateTime
+  @column()
+  declare date: string
 
   @column()
   declare userId: number

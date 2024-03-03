@@ -13,8 +13,8 @@ export default class User extends BaseModel {
   @column()
   declare email: string
 
-  @column.dateTime({ autoCreate: true })
-  declare date: DateTime
+  @column()
+  declare date: string
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare createdAt: DateTime

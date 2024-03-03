@@ -14,8 +14,8 @@ export default class TagLink extends BaseModel {
   @column()
   declare userId: number | null
 
-  @column.dateTime({ autoCreate: true })
-  declare date: DateTime
+  @column()
+  declare date: string
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare createdAt: DateTime

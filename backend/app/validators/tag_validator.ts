@@ -8,7 +8,7 @@ export const createTagValidator = vine.compile(
     id: vine.number().positive().withoutDecimals().optional(),
     name: vine.string().trim(),
     userId: vine.number().positive().withoutDecimals(),
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )
 
@@ -20,6 +20,6 @@ export const updateTagValidator = vine.compile(
     id: vine.number().positive().withoutDecimals(),
     name: vine.string().trim(),
     userId: vine.number().positive().withoutDecimals(),
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )

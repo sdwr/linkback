@@ -11,8 +11,8 @@ export default class SavedLink extends BaseModel {
   @column()
   declare linkId: number
 
-  @column.dateTime({ autoCreate: true })
-  declare date: DateTime
+  @column()
+  declare date: string
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare createdAt: DateTime

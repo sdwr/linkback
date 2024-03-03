@@ -6,7 +6,7 @@ export const createUserValidator = vine.compile(
     username: vine.string().trim(),
     email: vine.string().email(),
 
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )
 
@@ -16,6 +16,6 @@ export const updateUserValidator = vine.compile(
     username: vine.string().trim(),
     email: vine.string().email(),
 
-    date: vine.date(),
+    date: vine.string().trim(),
   })
 )
