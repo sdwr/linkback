@@ -228,7 +228,7 @@ const api = {
     //   return oldTaggedLink;
     // }
 
-    let taggedLink = await backendApi.createTaggedLink(taggedLinkDto);
+    let taggedLink = await backendApi.createTagLink(taggedLinkDto);
     if (!taggedLink) {
       console.log("addTaggedLink: failed to create tagged link", taggedLink);
       return null;
@@ -291,124 +291,129 @@ const api = {
 
   //API gets
   getUser: async (userId) => {
-    let user = mockUsers.find(user => user.userId === userId);
+    let user = await backendApi.getUserById(userId);
     return user;
   },
 
   getUsers: async () => {
-    return mockUsers;
+    let users = await backendApi.getAllUsers();
+    return users;
   },
 
   getLink: async (linkId) => {
     linkId = parseInt(linkId);
-    let result = mockLinks.find(link => link.linkId === linkId);
-    return result;
+    let link = await backendApi.getLinkById(linkId);
+    return link;
   },
 
   getLinks: async () => {
-    return mockLinks;
+    let links = await backendApi.getAllLinks();
+    return links;
   },
 
   //copy to avoid modifying original data
   addUserDataToLinks: async (userId, links) => {
-    let savedLinks = mockSavedLinks.filter(savedLink => savedLink.userId === userId).map(savedLink => savedLink.linkId);
-    let linksCopy = JSON.parse(JSON.stringify(links));
+    let savedLinks = await api.getSavedLinksByUser(userId);
+    let savedLinkIds = savedLinks.map(link => link.linkId);
 
-    links = linksCopy.map(link => {
-      if (savedLinks.includes(link.linkId)) {
+    let linksCopy = structuredClone(links);
+
+    let updatedLinks = linksCopy.map(link => {
+      if (savedLinkIds.includes(link.linkId)) {
         link.saved = true;
       }
       return link;
     });
-    return links;
+    return updatedLinks;
   },
 
   getLinksByUser: async (userId) => {
-    return mockLinks.filter(link => link.userId === userId) || [];
+    let links = backendApi.getLinksByUserId(userId);
+    return links;
   },
 
   getCommentsByLink: async (linkId) => {
-    return mockComments.filter(comment => comment.linkId === linkId) || [];
+    let comments = backendApi.getCommentsByLinkId(linkId);
+    return comments;
   },
 
   getVotesByLink: async (linkId) => {
-    return mockVotes.filter(vote => vote.linkId === linkId) || [];
+    let votes = backendApi.getVotesByLinkId(linkId);
+    return votes;
   },
 
   getTagsByLink: async (linkId) => {
-    let results = mockTaggedLinks.filter(taggedLink => taggedLink.linkId === linkId) || [];
-    results = results.map(taggedLink => taggedLink.tagId);
-    //get tag data
-    let tags = mockTags.filter(tag => results.includes(tag.tagId));
+    let tags = backendApi.getTagsByLinkId(linkId);
     return tags;
   },
 
   getTaggedLinks: async () => {
-    return mockTaggedLinks;
+    let taggedLinks = backendApi.getAllTagLinks();
+    return taggedLinks;
   },
 
   getSavedLinks: async () => {
-    return mockSavedLinks;
+    let savedLinks = backendApi.getAllSavedLinks();
+    return savedLinks;
   },
 
   getUserActions: async () => {
-    return mockUserActions;
+    let userActions = backendApi.getAllUserActions();
+    return userActions;
   },
 
   getUserActionsByUser: async (userId) => {
-    return mockUserActions.filter(userAction => userAction.userId === userId) || [];
+    let userActions = backendApi.getUserActionsByUserId(userId);
+    return userActions;
   },
 
   getComments: async () => {
-    return mockComments;
+    let comments = backendApi.getAllComments();
+    return comments;
   },
 
   getVotes: async () => {
-    return mockVotes;
+    let votes = backendApi.getAllVotes();
+    return votes;
   },
 
   // Complex Endpoints
 
   getSavedLinksByUser: async (userId) => {
-    let savedLinks = mockSavedLinks.filter(savedLink => savedLink.userId === userId).map(savedLink => savedLink.linkId);
-    let links = mockLinks.filter(link => savedLinks.includes(link.linkId));
-    return links;
+    let savedLinks = backendApi.getSavedLinksByUserId(userId);
+    return savedLinks;
   },
 
 
   getNewLinks: async (limit = 10) => {
-    return mockLinks.sort((a, b) => b.date - a.date).slice(0, limit);
+    let links = await backendApi.getNewLinks(limit);
+    return links;
   },
 
   getTopLinks: async (limit = 10) => {
-    const linkVotes = mockLinks.map(link => {
-      const votes = mockVotes.filter(vote => vote.linkId === link.linkId);
-      const upvotes = votes.filter(vote => vote.voteType === 'upvote').length;
-      return { ...link, voteCount: upvotes };
-    });
-
-    return linkVotes.sort((a, b) => b.voteCount - a.voteCount).slice(0, limit);
+    let links = await backendApi.getTopLinks(limit);
+    return links;
   },
 
   //check if user has saved link
   checkUserSavedLink: async (userId, linkId) => {
-    const savedLink = mockSavedLinks.find(savedLink => savedLink.userId === userId && savedLink.linkId === linkId);
-    return savedLink ? savedLink : false;
+    let savedLink = await backendApi.getSavedLinkByUserIdAndLinkId(userId, linkId);
+    return savedLink ? true : false;
   },
 
   getTag: async (tagId) => {
     tagId = parseInt(tagId);
-    let result = mockTags.find(tag => tag.tagId === tagId);
-    return result;
+    let tag = await backendApi.getTagById(tagId);
+    return tag;
   },
   
   getTags: async () => {
-    return mockTags;
+    let tags = await backendApi.getAllTags();
+    return tags;
   },
 
   getLinksByTag: async (data) => {
-    let links = mockTaggedLinks.filter(taggedLink => taggedLink.tagId === data.tagId).map(taggedLink => taggedLink.linkId);
-    links = mockLinks.filter(link => links.includes(link.linkId));
+    let links = await backendApi.getLinksByTag(data);
     return links;
   },
 

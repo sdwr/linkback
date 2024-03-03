@@ -9,12 +9,19 @@ add an .env.js file in /src
 add export const BACKEND_URL="URL:port" to the file
 
 create a .env file to /backend, copied from .env.example
+make sure host is 0.0.0.0 for outside access
+  TZ=UTC
+  PORT=3333
+  HOST=0.0.0.0
+  LOG_LEVEL=info
+  APP_KEY=p0626L8idgNW_f3f71OWSJ6u4wMx23cS
+  NODE_ENV=development
 
   DB_CONNECTION=pg
   DB_HOST=127.0.0.1
   DB_PORT=5432
   DB_USER=postgres
-  DB_PASSWORD=
+  DB_PASSWORD=postgres
   DB_DATABASE=linkback
   SESSION_DRIVER=cookie
 

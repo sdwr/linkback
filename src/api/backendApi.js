@@ -177,7 +177,7 @@ const backendApi = {
       return null;
     }
   },
-  getUserActionById: async (id) => {
+  getUserActionsById: async (id) => {
     const url = `${BACKEND_URL}/${USER_ACTIONS_PATH}/${id}`;
     try {
       const response = await fetch(url);
@@ -302,6 +302,50 @@ const backendApi = {
       return data;
     } catch (error) {
       console.error('Error fetching links:', error.message);
+      return null;
+    }
+  },
+  getLinksByTag: async (tagId) => {
+    const url = `${BACKEND_URL}/${LINKS_PATH}/tag/${tagId}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch links, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching links:', error.message);
+      return null;
+    }
+  },
+  getNewLinks: async (amount) => {
+    const url = `${BACKEND_URL}/${LINKS_PATH}/new`;
+    url.searchParams.append('amount', amount);
+    try {
+      const response = await fetch(url.toString());
+      if (!response.ok) {
+        throw new Error(`Failed to fetch new links, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching new links:', error.message);
+      return null;
+    }
+  },
+  getTopLinks: async (amount) => {
+    const url = `${BACKEND_URL}/${LINKS_PATH}/top`;
+    url.searchParams.append('amount', amount);
+    try {
+      const response = await fetch(url.toString());
+      if (!response.ok) {
+        throw new Error(`Failed to fetch top links, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching top links:', error.message);
       return null;
     }
   },
@@ -863,6 +907,20 @@ const backendApi = {
   },
   getSavedLinkById: async (id) => {
     const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/${id}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch saved link, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching saved link:', error.message);
+      return null;
+    }
+  },
+  getSavedLinkByUserIdAndLinkId: async (userId, linkId) => {
+    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/user/${userId}/link/${linkId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {

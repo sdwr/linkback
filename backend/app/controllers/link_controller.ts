@@ -31,6 +31,40 @@ export default class LinkController {
     return response.ok(links);
   }
 
+  async getLinksByTag({ request, response }: HttpContext) {
+    const tagId = request.param('tagId');
+
+    const links = await Link.query()
+      .select('links.*')
+      .leftJoin('tag_links', 'links.id', 'tag_links.link_id')
+      .where('tag_links.tag_id', tagId);
+
+    return response.ok(links);
+  }
+
+  //query params: amount
+  async getNewLinks({ request, response }: HttpContext) {
+    const amount = Number(request.input('amount', 10));
+
+    const links = await Link.query().orderBy('created_at', 'desc').limit(amount);
+
+    return response.ok(links);
+  }
+
+  //query params: amount
+  async getTopLinks({ request, response }: HttpContext) {
+    const amount = Number(request.input('amount', 10));
+
+    const links = await Link.query()
+      .select('links.*')
+      .leftJoin('votes', 'links.id', 'votes.link_id')
+      .groupBy('links.id')
+      .orderByRaw('SUM(votes.vote_value) DESC')
+      .limit(amount);
+
+    return response.ok(links);
+  }
+
   async create({ request, response }: HttpContext) {
     const validatedLink = await request.validateUsing(createLinkValidator);
     const iLink = validatedLink as ILink;

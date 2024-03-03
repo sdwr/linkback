@@ -30,6 +30,18 @@ export default class SavedLinkController {
     return response.ok(savedLinks);
   }
 
+  async getSavedLinkByUserAndLink({ request, response }: HttpContext) {
+    const userId = request.param('userId');
+    const linkId = request.param('linkId');
+
+    const savedLink = await SavedLink.query()
+      .where('userId', userId)
+      .andWhere('linkId', linkId)
+      .firstOrFail()
+
+    return response.ok(savedLink);
+  }
+
   async create({ request, response }: HttpContext) {
     const validatedData = await request.validateUsing(createSavedLinkValidator);
     const iSavedLink = validatedData as ISavedLink;
@@ -37,7 +49,7 @@ export default class SavedLinkController {
     const savedLink = await SavedLink.create(iSavedLink);
 
     return response.ok(savedLink);
-  },
+  }
 
   async deleteByUserAndLink({ request, response }: HttpContext) {
     const userId = request.param('userId');
