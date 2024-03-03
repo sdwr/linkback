@@ -32,9 +32,6 @@ import {
   mockUserData,
 } from "@/mockData";
 
-import {
-  BACKEND_URL
-} from "@/.env";
 
 let mockUsers = [];
 let mockLinks = [];
@@ -64,6 +61,8 @@ mockUsers = mockUserData;
 // - check if tag already exists
 // - check if tagged link already exists
 // - check if saved link already exists
+
+const BACKEND_URL = 'localhost:3333'
 
 const api = {
   mockUser: mockUser,
@@ -313,10 +312,10 @@ const api = {
 
   //copy to avoid modifying original data
   addUserDataToLinks: async (userId, links) => {
-    let savedLinks = await api.getSavedLinksByUser(userId);
+    let savedLinks = await api.getSavedLinksByUser(userId) || [];
     let savedLinkIds = savedLinks.map(link => link.linkId);
 
-    let linksCopy = structuredClone(links);
+    let linksCopy = structuredClone(links) || [];
 
     let updatedLinks = linksCopy.map(link => {
       if (savedLinkIds.includes(link.linkId)) {

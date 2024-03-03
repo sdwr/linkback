@@ -5,11 +5,12 @@ export default class UserActionsSchema extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('userActionId')
-      table.integer('userId').unsigned().references('id').inTable('users').onDelete('CASCADE')
-      table.string('actionType').notNullable()
-      table.integer('itemId').notNullable()
-      table.timestamp('date', { useTz: true }).defaultTo(this.now())
+      table.increments('id')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.string('action_type').notNullable()
+      table.integer('item_id').notNullable()
+      
+      table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
       table.timestamps(true, true)
     })
   }

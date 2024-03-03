@@ -1,5 +1,6 @@
 export const OPEN_GRAPH_PATH = '/opengraph';
 export const USERS_PATH = '/users';
+export const USER_ACTIONS_PATH = '/useractions';
 export const LINKS_PATH = '/links';
 export const COMMENTS_PATH = '/comments';
 export const TAGS_PATH = '/tags';

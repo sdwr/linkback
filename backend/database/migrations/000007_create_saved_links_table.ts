@@ -5,10 +5,11 @@ export default class SavedLinksSchema extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('savedLinkId')
-      table.integer('userId').unsigned().references('id').inTable('users').onDelete('CASCADE')
-      table.integer('linkId').unsigned().references('id').inTable('links').onDelete('CASCADE')
-      table.timestamp('date', { useTz: true }).defaultTo(this.now())
+      table.increments('id')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('link_id').unsigned().references('id').inTable('links').onDelete('CASCADE')
+
+      table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
       table.timestamps(true, true)
     })
   }

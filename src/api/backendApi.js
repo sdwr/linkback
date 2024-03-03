@@ -27,9 +27,6 @@ import {
   mockUserData,
 } from "@/mockData";
 
-import {
-  BACKEND_URL
-} from "@/.env";
 import { 
   OPEN_GRAPH_PATH, 
   USERS_PATH,
@@ -40,7 +37,7 @@ import {
   VOTES_PATH,
   TAG_LINKS_PATH,
   SAVED_LINKS_PATH,
-   } from "./api_routes";
+  } from "./api_routes";
   
 
 
@@ -59,10 +56,12 @@ let mockUser = {
   email: "test@test.com",
 }
 
+const BACKEND_URL = "http://localhost:3333";
+
 const backendApi = {
 
   // Open Graph
-  fetchImage: async (url) => {
+  fetchImage: async (inputUrl) => {
     const url = `${BACKEND_URL}${OPEN_GRAPH_PATH}/fetch-image?url=${encodeURIComponent(inputUrl)}`;
     try {
       const response = await fetch(url);
@@ -79,7 +78,7 @@ const backendApi = {
 
   // User
   getAllUsers: async () => {
-    const url = `${BACKEND_URL}/${USERS_PATH}`;
+    const url = `${BACKEND_URL}${USERS_PATH}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -93,7 +92,7 @@ const backendApi = {
     }
   },
   getUserById: async (id) => {
-    const url = `${BACKEND_URL}/${USERS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${USERS_PATH}/${id}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -107,7 +106,7 @@ const backendApi = {
     }
   },
   createUser: async (userData) => {
-    const url = `${BACKEND_URL}/${USERS_PATH}`;
+    const url = `${BACKEND_URL}${USERS_PATH}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -127,7 +126,7 @@ const backendApi = {
     }
   },
   updateUser: async (id, userData) => {
-    const url = `${BACKEND_URL}/${USERS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${USERS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -147,7 +146,7 @@ const backendApi = {
     }
   },
   deleteUser: async (id) => {
-    const url = `${BACKEND_URL}/${USERS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${USERS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE'
@@ -164,7 +163,7 @@ const backendApi = {
   },
   // User Action
   getAllUserActions: async () => {
-    const url = `${BACKEND_URL}/${USER_ACTIONS_PATH}`;
+    const url = `${BACKEND_URL}${USER_ACTIONS_PATH}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -178,7 +177,7 @@ const backendApi = {
     }
   },
   getUserActionsById: async (id) => {
-    const url = `${BACKEND_URL}/${USER_ACTIONS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${USER_ACTIONS_PATH}/${id}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -192,7 +191,7 @@ const backendApi = {
     }
   },
   getUserActionsByUserId: async (userId) => {
-    const url = `${BACKEND_URL}/${USER_ACTIONS_PATH}/user/${userId}`;
+    const url = `${BACKEND_URL}${USER_ACTIONS_PATH}/user/${userId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -206,7 +205,7 @@ const backendApi = {
     }
   },
   createUserAction: async (userActionData) => {
-    const url = `${BACKEND_URL}/${USER_ACTIONS_PATH}`;
+    const url = `${BACKEND_URL}${USER_ACTIONS_PATH}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -226,7 +225,7 @@ const backendApi = {
     }
   },
   updateUserAction: async (id, userActionData) => {
-    const url = `${BACKEND_URL}/${USER_ACTIONS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${USER_ACTIONS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -246,7 +245,7 @@ const backendApi = {
     }
   },
   deleteUserAction: async (id) => {
-    const url = `${BACKEND_URL}/${USER_ACTIONS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${USER_ACTIONS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE'
@@ -264,7 +263,7 @@ const backendApi = {
 
   // Link
   getAllLinks: async () => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}`;
+    const url = `${BACKEND_URL}${LINKS_PATH}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -278,7 +277,7 @@ const backendApi = {
     }
   },
   getLinkById: async (id) => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -292,7 +291,7 @@ const backendApi = {
     }
   },
   getLinksByUserId: async (userId) => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}/user/${userId}`;
+    const url = `${BACKEND_URL}${LINKS_PATH}/user/${userId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -306,7 +305,7 @@ const backendApi = {
     }
   },
   getLinksByTag: async (tagId) => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}/tag/${tagId}`;
+    const url = `${BACKEND_URL}${LINKS_PATH}/tag/${tagId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -320,7 +319,7 @@ const backendApi = {
     }
   },
   getNewLinks: async (amount) => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}/new`;
+    const url = new URL(`${BACKEND_URL}${LINKS_PATH}/new`);
     url.searchParams.append('amount', amount);
     try {
       const response = await fetch(url.toString());
@@ -335,7 +334,7 @@ const backendApi = {
     }
   },
   getTopLinks: async (amount) => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}/top`;
+    const url = new URL(`${BACKEND_URL}${LINKS_PATH}/top`);
     url.searchParams.append('amount', amount);
     try {
       const response = await fetch(url.toString());
@@ -350,7 +349,7 @@ const backendApi = {
     }
   },
   createLink: async (linkData) => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}`;
+    const url = `${BACKEND_URL}${LINKS_PATH}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -370,7 +369,7 @@ const backendApi = {
     }
   },
   updateLink: async (id, linkData) => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -390,7 +389,7 @@ const backendApi = {
     }
   },
   deleteLink: async (id) => {
-    const url = `${BACKEND_URL}/${LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE'
@@ -408,7 +407,7 @@ const backendApi = {
 
   // Comment
   getAllComments: async () => {
-    const url = `${BACKEND_URL}/${COMMENTS_PATH}`;
+    const url = `${BACKEND_URL}${COMMENTS_PATH}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -422,7 +421,7 @@ const backendApi = {
     }
   },
   getCommentById: async (id) => {
-    const url = `${BACKEND_URL}/${COMMENTS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${COMMENTS_PATH}/${id}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -436,7 +435,7 @@ const backendApi = {
     }
   },
   getCommentsByUserId: async (userId) => {
-    const url = `${BACKEND_URL}/${COMMENTS_PATH}/user/${userId}`;
+    const url = `${BACKEND_URL}${COMMENTS_PATH}/user/${userId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -450,7 +449,7 @@ const backendApi = {
     }
   },
   getCommentsByLinkId: async (linkId) => {
-    const url = `${BACKEND_URL}/${COMMENTS_PATH}/link/${linkId}`;
+    const url = `${BACKEND_URL}${COMMENTS_PATH}/link/${linkId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -464,7 +463,7 @@ const backendApi = {
     }
   },
   createComment: async (commentData) => {
-    const url = `${BACKEND_URL}/${COMMENTS_PATH}`;
+    const url = `${BACKEND_URL}${COMMENTS_PATH}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -484,7 +483,7 @@ const backendApi = {
     }
   },
   updateComment: async (id, commentData) => {
-    const url = `${BACKEND_URL}/${COMMENTS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${COMMENTS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -504,7 +503,7 @@ const backendApi = {
     }
   },
   deleteComment: async (id) => {
-    const url = `${BACKEND_URL}/${COMMENTS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${COMMENTS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE'
@@ -522,7 +521,7 @@ const backendApi = {
   
   // Tag
   getAllTags: async () => {
-    const url = `${BACKEND_URL}/${TAGS_PATH}`;
+    const url = `${BACKEND_URL}${TAGS_PATH}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -536,7 +535,7 @@ const backendApi = {
     }
   },
   getTagById: async (id) => {
-    const url = `${BACKEND_URL}/${TAGS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${TAGS_PATH}/${id}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -550,7 +549,7 @@ const backendApi = {
     }
   },
   getTagsByLinkId: async (linkId) => {
-    const url = `${BACKEND_URL}/${TAGS_PATH}/link/${linkId}`;
+    const url = `${BACKEND_URL}${TAGS_PATH}/link/${linkId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -564,7 +563,7 @@ const backendApi = {
     }
   },
   getTagsByUserId: async (userId) => {
-    const url = `${BACKEND_URL}/${TAGS_PATH}/user/${userId}`;
+    const url = `${BACKEND_URL}${TAGS_PATH}/user/${userId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -578,7 +577,7 @@ const backendApi = {
     }
   },
   createTag: async (tagData) => {
-    const url = `${BACKEND_URL}/${TAGS_PATH}`;
+    const url = `${BACKEND_URL}${TAGS_PATH}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -598,7 +597,7 @@ const backendApi = {
     }
   },
   updateTag: async (id, tagData) => {
-    const url = `${BACKEND_URL}/${TAGS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${TAGS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -618,7 +617,7 @@ const backendApi = {
     }
   },
   deleteTag: async (id) => {
-    const url = `${BACKEND_URL}/${TAGS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${TAGS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE'
@@ -636,7 +635,7 @@ const backendApi = {
 
   // Vote
   getAllVotes: async () => {
-    const url = `${BACKEND_URL}/${VOTES_PATH}`;
+    const url = `${BACKEND_URL}${VOTES_PATH}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -650,7 +649,7 @@ const backendApi = {
     }
   },
   getVoteById: async (id) => {
-    const url = `${BACKEND_URL}/${VOTES_PATH}/${id}`;
+    const url = `${BACKEND_URL}${VOTES_PATH}/${id}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -664,7 +663,7 @@ const backendApi = {
     }
   },
   getVotesByLinkId: async (linkId) => {
-    const url = `${BACKEND_URL}/${VOTES_PATH}/link/${linkId}`;
+    const url = `${BACKEND_URL}${VOTES_PATH}/link/${linkId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -678,7 +677,7 @@ const backendApi = {
     }
   },
   getVotesByUserId: async (userId) => {
-    const url = `${BACKEND_URL}/${VOTES_PATH}/user/${userId}`;
+    const url = `${BACKEND_URL}${VOTES_PATH}/user/${userId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -692,7 +691,7 @@ const backendApi = {
     }
   },
   createVote: async (voteData) => {
-    const url = `${BACKEND_URL}/${VOTES_PATH}`;
+    const url = `${BACKEND_URL}${VOTES_PATH}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -712,7 +711,7 @@ const backendApi = {
     }
   },
   updateVote: async (id, voteData) => {
-    const url = `${BACKEND_URL}/${VOTES_PATH}/${id}`;
+    const url = `${BACKEND_URL}${VOTES_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -732,7 +731,7 @@ const backendApi = {
     }
   },
   deleteVote: async (id) => {
-    const url = `${BACKEND_URL}/${VOTES_PATH}/${id}`;
+    const url = `${BACKEND_URL}${VOTES_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE'
@@ -750,7 +749,7 @@ const backendApi = {
 
   // Tag Link
   getAllTagLinks: async () => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -764,7 +763,7 @@ const backendApi = {
     }
   },
   getTagLinkById: async (id) => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -778,7 +777,7 @@ const backendApi = {
     }
   },
   getTagLinksByTagId: async (tagId) => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}/tag/${tagId}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}/tag/${tagId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -792,7 +791,7 @@ const backendApi = {
     }
   },
   getTagLinksByLinkId: async (linkId) => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}/link/${linkId}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}/link/${linkId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -806,7 +805,7 @@ const backendApi = {
     }
   },
   getTagLinksByTagId: async (tagId) => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}/tag/${tagId}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}/tag/${tagId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -820,7 +819,7 @@ const backendApi = {
     }
   },
   getTagLinksByUserId: async (userId) => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}/user/${userId}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}/user/${userId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -834,7 +833,7 @@ const backendApi = {
     }
   },
   createTagLink: async (tagLinkData) => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -854,7 +853,7 @@ const backendApi = {
     }
   },
   updateTagLink: async (id, tagLinkData) => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -874,7 +873,7 @@ const backendApi = {
     }
   },
   deleteTagLink: async (id) => {
-    const url = `${BACKEND_URL}/${TAG_LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${TAG_LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE'
@@ -892,7 +891,7 @@ const backendApi = {
 
   // Saved Link
   getAllSavedLinks: async () => {
-    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -906,7 +905,7 @@ const backendApi = {
     }
   },
   getSavedLinkById: async (id) => {
-    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -920,7 +919,7 @@ const backendApi = {
     }
   },
   getSavedLinkByUserIdAndLinkId: async (userId, linkId) => {
-    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/user/${userId}/link/${linkId}`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/user/${userId}/link/${linkId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -934,7 +933,7 @@ const backendApi = {
     }
   },
   getSavedLinksByUserId: async (userId) => {
-    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/user/${userId}`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/user/${userId}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -948,7 +947,7 @@ const backendApi = {
     }
   },
   createSavedLink: async (savedLinkData) => {
-    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -968,7 +967,7 @@ const backendApi = {
     }
   },
   updateSavedLink: async (id, savedLinkData) => {
-    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -988,7 +987,7 @@ const backendApi = {
     }
   },
   deleteSavedLink: async (id) => {
-    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/${id}`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE'
@@ -1004,7 +1003,7 @@ const backendApi = {
     }
   },
   deleteSavedLinkByUserAndLinkId: async (userId, linkId) => {
-    const url = `${BACKEND_URL}/${SAVED_LINKS_PATH}/delete`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/delete`;
     try {
       const response = await fetch(url, {
         method: 'POST'

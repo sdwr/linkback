@@ -16,9 +16,10 @@ export default class LinksSchema extends BaseSchema {
       table.boolean('embeddable').defaultTo(false)
       table.text('title').nullable()
       table.text('description').nullable()
-      table.timestamp('date', { useTz: true }).notNullable()
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('original_link_id').unsigned().nullable().references('id').inTable('links')
+
+      table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
 
       table.timestamps(true)
     })

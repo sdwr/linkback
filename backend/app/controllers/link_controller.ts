@@ -1,12 +1,13 @@
-import LinkService from '#services/link_service';
 import { createLinkValidator, updateLinkValidator } from '#validators/link_validator';
 import type { HttpContext } from '@adonisjs/core/http'
+import logger from '@adonisjs/core/services/logger'
+
 
 import Link from '#models/link';
 import ILink from '#models/request_objects/iLink';
 
 export default class LinkController {
-  constructor(protected linkService: LinkService) {}
+  constructor() {}
   //get all links
   async index({ response }: HttpContext) {
     const links = await Link.all();
