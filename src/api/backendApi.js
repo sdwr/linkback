@@ -346,7 +346,7 @@ const backendApi = {
       console.error('Error fetching new links: amount is not a number');
       return null;
     }
-    const url = `${BACKEND_URL}${LINKS_PATH}/new`;
+    let url = `${BACKEND_URL}${LINKS_PATH}/new`;
     url = url + '?amount=' + amount;
 
     try {
@@ -368,7 +368,7 @@ const backendApi = {
       return null;
     }
 
-    const url = `${BACKEND_URL}${LINKS_PATH}/top`;
+    let url = `${BACKEND_URL}${LINKS_PATH}/top`;
     url = url + '?amount=' + amount;
 
     try {
