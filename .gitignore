@@ -18,6 +18,8 @@ pnpm-debug.log*
 
 output.log*
 /backend/output.log*
+nohup.out
+/backend/nohup.out
 
 # Editor directories and files
 .idea
