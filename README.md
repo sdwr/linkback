@@ -106,3 +106,32 @@ node ace migration:rollback
   node ace migration:run
 
 
+## Running on hosted environment
+
+install nginx
+use nginx-conf file
+
+make sure the env files are created
+/src/.secrets.js
+/src/.env.js
+/backend/.env
+
+make sure postgres is running, with correct user and linkback DB created
+
+npm install in main dir
+npm install in /backend
+
+run DB migrations in backend with node ace migration:run
+
+check that server isn't running already in headless w
+
+  ss -tuln | grep 3333
+
+run server in background with 
+
+  nohup node ace serve --watch &
+
+run FE in backgroun with
+
+  nohup npm run dev &
+
