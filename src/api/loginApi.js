@@ -1,7 +1,8 @@
 
 import { USER_SESSIONS_PATH } from "./api_routes"
 
-const BACKEND_URL = 'http://localhost:3333'
+const BACKEND_URL = '/api'
+// const BACKEND_URL = 'http://localhost:3333
 
 const loginApi = {
   login: async (userDto) => { 

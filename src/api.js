@@ -62,7 +62,6 @@ mockUsers = mockUserData;
 // - check if tagged link already exists
 // - check if saved link already exists
 
-const BACKEND_URL = 'localhost:3333'
 
 const api = {
   mockUser: mockUser,

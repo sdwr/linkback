@@ -57,7 +57,8 @@ let mockUser = {
   email: "test@test.com",
 }
 
-const BACKEND_URL = "http://localhost:3333";
+const BACKEND_URL = "/api";
+// const BACKEND_URL = "http://localhost:3333";
 
 const backendApi = {
 
