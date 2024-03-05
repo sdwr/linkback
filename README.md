@@ -131,7 +131,11 @@ run server in background with
 
   nohup node ace serve --watch &
 
+build FE with 
+
+  npm run build
+
 run FE in backgroun with
 
-  nohup npm run dev &
+  nohup npm run serve &
 
