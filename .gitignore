@@ -4,11 +4,10 @@ node_modules
 package-lock.json
 
 # local env files
+.env*
 .env.local
 .env.*.local
-.secrets.*
 .hosting.*
-.env.js
 
 # Log files
 npm-debug.log*
