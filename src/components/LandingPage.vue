@@ -50,9 +50,12 @@ export default {
     UserCard,
   },
   computed: {
-      user () {
+      storedUser () {
         return this.$store.getters.getUser
-      } 
+      },
+      user () {
+        return this.$store.getters.getUser || {}
+      }
   },
   data() {
     return {
@@ -145,10 +148,23 @@ export default {
     }
   },
   async created() {
-    this.user = await backendApi.createGuestUser({isGuest: true});
-    let login = await loginApi.login(this.user)
-    console.log("user", this.user)
-    // await this.$store.dispatch('loadUser');
+    //attempt to load user from store
+    await this.$store.dispatch('loadUser');
+    if(!this.storedUser) {
+      //if no user, create a guest user
+      let user = await backendApi.createGuestUser({isGuest: true});
+      this.$store.dispatch('saveUser', user);
+    }
+
+    // user should be loaded from store, try to login
+    try {
+      let userResponse = await loginApi.login(this.storedUser);
+      this.$store.dispatch('saveUser', userResponse);
+
+    } catch (error) {
+      console.error('Error logging in as user :', this.storedUser, error);
+    }
+
     await this.loadLinks();
   },
 }

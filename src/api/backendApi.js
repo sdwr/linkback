@@ -63,7 +63,7 @@ const backendApi = {
 
   // Open Graph
   fetchImage: async (inputUrl) => {
-    const url = `${BACKEND_URL}${OPEN_GRAPH_PATH}/fetch-image?url=${encodeURIComponent(inputUrl)}`;
+    const url = `${BACKEND_URL}${OPEN_GRAPH_PATH}/fetchImage?url=${encodeURIComponent(inputUrl)}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {

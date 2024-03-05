@@ -3,7 +3,7 @@ import { createStore } from 'vuex';
 export default createStore({
     state() {
         return {
-            user: {}
+            user: null
         };
     },
     mutations: {
@@ -16,15 +16,10 @@ export default createStore({
             try {
                 // Load user data from localStorage
                 const userData = localStorage.getItem('user');
-                let user = {}
                 if (userData) {
-                    user = JSON.parse(userData);
-                } else {
-                    user = createMockUser();
+                    let user = JSON.parse(userData);
+                    commit('setUser', user);
                 }
-
-                // TODO: Check if user is expired
-                commit('setUser', user);
 
             } catch (error) {
                 console.error('load user failed:', error);

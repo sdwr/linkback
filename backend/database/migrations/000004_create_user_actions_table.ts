@@ -11,7 +11,7 @@ export default class UserActionsSchema extends BaseSchema {
       table.integer('item_id').notNullable()
       
       table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
-      table.timestamps(true, true)
+      table.timestamps(true)
     })
   }
 

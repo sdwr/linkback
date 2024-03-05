@@ -35,6 +35,8 @@ export default class UserController {
     const iUser = validatedData as IUser
 
     const user = await User.create(iUser)
+    user.username = `guest${user.id}`
+    user.save();
 
     return response.json(user)
   }

@@ -9,7 +9,7 @@
 
     <!-- Thumbnail -->
     <div class="thumbnail">
-      <img class="thumbnail-img" :src="thum_thumbnail" alt="thumbnail" style="height: 80px;">
+      <img class="thumbnail-img" :src="OGthumbnail" alt="thumbnail" style="height: 80px;">
     </div>
 
     <!-- Link Details -->
@@ -36,6 +36,7 @@
 </template>
 <script>
 import defaultThumbnail from '@/assets/tiny-default-thumbnail.png';
+import backendApi from '@/api/backendApi';
 
 export default {
   name: 'LinkItem',
@@ -48,6 +49,7 @@ export default {
   emits: 
     ['save', 'unsave', 'on-click'],
   data: () => ({
+    OGthumbnail: null,
   }),
   computed: {
     thum_thumbnail() {
@@ -80,6 +82,11 @@ export default {
     clickLink() {
       this.$emit('on-click', this.link)
     }
+  },
+  async created() {
+    // Fetch the thumbnail for the link
+    // For example, using a service or API
+    this.OGthumbnail = await backendApi.fetchImage(this.link.url);
   },
 };
 </script>

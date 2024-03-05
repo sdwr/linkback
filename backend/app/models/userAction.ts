@@ -3,7 +3,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 export default class UserAction extends BaseModel {
   @column({ isPrimary: true })
-  declare userActionId: number
+  declare id: number
 
   @column()
   declare userId: number
