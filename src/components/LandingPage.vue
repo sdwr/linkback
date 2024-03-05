@@ -1,5 +1,6 @@
 <template>
   <div class="landing-page">
+    <UserCard :user="user" />
     <div> <button @click="goToDebug">Debug Page </button> </div>
     <div> <GoogleSignIn /> </div>
     <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUser(user)">{{user.username}}</a></div>
@@ -36,13 +37,17 @@
 
 <script>
 import api from '@/api'
+import backendApi from '@/api/backendApi'
+import loginApi from '@/api/loginApi'
 import GoogleSignIn from '@/components/GoogleSignin.vue'
 import LinkItem from '@/components/LinkItem.vue'
+import UserCard from '@/components/UserCard.vue'
 
 export default {
   components: {
     GoogleSignIn,
     LinkItem,
+    UserCard,
   },
   computed: {
       user () {
@@ -68,7 +73,7 @@ export default {
             isClip: false,
             loopClip: false,
             originalVideo: null,
-            userId: this.user.userId,
+            userId: this.user.id,
           })
 
           this.newLink = '';
@@ -82,7 +87,7 @@ export default {
     async getTopLinks() {
       this.topLinks = [];
       try {
-        const links = await api.getTopLinksWithUserData(this.user.userId);
+        const links = await api.getTopLinksWithUserData(this.user.id);
         this.topLinks = links;
         this.currentTab = 'top';
         
@@ -93,7 +98,7 @@ export default {
     async getNewLinks() {
       this.recentLinks = [];
       try {
-        const links = await api.getNewLinksWithUserData(this.user.userId);
+        const links = await api.getNewLinksWithUserData(this.user.id);
         this.recentLinks = links;
         this.currentTab = 'recent';
       } catch (error) {
@@ -140,7 +145,10 @@ export default {
     }
   },
   async created() {
-    await this.$store.dispatch('loadUser');
+    this.user = await backendApi.createGuestUser({isGuest: true});
+    let login = await loginApi.login(this.user)
+    console.log("user", this.user)
+    // await this.$store.dispatch('loadUser');
     await this.loadLinks();
   },
 }

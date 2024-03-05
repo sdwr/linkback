@@ -2,6 +2,28 @@ TODO:
 -------------
 
 USER:
+  - use sessions to authenticate and stay logged in
+  - stored in local storage
+  - first iteration, guest users only
+  - flow is:
+    - on first time:
+      * create guest user
+      * create session for guest user
+      * return session
+
+    - when returning:
+      * get session from local storage
+    
+    - while session is on client
+      * verify all requests using sessionToken
+        (check that session w that token exists for that user)
+
+    - if logging in from another device
+      * can log out of guest user and log into existing user
+
+    - to upgrade guest user
+      * add email, change name, create password
+
   - authenticate user
   - have log in page?
 

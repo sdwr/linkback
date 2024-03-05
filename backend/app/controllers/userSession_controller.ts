@@ -2,11 +2,9 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 import User from '#models/user'
 import UserSession from '#models/userSession'
-import IUserSession from '#models/request_objects/iUserSession'
-import UserSessionUtils from '#services/user_session_utils'
 
 export default class UserSessionController {
-  constructor(protected userSessionUtils: UserSessionUtils) {}
+  constructor() {}
 
   async index({ response }: HttpContext) {
     const userSessions = await UserSession.all()
@@ -14,44 +12,31 @@ export default class UserSessionController {
     return response.json(userSessions)
   }
 
-  async onFirstLogin({ request, response }: HttpContext) {
-    //create a new guest user
-    let guestUser = await User.create({
-      username: '',
-      email: '',
-      password: '',
-      date: new Date(),
-    })
+  async login({ request, auth, response }: HttpContext) {
+    //extract user session info from request
+    const {email, password} = request.only(['email', 'password'])
+    const {id, isGuest} = request.only(['id', 'isGuest'])
 
-    guestUser.username = 'guest' + guestUser.id
-    await guestUser.save() 
-
-    //extract device info from request
-    let deviceInfo = request.input('deviceInfo')
-
-    //create a new user session
-    let userSession = await UserSession.create({
-      userId: guestUser.id,
-      sessionToken: '',
-      deviceInfo: deviceInfo,
-      date: new Date(),
-    })
+    let user = null;
+    if (isGuest) {
+      user = await User.query()
+      .where('id', id)
+      .andWhere('isGuest', true)
+      .firstOrFail()
+    } else {
+      user = await User.verifyCredentials(email, password)
+    }
     
+    await auth.use('web').login(user)
 
-
-
-    //return user session
-    return response.json(userSession)
+    return response.json(user)
   }
 
-  async loginWithSessionToken({ request, response }: HttpContext) {
-    //find user session by session token
-    let sessionToken = request.input('sessionToken')
-    let userSession = await UserSession.findBy('sessionToken', sessionToken)
-    
-    //verify user session
+  async logout({ auth, response }: HttpContext) {
+    await auth.use('web').logout()
 
-
-    //return user session
+    return response.json({message: 'logged out'})
   }
+  
+}
 

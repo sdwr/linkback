@@ -29,11 +29,18 @@ function assertHasProperties(obj, properties) {
 
 // create DTOs
 export function createUserDto(data) {
-    assertHasProperties(data, ['username', 'email']);
+    assertHasProperties(data, ['username', 'email', 'password']);
     return {
-        userId: getNextId(),
         username: data.username,
         email: data.email,
+        password: data.password,
+        date: getDateTimeStringNow()
+    };
+}
+
+export function createGuestUserDto(data) {
+    return {
+        isGuest: true,
         date: getDateTimeStringNow()
     };
 }
@@ -41,7 +48,6 @@ export function createUserDto(data) {
 export function createLinkDto(data) {
     assertHasProperties(data, ['url', 'userId']);
     let link = {
-        linkId: getNextId(),
         url: data.url,
         domain: null,
         contentId: null,
@@ -67,7 +73,6 @@ export function createLinkDto(data) {
 export function createVoteDto(data) {
     assertHasProperties(data, ['linkId', 'userId', 'voteValue']);
     return {
-        voteId: getNextId(),
         linkId: data.linkId,
         userId: data.userId,
         voteValue: data.voteValue,
@@ -78,7 +83,6 @@ export function createVoteDto(data) {
 export function createCommentDto(data) {
     assertHasProperties(data, ['content', 'userId', 'linkId']);
     return {
-        commentId: getNextId(),
         content: data.content,
         linkId: data.linkId,
         userId: data.userId,
@@ -89,7 +93,6 @@ export function createCommentDto(data) {
 export function createSavedLinkDto(data) {
     assertHasProperties(data, ['userId', 'linkId']);
     return {
-        savedLinkId: getNextId(),
         userId: data.userId,
         linkId: data.linkId,
         date: getDateTimeStringNow()
@@ -99,7 +102,6 @@ export function createSavedLinkDto(data) {
 export function createTagDto(data) {
     assertHasProperties(data, ['name', 'userId']);
     return {
-        tagId: getNextId(),
         name: data.name,
         userId: data.userId,
         date: getDateTimeStringNow()
@@ -109,7 +111,6 @@ export function createTagDto(data) {
 export function createTagLinkDto(data) {
     assertHasProperties(data, ['linkId', 'tagId']);
     return {
-        linkTagId: getNextId(),
         linkId: data.linkId,
         tagId: data.tagId,
         userId: data.userId || null,
@@ -120,7 +121,6 @@ export function createTagLinkDto(data) {
 export function createUserActionDto(data) {
     assertHasProperties(data, ['userId', 'actionType', 'itemId']);
     return {
-        userActionId: getNextId(),
         userId: data.userId,
         itemId: data.itemId,
         actionType: data.actionType,

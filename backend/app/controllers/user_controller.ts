@@ -3,7 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import IUser from '#models/request_objects/iUser'
 
-import { createUserValidator, updateUserValidator } from '#validators/user_validator'
+import { createGuestUserValidator, createUserValidator, updateUserValidator } from '#validators/user_validator'
 export default class UserController {
   constructor() {}
 
@@ -23,6 +23,15 @@ export default class UserController {
 
   async create({ request, response }: HttpContext) {
     const validatedData = await request.validateUsing(createUserValidator)
+    const iUser = validatedData as IUser
+
+    const user = await User.create(iUser)
+
+    return response.json(user)
+  }
+
+  async createGuest({ request, response }: HttpContext) {
+    const validatedData = await request.validateUsing(createGuestUserValidator)
     const iUser = validatedData as IUser
 
     const user = await User.create(iUser)

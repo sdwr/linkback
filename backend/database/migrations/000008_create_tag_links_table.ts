@@ -9,7 +9,7 @@ export default class TagLinksSchema extends BaseSchema {
       table.integer('tag_id').unsigned().references('id').inTable('tags').onDelete('CASCADE')
       table.integer('link_id').unsigned().references('id').inTable('links').onDelete('CASCADE')
 
-      table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
+      table.timestamp('date').notNullable()
       table.timestamps(true)
     })
   }

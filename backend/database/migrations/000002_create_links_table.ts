@@ -19,8 +19,7 @@ export default class LinksSchema extends BaseSchema {
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('original_link_id').unsigned().nullable().references('id').inTable('links')
 
-      table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
-
+      table.timestamp('date').notNullable()
       table.timestamps(true)
     })
   }

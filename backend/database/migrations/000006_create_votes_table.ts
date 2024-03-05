@@ -10,7 +10,7 @@ export default class VotesSchema extends BaseSchema {
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('vote_value').notNullable()
 
-      table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
+      table.timestamp('date').notNullable()
       table.timestamps(true)
     })
   }

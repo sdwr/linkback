@@ -10,6 +10,14 @@ export const createUserValidator = vine.compile(
   })
 )
 
+export const createGuestUserValidator = vine.compile(
+  vine.object({
+    id: vine.number().positive().withoutDecimals().optional(),
+    isGuest: vine.boolean().parse(v => v === 'true' || v === true),
+    date: vine.string().trim(),
+  })
+)
+
 export const updateUserValidator = vine.compile(
   vine.object({
     id: vine.number().positive().withoutDecimals(),

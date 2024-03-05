@@ -10,6 +10,7 @@
 import router from '@adonisjs/core/services/router'
 
 import OpenGraphController from '#controllers/open_graph_controller'
+import UserSessionController from '#controllers/userSession_controller'
 import UserController from '#controllers/user_controller'
 import LinkController from '#controllers/link_controller'
 import TagController from '#controllers/tag_controller'
@@ -33,11 +34,19 @@ router.get('/', async () => {
 // opengraph routers
 router.get('/opengraph/fetchImage', [OpenGraphController, 'fetchImage'])
 
+// user session routes
+router.post('/usersessions/logout', [UserSessionController, 'logout'])
+router.post('/usersessions/login', [UserSessionController, 'login'])
+router.get('/usersessions', [UserSessionController, 'index'])
+
+
+
 // user routes
 router.get('/users/:id', [UserController, 'getOne'])
 router.get('/users', [UserController, 'index'])
 
 router.post('/users', [UserController, 'create'])
+router.post('/users/createGuest', [UserController, 'createGuest'])
 
 router.put('/users/:id', [UserController, 'update'])
 

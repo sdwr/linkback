@@ -9,7 +9,7 @@ export default class TagsSchema extends BaseSchema {
       table.string('name', 255).notNullable().unique()
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
 
-      table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
+      table.timestamp('date').notNullable()
       table.timestamps(true)
     })
   }

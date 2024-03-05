@@ -10,7 +10,7 @@ export default class CommentsSchema extends BaseSchema {
       table.integer('link_id').unsigned().references('id').inTable('links').onDelete('CASCADE')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
 
-      table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
+      table.timestamp('date').notNullable()
       table.timestamps(true)
     })
   }

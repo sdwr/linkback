@@ -1,7 +1,8 @@
 import externalApi from "@/externalApi";
 
 import { 
-  createUserDto, 
+  createUserDto,
+  createGuestUserDto,
   createLinkDto, 
   createVoteDto,
   createCommentDto, 
@@ -122,6 +123,26 @@ const backendApi = {
       return data;
     } catch (error) {
       console.error('Error creating user:', error.message);
+      return null;
+    }
+  },
+  createGuestUser: async (userData) => {
+    const url = `${BACKEND_URL}${USERS_PATH}/createGuest`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(createGuestUserDto(userData))
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to create guest user, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error creating guest user:', error.message);
       return null;
     }
   },
