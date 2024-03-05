@@ -341,10 +341,16 @@ const backendApi = {
     }
   },
   getNewLinks: async (amount) => {
-    const url = new URL(`${BACKEND_URL}${LINKS_PATH}/new`);
-    url.searchParams.append('amount', amount);
+    //check amount is a number
+    if (isNaN(amount)) {
+      console.error('Error fetching new links: amount is not a number');
+      return null;
+    }
+    const url = `${BACKEND_URL}${LINKS_PATH}/new`;
+    url = url + '?amount=' + amount;
+
     try {
-      const response = await fetch(url.toString());
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Failed to fetch new links, status code: ${response.status}`);
       }
@@ -356,10 +362,17 @@ const backendApi = {
     }
   },
   getTopLinks: async (amount) => {
-    const url = new URL(`${BACKEND_URL}${LINKS_PATH}/top`);
-    url.searchParams.append('amount', amount);
+    //check amount is a number
+    if (isNaN(amount)) {
+      console.error('Error fetching top links: amount is not a number');
+      return null;
+    }
+
+    const url = `${BACKEND_URL}${LINKS_PATH}/top`;
+    url = url + '?amount=' + amount;
+
     try {
-      const response = await fetch(url.toString());
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Failed to fetch top links, status code: ${response.status}`);
       }
