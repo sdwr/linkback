@@ -138,14 +138,14 @@ const api = {
   },
 
   updateLink: async (data) => {
-    let linkId = parseInt(data.linkId);
-    if(!linkId) {
-      console.log("updateLink: invalid linkId", linkId, data)
+    let id = parseInt(data.id);
+    if(!id) {
+      console.log("updateLink: invalid id", id, data)
       return null;
     }
 
     let linkDto = createLinkDto(data);
-    linkDto.linkId = linkId;
+    linkDto.id = id;
 
     let link = await backendApi.updateLink(data);
     return link;
@@ -207,7 +207,7 @@ const api = {
       console.log("addTag: failed to create tag", tag);
       return null;
     }
-    await api.addUserAction({ userId: tag.userId, actionType: ACTION_CREATETAG, itemId: tag.tagId });
+    await api.addUserAction({ userId: tag.userId, actionType: ACTION_CREATETAG, itemId: tag.id });
 
     return tag;
   },
@@ -280,7 +280,7 @@ const api = {
       console.log("addTagToLink: failed to create tag", tagName);
       return null;
     }
-    const taggedLink = await api.addTaggedLink({ userId, linkId, tagId: tag.tagId });
+    const taggedLink = await api.addTaggedLink({ userId, linkId, tagId: tag.id });
     
     return taggedLink;
   },
@@ -312,12 +312,12 @@ const api = {
   //copy to avoid modifying original data
   addUserDataToLinks: async (userId, links) => {
     let savedLinks = await api.getSavedLinksByUser(userId) || [];
-    let savedLinkIds = savedLinks.map(link => link.linkId);
+    let savedLinkIds = savedLinks.map(savedLink => savedLink.linkId);
 
     let linksCopy = structuredClone(links) || [];
 
     let updatedLinks = linksCopy.map(link => {
-      if (savedLinkIds.includes(link.linkId)) {
+      if (savedLinkIds.includes(link.id)) {
         link.saved = true;
       }
       return link;

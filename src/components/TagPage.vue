@@ -33,24 +33,24 @@ export default {
   methods: {
     goToLink(link) {
       if(link.domain === 'youtube.com') {
-        this.$router.push({ path: `/tube/${link.linkId}`})
+        this.$router.push({ path: `/tube/${link.id}`})
       } else {
-        this.$router.push({ path: `/link/${link.linkId}`})
+        this.$router.push({ path: `/link/${link.id}`})
       }
     },
     async saveLink(link) {
-      await api.saveLink(this.user.userId, link.linkId);
+      await api.saveLink(this.user.id, link.id);
       await this.loadLinks();
     },
     async unsaveLink(link) {
-      await api.unsaveLink(this.user.userId, link.linkId);
+      await api.unsaveLink(this.user.id, link.id);
       await this.loadLinks();
     },
     async loadTag() {
       this.tag = await api.getTag(this.tagId)
     },
     async loadLinks() {
-      this.links = await api.getLinksByTagWithUserData(this.user.userId, this.tag)
+      this.links = await api.getLinksByTagWithUserData(this.user.id, this.tag)
     },
     goBack() {
       this.$router.go(-1);

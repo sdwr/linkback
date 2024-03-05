@@ -54,27 +54,27 @@ export default {
   },
   methods: {
     async saveLink(link) {
-      await api.saveLink(this.user.userId, link.linkId);
+      await api.saveLink(this.user.id, link.id);
       await this.loadLinks();
     },
     async unsaveLink(link) {
-      await api.unsaveLink(this.user.userId, link.linkId);
+      await api.unsaveLink(this.user.id, link.id);
       await this.loadLinks();
     },
     goToLink(link) {
       if(link.domain === 'youtube.com') {
-        this.$router.push({ path: `/tube/${link.linkId}`})
+        this.$router.push({ path: `/tube/${link.id}`})
       } else {
-        this.$router.push({ path: `/link/${link.linkId}`})
+        this.$router.push({ path: `/link/${link.id}`})
       }
     },
     goBack() {
       this.$router.go(-1)
     },
     async loadLinks() {
-      this.userHistory = await api.getUserActionsByUser(this.user.userId);
-      this.submittedLinks = await api.getSubmittedLinksWithUserData(this.user.userId);
-      this.savedLinks = await api.getSavedLinksWithUserData(this.user.userId);
+      this.userHistory = await api.getUserActionsByUser(this.user.id);
+      this.submittedLinks = await api.getSubmittedLinksWithUserData(this.user.id);
+      this.savedLinks = await api.getSavedLinksWithUserData(this.user.id);
     },
   },
   async created() {

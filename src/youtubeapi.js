@@ -1,4 +1,5 @@
-import { YOUTUBE_API_KEY } from './.secrets.js';
+
+const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
 export async function fetchYoutubeData(videoId) {
 

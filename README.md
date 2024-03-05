@@ -2,11 +2,12 @@
 
 ## Env variables and secrets
 
-create a .secrets.js file in /src
-add export const YOUTUBE_API_KEY="<KEY_HERE>" to the file
+create a .env file in the root directory with backend url and youtube api key:
 
-add an .env.js file in /src
-add export const BACKEND_URL="URL:port" to the file
+  VITE_BACKEND_URL_PROD = "/api"
+  VITE_BACKEND_URL_DEV = "http://localhost:3333"
+  VITE_YOUTUBE_API_KEY = "<KEY HERE>"
+
 
 create a .env file to /backend, copied from .env.example
 make sure host is 0.0.0.0 for outside access
@@ -112,8 +113,7 @@ install nginx
 use nginx-conf file
 
 make sure the env files are created
-/src/.secrets.js
-/src/.env.js
+.env
 /backend/.env
 
 make sure postgres is running, with correct user and linkback DB created

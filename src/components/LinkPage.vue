@@ -91,10 +91,10 @@ export default {
       if(this.newTagName && this.newTagName.length > 0) {
         await api.addTag({
           name: this.newTagName,
-          linkId: this.link.linkId
+          linkId: this.link.id
         })
         this.newTagName = ''
-        this.tags = await api.getTagsByLink(this.link.linkId)
+        this.tags = await api.getTagsByLink(this.link.id)
       }
       console.log(this.tags)
     },

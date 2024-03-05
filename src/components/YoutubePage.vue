@@ -3,7 +3,7 @@
     <button @click="backToHome"> &lt; Back</button>
     <div> <button @click="goToDebug">Debug Page </button> </div>
     <h1 v-if="link">{{link.title || link.url}}</h1>
-    <h2>Added by: <a :href="`/user`" @click.prevent="goToUser(submittingUser.userId)">{{submittingUser.username}}</a></h2> <!-- Author credit -->
+    <h2>Added by: <a :href="`/user`" @click.prevent="goToUser(submittingUser.id)">{{submittingUser.username}}</a></h2> <!-- Author credit -->
     <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
     <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave from My Links</button> <!-- Saved button -->
     <a :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
@@ -58,10 +58,10 @@
       <div class="tags">
         <h2>Tags</h2>
         <!-- List of tags here -->
-        <div v-for="tag in tags" :key="tag.tagId">
+        <div v-for="tag in tags" :key="tag.id">
             <a :href="`/tag/${tag.name}`" @click.prevent="goToTag(tag)">{{tag.name}}</a>
             <!-- Voting component for each tag -->
-            <VoteButton :tag-id="tag.tagId"></VoteButton>
+            <VoteButton :tag-id="tag.id"></VoteButton>
         </div>
 
         <!-- Form to add a new tag -->
@@ -115,14 +115,14 @@ export default {
   },
   methods: {
     async saveToLinks() {
-      let result = await api.saveLink(this.user.userId, this.link.linkId);
+      let result = await api.saveLink(this.user.id, this.link.id);
       if(result) {
         this.userSavedLink = true;
       }
     },
 
     async unsaveToLinks() {
-      let result = await api.unsaveLink(this.user.userId, this.link.linkId);
+      let result = await api.unsaveLink(this.user.id, this.link.id);
       if(result) {
         this.userSavedLink = false;
       }
@@ -137,8 +137,8 @@ export default {
         endTime: this.clipEnd,
         isClip: true,
         loopClip: this.loopClip,
-        originalVideo: this.link.linkId,
-        userId: this.user.userId,
+        originalVideo: this.link.id,
+        userId: this.user.id,
       })
       this.creatingClip = false;
       this.goToLink(clip);
@@ -146,9 +146,9 @@ export default {
     },
     goToLink(link) {
       if(link.domain === 'youtube.com') {
-        this.$router.push({ path: `/tube/${link.linkId}`})
+        this.$router.push({ path: `/tube/${link.linidkId}`})
       } else {
-        this.$router.push({ path: `/link/${link.linkId}`})
+        this.$router.push({ path: `/link/${link.id}`})
       }
     },
     goToUser(id) {
@@ -173,8 +173,8 @@ export default {
     },
     async addTag() {
       if(this.newTagName && this.newTagName.length > 0) {
-        await api.addTagToLink(this.user.userId, this.link.linkId, this.newTagName);
-        this.tags = await api.getTagsByLink(this.link.linkId)
+        await api.addTagToLink(this.user.id, this.link.id, this.newTagName);
+        this.tags = await api.getTagsByLink(this.link.id)
 
       }
     },
@@ -182,7 +182,7 @@ export default {
       this.$router.push({ path:"/"})
     },
     goToTag(tag) {
-      this.$router.push({ path: `/tag/${tag.tagId}`})
+      this.$router.push({ path: `/tag/${tag.id}`})
     },
     async loadLink(linkId) {
       let link = await api.getLink(linkId);
@@ -194,8 +194,8 @@ export default {
     this.link = await this.loadLink(id);
     this.submittingUser = await api.getUser(this.link.userId);
     this.user = await api.getUser(1);
-    this.userSavedLink = await api.checkUserSavedLink(this.user.userId, this.link.linkId);
-    this.tags = await api.getTagsByLink(this.link.linkId);
+    this.userSavedLink = await api.checkUserSavedLink(this.user.id, this.link.id);
+    this.tags = await api.getTagsByLink(this.link.id);
   },
   mounted() {
   }

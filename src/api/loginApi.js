@@ -1,8 +1,16 @@
 
 import { USER_SESSIONS_PATH } from "./api_routes"
 
-const BACKEND_URL = '/api'
-// const BACKEND_URL = 'http://localhost:3333
+//load the backend url from environment variables
+let backendUrl;
+if (import.meta.env.PROD) {
+  backendUrl = import.meta.env.VITE_BACKEND_URL_PROD;
+} else {
+  backendUrl = import.meta.env.VITE_BACKEND_URL_DEV;
+}
+
+const BACKEND_URL = backendUrl;
+
 
 const loginApi = {
   login: async (userDto) => { 
