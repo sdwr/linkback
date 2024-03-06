@@ -1,6 +1,5 @@
 <template>
   <div class="landing-page">
-    <UserCard :user="user" />
     <div> <button @click="goToDebug">Debug Page </button> </div>
     <div> <GoogleSignIn /> </div>
     <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUser(user)">{{user.username}}</a></div>
@@ -41,19 +40,17 @@ import backendApi from '@/api/backendApi'
 import loginApi from '@/api/loginApi'
 import GoogleSignIn from '@/components/GoogleSignin.vue'
 import LinkItem from '@/components/LinkItem.vue'
-import UserCard from '@/components/UserCard.vue'
 
 export default {
   components: {
     GoogleSignIn,
     LinkItem,
-    UserCard,
   },
   computed: {
       storedUser () {
         return this.$store.getters.getUser
       },
-      user () {
+      user() {
         return this.$store.getters.getUser || {}
       }
   },

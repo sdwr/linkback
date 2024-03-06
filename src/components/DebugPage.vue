@@ -57,7 +57,7 @@ export default {
 
       // Create a table for each data type
       Object.keys(this.apiData).forEach(key => {
-        if(this.apiData[key].length === 0) return;
+        if(!this.apiData[key] || this.apiData[key].length === 0) return;
         this.createTable(key, this.apiData[key]);
       });
     },

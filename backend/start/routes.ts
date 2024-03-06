@@ -109,6 +109,7 @@ router.get('/votes/link/:linkId', [VoteController, 'getVotesByLink'])
 router.get('/votes/:id', [VoteController, 'getOne'])
 router.get('/votes', [VoteController, 'index'])
 
+router.post('/votes/createorUpdate', [VoteController, 'createOrUpdate'])
 router.post('/votes', [VoteController, 'create'])
 
 router.put('/votes/:id', [VoteController, 'update'])

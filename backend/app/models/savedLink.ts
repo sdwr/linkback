@@ -3,7 +3,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 export default class SavedLink extends BaseModel {
   @column({ isPrimary: true })
-  declare savedLinkId: number
+  declare id: number
 
   @column()
   declare userId: number

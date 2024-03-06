@@ -9,7 +9,7 @@
 
     <!-- Thumbnail -->
     <div class="thumbnail">
-      <img class="thumbnail-img" :src="OGthumbnail" alt="thumbnail" style="height: 80px;">
+      <img class="thumbnail-img" :src="thumbnail" alt="thumbnail" style="height: 80px;">
     </div>
 
     <!-- Link Details -->
@@ -37,6 +37,7 @@
 <script>
 import defaultThumbnail from '@/assets/tiny-default-thumbnail.png';
 import backendApi from '@/api/backendApi';
+import api from '@/api.js';
 
 export default {
   name: 'LinkItem',
@@ -52,12 +53,15 @@ export default {
     OGthumbnail: null,
   }),
   computed: {
+    user() {
+      return this.$store.getters.getUser || {};
+    },
     thum_thumbnail() {
       let thum = "//image.thum.io/get/width/80/" + this.link.url;
       return thum;
     },
     thumbnail() {
-      return this.link.thumbnail || defaultThumbnail;
+      return this.OGthumbnail || defaultThumbnail;
     },
     duration() {
       return this.link.startTime && this.link.endTime
@@ -66,12 +70,21 @@ export default {
     },
   },
   methods: {
-    upvote() {
-      // Implement upvote functionality
-      // For example, emit an event or increment a local vote counter
+    async upvote() {
+      let voteDto = {
+        linkId: this.link.id,
+        userId: this.user.id,
+        vote: 1,
+      };
+      await api.addVote(this.link.id);
     },
-    downvote() {
-      // Implement downvote functionality
+    async downvote() {
+      let voteDto = {
+        linkId: this.link.id,
+        userId: this.user.id,
+        vote: -1,
+      };
+      await api.addVote(this.link.id);
     },
     saveLink() {
       this.$emit('on-save', this.link)
@@ -107,6 +120,8 @@ export default {
 }
 .thumbnail-img {
   height: 80px;
+  width: 80px;
+  overflow:hidden;
 }
 .details {
   width: 50%;

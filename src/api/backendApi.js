@@ -753,6 +753,26 @@ const backendApi = {
       return null;
     }
   },
+  createOrUpdateVote: async (voteData) => {
+    const url = `${BACKEND_URL}${VOTES_PATH}/createOrUpdate`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(createVoteDto(voteData))
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to create or update vote, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error creating or updating vote:', error.message);
+      return null;
+    }
+  },
   updateVote: async (id, voteData) => {
     const url = `${BACKEND_URL}${VOTES_PATH}/${id}`;
     try {

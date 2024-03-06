@@ -27,7 +27,8 @@ export default class LinkController {
   async getLinksByUser({ request, response }: HttpContext) {
     const userId = request.param('userId');
 
-    const links = await Link.findBy('userId', userId)
+    const links = await Link.query()
+      .where('userId', userId)
 
     return response.ok(links);
   }
@@ -47,7 +48,9 @@ export default class LinkController {
   async getNewLinks({ request, response }: HttpContext) {
     const amount = Number(request.input('amount', 10));
 
-    const links = await Link.query().orderBy('created_at', 'desc').limit(amount);
+    const links = await Link.query()
+      .orderBy('created_at', 'desc')
+      .limit(amount);
 
     return response.ok(links);
   }

@@ -25,7 +25,8 @@ export default class SavedLinkController {
   async getSavedLinksByUser({ request, response }: HttpContext) {
     const userId = request.param('userId');
 
-    const savedLinks = await SavedLink.findBy('userId', userId)
+    const savedLinks = await SavedLink.query()
+      .where('userId', userId)
 
     return response.ok(savedLinks);
   }

@@ -25,7 +25,8 @@ export default class LinkController {
   async getCommentsByUser({ request, response }: HttpContext) {
     const userId = request.param('userId');
 
-    const comments = await Comment.findBy('userId', userId)
+    const comments = await Comment.query()
+      .where('userId', userId)
 
     return response.ok(comments);
   }

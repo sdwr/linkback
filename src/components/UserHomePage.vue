@@ -6,7 +6,7 @@
       <div class="section">
         <h2>User History</h2>
         <ul>
-          <li v-for="historyItem in userHistory" :key="historyItem.userActionId">{{ historyItem.actionType }}</li>
+          <li v-for="historyItem in userHistory" :key="historyItem.id">{{ historyItem.actionType }}</li>
         </ul>
       </div>
       <div class="section">

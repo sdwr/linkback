@@ -150,13 +150,13 @@ const api = {
     let link = await backendApi.updateLink(data);
     return link;
   },
-
+  //uses create or update so it will overwrite existing vote
   addVote: async (data) => {
     const voteDto = createVoteDto(data);
 
-    let vote = await backendApi.createVote(voteDto);
+    let vote = await backendApi.createOrUpdateVote(voteDto);
     if (!vote) {
-      console.log("addVote: failed to create vote", vote);
+      console.log("addVote: failed to add vote", vote);
       return null;
     }
     await api.addUserAction({ userId: vote.userId, actionType: ACTION_VOTE, itemId: vote.linkId });

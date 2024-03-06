@@ -25,7 +25,8 @@ export default class VoteController {
   async getVotesByLink({ request, response }: HttpContext) {
     const linkId = request.param('linkId');
 
-    const votes = await Vote.findBy('linkId', linkId)
+    const votes = await Vote.query()
+      .where('linkId', linkId)
 
     return response.ok(votes);
   }
@@ -33,9 +34,29 @@ export default class VoteController {
   async getVotesByUser({ request, response }: HttpContext) {
     const userId = request.param('userId');
 
-    const votes = await Vote.findBy('userId', userId)
+    const votes = await Vote.query()
+      .where('userId', userId)
 
     return response.ok(votes);
+  }
+
+  async createOrUpdate({ request, response }: HttpContext) {
+    const validatedData = await request.validateUsing(createVoteValidator);
+    const iVote = validatedData as IVote;
+
+    let vote = await Vote.query()
+      .where('userId', iVote.userId)
+      .andWhere('linkId', iVote.linkId)
+      .first()
+
+    if (vote) {
+      vote.merge(iVote);
+      await vote.save();
+    } else {
+      vote = await Vote.create(iVote);
+    }
+
+    return response.ok(vote);
   }
 
   async create({ request, response }: HttpContext) {

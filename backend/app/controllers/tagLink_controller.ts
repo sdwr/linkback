@@ -25,7 +25,8 @@ export default class TagLinkController {
   async getTagLinksByLink({ request, response }: HttpContext) {
     const linkId = request.param('linkId');
 
-    const tagLinks = await TagLink.findBy('linkId', linkId);
+    const tagLinks = await TagLink.query()
+      .where('linkId', linkId);
 
     return response.ok(tagLinks);
   }
@@ -33,7 +34,8 @@ export default class TagLinkController {
   async getTagLinksByTag({ request, response }: HttpContext) {
     const tagId = request.param('tagId');
 
-    const tagLinks = await TagLink.findBy('tagId', tagId);
+    const tagLinks = await TagLink.query()
+      .where('tagId', tagId);
 
     return response.ok(tagLinks);
   }
@@ -41,7 +43,8 @@ export default class TagLinkController {
   async getTagLinksByUser({ request, response }: HttpContext) {
     const userId = request.param('userId');
 
-    const tagLinks = await TagLink.findBy('userId', userId);
+    const tagLinks = await TagLink.query()
+      .where('userId', userId);
 
     return response.ok(tagLinks);
   }

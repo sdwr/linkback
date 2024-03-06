@@ -25,7 +25,8 @@ export default class TagController {
   async getTagsByLink({ request, response }: HttpContext) {
     const linkId = request.param('linkId')
 
-    const tags = await Tag.findBy('linkId', linkId)
+    const tags = await Tag.query()
+      .where('linkId', linkId)
 
     return response.json(tags)
   }
@@ -33,7 +34,8 @@ export default class TagController {
   async getTagsByUser({ request, response }: HttpContext) {
     const userId = request.param('userId')
 
-    const tags = await Tag.findBy('userId', userId)
+    const tags = await Tag.query()
+      .where('userId', userId)
 
     return response.json(tags)
   }
