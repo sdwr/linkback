@@ -5,6 +5,8 @@ import TagPage from './components/TagPage.vue'
 import UserHomePage from './components/UserHomePage.vue'
 import YoutubePage from './components/YoutubePage.vue'
 
+import CreateLinkPage from './components/CreateLinkPage.vue'
+
 import DebugPage from './components/DebugPage.vue'
 
 const routes = [
@@ -14,6 +16,7 @@ const routes = [
     { path: '/tag/:id', component: TagPage, name: 'tagpage'},
     { path: '/user/:id', component: UserHomePage, name: 'userpage'},
     
+    { path: '/createlink', component: CreateLinkPage, name: 'createlinkpage'},
     { path: '/debug', component: DebugPage, name: 'debugpage'},
 ]
 

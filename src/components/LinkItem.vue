@@ -18,10 +18,6 @@
       <div class="details-url" style="font-size: 0.8em;">{{ link.url }}</div>
     </a>
 
-    <!-- Spacer-->
-    <div class="spacer">
-    </div>
-
     <!-- Duration -->
     <div v-if="duration" class="duration" style="flex-shrink: 0; padding: 0 10px;">
       length: {{ duration }}s
@@ -124,7 +120,8 @@ export default {
   overflow:hidden;
 }
 .details {
-  width: 50%;
+  flex: 1;
+  min-width: 0;
   padding: 0px 30px;
 }
 .details-title {
@@ -136,9 +133,6 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.spacer {
-  flex-grow: 1;
 }
 .duration {
   flex-shrink: 0;

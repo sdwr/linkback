@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      title: 'Page Header'
+      title: 'Linkback'
     }
   },
   methods: {
@@ -66,7 +66,7 @@ export default {
 
 .page-header-buttons {
   display: flex;
-  margin-left: 40px;
+  margin-left: 10px;
   gap: 10px; /* Adds some space between buttons */
 }
 

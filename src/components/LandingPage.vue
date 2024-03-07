@@ -1,11 +1,8 @@
 <template>
   <div class="landing-page">
-    <div> <button @click="goToDebug">Debug Page </button> </div>
-    <div> <GoogleSignIn /> </div>
-    <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUser(user)">{{user.username}}</a></div>
     <div class="add-link">
-      <input v-model="newLink" @keyup.enter="addLink" type="url" placeholder="Paste a URL here..." />
-      <button @click="addLink">Add Link</button>
+      Add a link
+      <CreateLinkButton/>
     </div>
     <div class="links-container">
       <div class="top-links">
@@ -19,7 +16,7 @@
           <!-- Additional components here -->
         </div>
       </div>
-      <div class="recent-links">
+      <div v-if="!isOnMobile" class="recent-links">
         <h2>Recent Links</h2>
         <div v-for="link in recentLinks" :key="link.id">
           <LinkItem :link="link" 
@@ -38,13 +35,13 @@
 import api from '@/api'
 import backendApi from '@/api/backendApi'
 import loginApi from '@/api/loginApi'
-import GoogleSignIn from '@/components/GoogleSignin.vue'
 import LinkItem from '@/components/LinkItem.vue'
+import CreateLinkButton from '@/components/CreateLinkButton.vue'
 
 export default {
   components: {
-    GoogleSignIn,
     LinkItem,
+    CreateLinkButton,
   },
   computed: {
       storedUser () {
@@ -52,6 +49,9 @@ export default {
       },
       user() {
         return this.$store.getters.getUser || {}
+      },
+      isOnMobile() {
+        return this.$store.getters.getIsOnMobile
       }
   },
   data() {
@@ -112,9 +112,6 @@ export default {
         this.$router.push({ path: `/link/${link.id}`})
       }
     },
-    goToDebug() {
-      this.$router.push({ path: `/debug`})
-    },
     async saveLink(link) {
       await api.saveLink(this.user.id, link.id);
       await this.loadLinks();
@@ -122,9 +119,6 @@ export default {
     async unsaveLink(link) {
       await api.unsaveLink(this.user.id, link.id);
       await this.loadLinks();
-    },
-    goToUser(user) {
-      this.$router.push({ name: 'userpage', params: { id: user.id } });
     },
     onSignIn(googleUser) {
       console.log(googleUser)
@@ -187,6 +181,10 @@ export default {
 .add-link {
   margin: 20px;
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 40px;
+  font-weight: bold;
   justify-content: center;
 }
 
@@ -194,10 +192,12 @@ export default {
   display: flex;
   justify-content: space-around;
   width: 100%;
+  overflow: hidden;
 }
 
 .top-links, .recent-links {
-  width: 45%;
+  flex: 1;
+  min-width: 300px;
 }
 
 .top-links > div, .recent-links > div {

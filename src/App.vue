@@ -7,16 +7,28 @@
 
 <script>
 import PageHeader from '@/components/PageHeader.vue';
+import { isOnMobile } from '@/utils'
 
 export default {
   name: 'App',
   components: {
     PageHeader,
   },
+  methods: {
+    handleResize() {
+      this.$store.dispatch('saveIsOnMobile', isOnMobile())
+    }
+  },
   created() {
     this.$store.dispatch('loadUser');
     
-  }
+  },
+  mounted() {
+    window.addEventListener('resize', this.handleResize)
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize)
+  },
 }
 </script>
 

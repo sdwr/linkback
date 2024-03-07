@@ -3,15 +3,20 @@ import { createStore } from 'vuex';
 export default createStore({
     state() {
         return {
-            user: null
+            user: null,
+            isOnMobile: false
         };
     },
     mutations: {
         setUser(state, user) {
             state.user = user;
+        },
+        setIsOnMobile(state, isOnMobile) {
+            state.isOnMobile = isOnMobile;
         }
     },
     actions: {
+        //User actions
         async loadUser({ commit }) {
             try {
                 // Load user data from localStorage
@@ -35,11 +40,20 @@ export default createStore({
             } catch (error) {
                 console.error('Save user failed:', error);
             }
+        },
+
+        //Mobile actions
+        async saveIsOnMobile({ commit }, isOnMobile) {
+            commit('setIsOnMobile', isOnMobile);
         }
+
     },
     getters: {
         getUser(state) {
             return state.user;
+        },
+        getIsOnMobile(state) {
+            return state.isOnMobile;
         }
     }
 });

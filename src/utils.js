@@ -1,9 +1,8 @@
 import { DateTime } from 'luxon';
 
-let globalId = 10;
 
-export function getNextId() {
-    return ++globalId;
+export function isOnMobile() {
+    return window.innerWidth < 800;
 }
 
 export function getDateTimeStringNow() {
