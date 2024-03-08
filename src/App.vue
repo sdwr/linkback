@@ -20,7 +20,10 @@ export default {
     }
   },
   created() {
+    //load user from local storage, if it exists 
     this.$store.dispatch('loadUser');
+    //check if the user is on mobile
+    this.$store.dispatch('saveIsOnMobile', isOnMobile())
     
   },
   mounted() {

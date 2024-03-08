@@ -70,9 +70,9 @@ export default {
       let voteDto = {
         linkId: this.link.id,
         userId: this.user.id,
-        vote: 1,
+        voteValue: 1,
       };
-      await api.addVote(this.link.id);
+      await api.addVote(voteDto);
     },
     async downvote() {
       let voteDto = {

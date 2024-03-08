@@ -12,6 +12,7 @@ export default class VotesSchema extends BaseSchema {
 
       table.timestamp('date').notNullable()
       table.timestamps(true)
+      
     })
   }
 

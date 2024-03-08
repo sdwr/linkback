@@ -73,6 +73,7 @@ router.get('/links/tag/:tagId', [LinkController, 'getLinksByTag'])
 router.get('/links/:id', [LinkController, 'getOne'])
 router.get('/links', [LinkController, 'index'])
 
+router.post('/links/getWithVotes', [LinkController, 'getWithVotes'])
 router.post('/links', [LinkController, 'create'])
 
 router.put('/links/:id', [LinkController, 'update'])
@@ -109,7 +110,7 @@ router.get('/votes/link/:linkId', [VoteController, 'getVotesByLink'])
 router.get('/votes/:id', [VoteController, 'getOne'])
 router.get('/votes', [VoteController, 'index'])
 
-router.post('/votes/createorUpdate', [VoteController, 'createOrUpdate'])
+router.post('/votes/createOrUpdate', [VoteController, 'createOrUpdate'])
 router.post('/votes', [VoteController, 'create'])
 
 router.put('/votes/:id', [VoteController, 'update'])

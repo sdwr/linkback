@@ -7,14 +7,20 @@ export default interface ILink {
   contentId?: string;
   startTime?: number;
   endTime?: number;
+  
   isClip: boolean;
   loopClip: boolean;
   embeddable: boolean;
   title: string;
   description: string;
-  date: any;
+
   userId: number;
   originalLinkId?: number;
+  
+  //generated fields
+  voteSum?: number;
+  
+  date: any;
   createdAt?: any;
   updatedAt?: any;
 }

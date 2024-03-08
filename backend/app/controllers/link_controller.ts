@@ -1,6 +1,5 @@
 import { createLinkValidator, updateLinkValidator } from '#validators/link_validator';
 import type { HttpContext } from '@adonisjs/core/http'
-import logger from '@adonisjs/core/services/logger'
 
 
 import Link from '#models/link';
@@ -15,7 +14,6 @@ export default class LinkController {
     return response.ok(links);
   }
   
-
   async getOne({ request, response }: HttpContext) {
     const id = request.param('id');
 
@@ -68,6 +66,19 @@ export default class LinkController {
 
     return response.ok(links);
   }
+
+  async getWithVotes({ request, response }: HttpContext) {
+    const linkIds = request.input('linkIds');
+
+    const links = await Link.query()
+      .whereIn('links.id', linkIds)
+      .leftJoin('votes', 'links.id', 'votes.link_id')
+      .groupBy('links.id')
+      .sum('votes.vote_value as votesSum');
+
+    return response.ok(links);
+  }
+    
 
   async create({ request, response }: HttpContext) {
     const validatedLink = await request.validateUsing(createLinkValidator);

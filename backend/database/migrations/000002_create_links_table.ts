@@ -21,6 +21,17 @@ export default class LinksSchema extends BaseSchema {
 
       table.timestamp('date').notNullable()
       table.timestamps(true)
+
+      //create materialized view for vote_sum
+      this.schema.raw(`
+        CREATE MATERIALIZED VIEW link_s_with_vote_sum AS
+        SELECT
+          l.id AS link_id,
+          COALESCE(SUM(v.vote_value), 0) AS vote_sum
+        FROM links l
+        LEFT JOIN votes v ON l.id = v.link_id
+        GROUP BY l.id;
+      `)
     })
   }
 

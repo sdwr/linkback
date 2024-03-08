@@ -105,6 +105,18 @@ const api = {
     return user;
   },
 
+  getTopLinksWithVotes: async (limit = 10) => {
+    let topLinks = await backendApi.getTopLinks(limit);
+    let topLinksWithVotes = await backendApi.getLinksWithVotes(topLinks);
+
+    return topLinksWithVotes;
+  },
+  getNewLinksWithVotes: async (limit = 10) => {
+    let newLinks = await backendApi.getNewLinks(limit);
+    let newLinksWithVotes = await backendApi.getLinksWithVotes(newLinks);
+
+    return newLinksWithVotes;
+  },
   addLink: async (data) => {
     let linkDto = createLinkDto(data);
     linkDto = await externalApi.addSiteData(linkDto);

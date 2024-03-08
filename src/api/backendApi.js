@@ -391,6 +391,33 @@ const backendApi = {
       return null;
     }
   },
+  getLinksWithVotes: async (linkIds) => {
+    if (!linkIds || linkIds.length === 0) {
+      console.error('Error fetching links with votes: linkIds is empty');
+      return null;
+    
+    }
+    let url = `${BACKEND_URL}${LINKS_PATH}/getWithVotes`;
+
+    //send linkIds as a body param
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(linkIds)
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch links with votes, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching links with votes:', error.message);
+      return null;
+    }
+  },
   createLink: async (linkData) => {
     const url = `${BACKEND_URL}${LINKS_PATH}`;
     try {

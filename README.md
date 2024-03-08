@@ -123,19 +123,32 @@ npm install in /backend
 
 run DB migrations in backend with node ace migration:run
 
-check that server isn't running already in headless w
-
-  ss -tuln | grep 3333
-
-run server in background with 
-
-  nohup node ace serve --watch &
-
-build FE with 
+run frontend with
 
   npm run build
 
-run FE in backgroun with
+  npm run serve
 
-  nohup npm run serve &
+and backend with
+
+  node ace serve --watch
+
+## To run FE and BE in the background, so they stay open when SSH closes
+
+open a new screen with
+  
+  screen
+
+run the command to start the process
+then detach from the screen with
+
+  ctrl+A, then D
+
+to see all running screens
+
+  screen -ls
+
+reattaching to restart a process
+
+  screen -r <Screen #>
 

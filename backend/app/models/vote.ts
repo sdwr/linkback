@@ -3,16 +3,19 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-export default class User extends BaseModel {
+export default class Vote extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
+  
+  @column()
+  declare linkId: number
 
   @column()
-  declare username: string
+  declare userId: number
 
   @column()
-  declare email: string
-
+  declare voteValue: number
+  
   @column()
   declare date: string
 
