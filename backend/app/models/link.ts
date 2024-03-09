@@ -44,6 +44,9 @@ export default class Link extends BaseModel {
   @column()
   declare originalLinkId: number | null
 
+  @column()
+  declare voteSum: number
+
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare createdAt: DateTime | null
 

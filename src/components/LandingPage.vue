@@ -12,6 +12,7 @@
             @onClick="goToLink"
             @onSave="saveLink"
             @onUnsave="unsaveLink"
+            @onVote="loadLinks"
           ></LinkItem>
           <!-- Additional components here -->
         </div>
@@ -23,6 +24,7 @@
             @onClick="goToLink"
             @onSave="saveLink"
             @onUnsave="unsaveLink"
+            @onVote="loadLinks"
           ></LinkItem>
           <!-- Additional components here -->
         </div>

@@ -44,7 +44,7 @@ export default {
     },
   },
   emits: 
-    ['save', 'unsave', 'on-click'],
+    ['save', 'unsave', 'on-click', 'on-vote'],
   data: () => ({
     OGthumbnail: null,
   }),
@@ -73,14 +73,16 @@ export default {
         voteValue: 1,
       };
       await api.addVote(voteDto);
+      this.$emit('on-vote');
     },
     async downvote() {
       let voteDto = {
         linkId: this.link.id,
         userId: this.user.id,
-        vote: -1,
+        voteValue: -1,
       };
-      await api.addVote(this.link.id);
+      await api.addVote(voteDto);
+      this.$emit('on-vote');
     },
     saveLink() {
       this.$emit('on-save', this.link)
