@@ -88,4 +88,10 @@ export default class VoteController {
     return response.ok(vote);
   }
 
+  async deleteAll({ response }: HttpContext) {
+    await Vote.truncate(true);
+
+    return response.ok("All votes deleted");
+  }
+
 }

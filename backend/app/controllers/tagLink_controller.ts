@@ -78,4 +78,9 @@ export default class TagLinkController {
     return response.ok(tagLink);
   }
   
+  async deleteAll({ response }: HttpContext) {
+    await TagLink.truncate(true);
+
+    return response.ok("All tagLinks deleted!");
+  }
 }

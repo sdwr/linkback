@@ -2,8 +2,7 @@
   <div>
     <button @click="goBack">Back</button>
     <h1>Debug Page</h1>
-    <button @click="dumpData">Dump Data</button>
-    <button @click="restoreData">Restore Data</button>
+    <button @click="deleteAll">Delete all</button>
     <div class="table-container" id="debug-table-container">
 
     </div>
@@ -19,21 +18,23 @@ export default {
       apiData: {
         links: [],
         tags: [],
-        savedLinks: [],
-        taggedLinks: [],
+        savedlinks: [],
+        taglinks: [],
         comments: [],
         votes: [],
         users: [],
-        userActions: [],
+        useractions: [],
       }
     };
   },
   methods: {
-    async dumpData() {
-      await api.createDBDump();
+    async deleteAll() {
+      await api.deleteAll();
+      await this.loadData();
+      this.buildTables();
     },
-    async restoreData() {
-      await api.restoreDBDump();
+    async deleteTable(tableName) {
+      await api.deleteTable(tableName);
       await this.loadData();
       this.buildTables();
     },
@@ -41,10 +42,10 @@ export default {
       // Fetch the data from the API
       this.apiData.links = await api.getLinks();
       this.apiData.tags = await api.getTags();
-      this.apiData.savedLinks = await api.getSavedLinks();
-      this.apiData.taggedLinks = await api.getTaggedLinks();
+      this.apiData.savedlink = await api.getSavedLinks();
+      this.apiData.taglinks = await api.getTaggedLinks();
       this.apiData.users = await api.getUsers();
-      this.apiData.userActions = await api.getUserActions();
+      this.apiData.useractions = await api.getUserActions();
       this.apiData.comments = await api.getComments();
       this.apiData.votes = await api.getVotes();
     },
@@ -57,7 +58,7 @@ export default {
 
       // Create a table for each data type
       Object.keys(this.apiData).forEach(key => {
-        if(!this.apiData[key] || this.apiData[key].length === 0) return;
+        if(!this.apiData[key]) return;
         this.createTable(key, this.apiData[key]);
       });
     },
@@ -71,6 +72,13 @@ export default {
       title.textContent = name;
       container.appendChild(title);  // Append title to the container
 
+      // Create a delete button
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = `Delete ${name}`;
+      deleteButton.onclick = () => this.deleteTable(name);
+      deleteButton.style.marginLeft = '10px';
+      title.appendChild(deleteButton);  // Append delete button to the container
+
       // Create a table element
       const table = document.createElement('table');
       table.style.width = '100%';
@@ -80,11 +88,13 @@ export default {
       // Create header row
       const thead = document.createElement('thead');
       const headerRow = document.createElement('tr');
-      Object.keys(data[0]).forEach(key => {
-          const th = document.createElement('th');
-          th.textContent = key;
-          headerRow.appendChild(th);
-      });
+      if (data.length > 0) {
+        Object.keys(data[0]).forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key;
+            headerRow.appendChild(th);
+        });
+    }
       thead.appendChild(headerRow);
       table.appendChild(thead);
 
@@ -106,6 +116,8 @@ export default {
     },
   },
   async created() {
+    this.$store.commit('savePageTitle', 'Debug Page')
+
     await this.loadData();
     this.buildTables();
     

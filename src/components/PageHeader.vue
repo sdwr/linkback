@@ -1,12 +1,15 @@
 <template>
 <div class="main-container">
   <div class="page-header">
-    <h1>{{ title }}</h1>
+    <h1>{{ siteTitle }}</h1>
     <div class="page-header-buttons">
       <button @click="goToLanding">Home</button>
       <button @click="goToDebug">Debug</button>
       <button @click="goToCreateLink">Create Link</button>
     </div>
+  </div>
+  <div class="page-title">
+    <h1>{{ pageTitle }}</h1>
   </div>
   <div class="user-card">
     <UserCard :user="user" />
@@ -27,11 +30,14 @@ export default {
   computed: {
     user() {
       return this.$store.getters.getUser || {}
-    }
+    },
+    pageTitle() {
+      return this.$store.getters.getPageTitle
+    },
   },
   data() {
     return {
-      title: 'Linkback'
+      siteTitle: 'Linkback'
     }
   },
   methods: {
@@ -61,13 +67,16 @@ export default {
 .page-header {
   display: flex;
   align-items: center;
-  width: 100%; /* Make sure the header takes up all available space */
 }
 
 .page-header-buttons {
   display: flex;
   margin-left: 10px;
   gap: 10px; /* Adds some space between buttons */
+}
+
+.page-title {
+  flex-grow: 1;
 }
 
 .user-card {

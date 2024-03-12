@@ -4,7 +4,8 @@ export default createStore({
     state() {
         return {
             user: null,
-            isOnMobile: false
+            isOnMobile: false,
+            pageTitle: '',
         };
     },
     mutations: {
@@ -13,7 +14,10 @@ export default createStore({
         },
         setIsOnMobile(state, isOnMobile) {
             state.isOnMobile = isOnMobile;
-        }
+        },
+        setPageTitle(state, title) {
+            state.pageTitle = title;
+        },
     },
     actions: {
         //User actions
@@ -45,7 +49,12 @@ export default createStore({
         //Mobile actions
         async saveIsOnMobile({ commit }, isOnMobile) {
             commit('setIsOnMobile', isOnMobile);
-        }
+        },
+
+        //Page title actions
+        async savePageTitle({ commit }, title) {
+            commit('setPageTitle', title);
+        },
 
     },
     getters: {
@@ -54,14 +63,9 @@ export default createStore({
         },
         getIsOnMobile(state) {
             return state.isOnMobile;
-        }
+        },
+        getPageTitle(state) {
+            return state.pageTitle;
+        },
     }
 });
-
-function createMockUser() {
-    return {
-        userId: 1,
-        name: 'John Doe',
-        email: 'test@test.com',
-    }
-}

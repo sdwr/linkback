@@ -53,6 +53,7 @@ export function createLinkDto(data) {
         startTime: data.startTime || null,
         endTime: data.endTime || null,
         isClip: data.isClip || false,
+        //note: loopClip unused, set to true by default
         loopClip: data.loopClip || false,
         embeddable: data.embeddable || false,
         title: data.title || "New Link",
@@ -175,28 +176,43 @@ export function processLink(link) {
 
     if(domain === "youtube.com" || domain === "youtu.be") {
         //replace with the embed url
+        //params get added back in when the link is loaded
         url = "https://www.youtube.com/embed/" + contentId;
 
-        let params = [];
-        
-
-        //if the url is to youtube, add the start and end time
-        if(link.startTime && link.endTime ) {
-            params.push("start=" + link.startTime);
-            params.push("end=" + link.endTime);
-        }
-        if(link.loopClip) {
-            params.push("loop=1");
-        }
-
-        if(params.length > 0) {
-            url += "?" + params.join("&");
-        }
-        
     }
     
     link.url = url;
     return link
+}
+
+//save the youube URL query params as fields in the link object
+// then when the link is loaded, add the query params to the youtube url
+export function loadYoutubeUrl(link) {
+    let url = link.url;
+    let paramsList = [];
+    if(link.isClip && link.startTime && link.endTime) {
+        paramsList.push("start=" + link.startTime);
+        paramsList.push("end=" + link.endTime);
+
+        //clips should loop by default
+        paramsList.push("loop=1");
+        //clips should turn off controls by default
+        paramsList.push("controls=0");
+    }
+
+    //turn off related videos by default
+    paramsList.push("rel=0");
+
+    //autoplay should be a user setting, set to true by default
+    paramsList.push("autoplay=1");
+
+    if(paramsList.length > 0) {
+        url += "?" + paramsList.join("&");
+    }
+
+    link.url = url;
+    console.log('url', url)
+    return link;
 }
 
 export function encodeURIComponent(str) {

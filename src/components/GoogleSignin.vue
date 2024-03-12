@@ -33,7 +33,7 @@ export default {
       let userData = {username: username, email: "test@test.com"}
       let user = await api.addUser(userData)
 
-      this.$store.commit('setUser', user);
+      this.$store.dispatch('saveUser', user);
     },
     handleCredentialResponse(response) {
       console.log(response)

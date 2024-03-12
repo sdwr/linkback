@@ -64,38 +64,35 @@ mockUsers = mockUserData;
 
 
 const api = {
-  mockUser: mockUser,
-  //debug
-  createDBDump: async () => {
-    let dump = {
-      mockUsers,
-      mockLinks,
-      mockVotes,
-      mockComments,
-      mockSavedLinks,
-      mockTags,
-      mockTaggedLinks,
-      mockUserActions,
+  //delete all
+  tableList: [
+    'users',
+    'links',
+    'votes',
+    'comments',
+    'savedlinks',
+    'tags',
+    'taglinks',
+    'useractions'
+  ],
+
+  deleteAll: async () => {
+    let results = [];
+    for (let table of api.tableList) {
+      let result = await api.deleteTable(table);
+      results.push(result);
     }
-    let json = JSON.stringify(dump);
-    localStorage.setItem('dbDump', json);
-    console.log('db dump created');
+    return results;
+
   },
 
-  restoreDBDump: async () => {
-    let json = localStorage.getItem('dbDump');
-    let dump = JSON.parse(json);
-
-    console.log("restoring db dump", dump)
-
-    mockUsers = dump.mockUsers;
-    mockLinks = dump.mockLinks;
-    mockVotes = dump.mockVotes;
-    mockComments = dump.mockComments;
-    mockSavedLinks = dump.mockSavedLinks;
-    mockTags = dump.mockTags;
-    mockTaggedLinks = dump.mockTaggedLinks;
-    mockUserActions = dump.mockUserActions;
+  deleteTable: async (tableName) => {
+    if (api.tableList.includes(tableName)) {
+      return backendApi.deleteTableData(tableName);
+    } else {
+      console.error("deleteTable: invalid table name", tableName);
+      return null;
+    }
   },
 
   //API adds

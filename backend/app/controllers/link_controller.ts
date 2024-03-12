@@ -109,5 +109,11 @@ export default class LinkController {
     return response.ok(link);
   }
 
+  async deleteAll({ response }: HttpContext) {
+    await Link.truncate(true);
+
+    return response.ok("All links deleted!");
+  }
+
 
 }

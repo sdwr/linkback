@@ -1,40 +1,39 @@
 <template>
   <div class="linkpage">
-    <button @click="backToHome"> &lt; Back</button>
-    <div> <button @click="goToDebug">Debug Page </button> </div>
-    <h1 v-if="link">{{link.title || link.url}}</h1>
     <h2>Added by: <a :href="`/user`" @click.prevent="goToUser(submittingUser.id)">{{submittingUser.username}}</a></h2> <!-- Author credit -->
-    <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
-    <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave from My Links</button> <!-- Saved button -->
-    <a :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
+    <div class="link-top-buttons">
+      <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
+      <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave from My Links</button> <!-- Saved button -->
+      <button @click="refreshIframe()">Restart</button>
+    </div>
+    <a v-if="linkIsClip" :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
 
     <div class="content-preview">
       <iframe class="iframe" id="iframe" v-if="link" :src="link.url"></iframe>
     </div>
-    <!-- Restart Button-->
-    <div class="restart-button">
-      <button @click="refreshIframe()">Restart</button>
-    </div>
-    <div v-if="!isClip">
-      <!-- Range Sliders -->
-      <div>
-        <input type="range" v-model="clipStart" @input="adjustRanges" min="0" :max="link.duration" step="1">
-        <input type="range" v-model="clipEnd" @input="adjustRanges" :min="0" :max="link.duration" step="1">
-      </div>
-      
-      <!-- Text Inputs -->
-      <div>
-        <input type="text" v-model="clipStart">
-        <input type="text" v-model="clipEnd">
+
+    <div v-if="!linkIsClip" class="clip-controls">
+      <!-- Clip Controls -->
+      <div class="clip-controls-title">
+        <h2>Create Clip: </h2>
       </div>
 
+      <!-- Range Sliders -->
+      <div class="clip-controls-time-controls">
+        <input type="range" v-model="clipStart" @input="adjustRanges" min="0" :max="link.duration" step="1">
+        <input class="clip-controls-text-input" type="text" disabled="true" v-model="clipStart">
+      
+        <input type="range" v-model="clipEnd" @input="adjustRanges" :min="0" :max="link.duration" step="1">
+        <input class="clip-controls-text-input" type="text" disabled="true" v-model="clipEnd">
+      </div>
+      
       <!-- Loop Input-->
       <div>
         <input type="checkbox" v-model="loopClip">
         <label for="loop">Loop</label>
       </div>
 
-      <button @click="createClip">Create Clip</button>
+      <button class="create-clip-button" @click="createClip">Create Clip</button>
     </div>
     <div class="main-content">
       <div class="comments">
@@ -77,6 +76,7 @@
 <script>
 import VoteButton from '@/components/VoteButton.vue'
 import api from '@/api';
+import { loadYoutubeUrl } from '@/utils'
 
 export default {
   components: {
@@ -112,6 +112,11 @@ export default {
       creatingClip: false, // Flag to check if the user is creating a clip,
       userSavedLink: false, // Flag to check if the user has saved the link
     }
+  },
+  computed: {
+    linkIsClip() {
+      return this.link && this.link.isClip;
+    },
   },
   methods: {
     async saveToLinks() {
@@ -163,6 +168,12 @@ export default {
       } else if (parseInt(this.clipEnd) < parseInt(this.clipStart)) {
         this.clipStart = this.clipEnd;
       }
+
+      // update the iframe based on the new clip times
+      // should do in youtube API instead
+      // this.link.startTime = this.clipStart;
+      // this.link.endTime = this.clipEnd;
+      // this.link = loadYoutubeUrl(this.link);
     },
     async refreshIframe() {
       let iframe = document.getElementById('iframe');
@@ -186,12 +197,20 @@ export default {
     },
     async loadLink(linkId) {
       let link = await api.getLink(linkId);
-      return link
+      link = loadYoutubeUrl(link);
+      this.link = link;
+
+      console.log(this.link)
+      
+      this.$store.dispatch('savePageTitle', link.title)
     }
   },
   async created() {
+    // Set default page title - will be updated when link is loaded
+    this.$store.dispatch('savePageTitle', 'Link Page')
+
     let id = this.$route.params.id;
-    this.link = await this.loadLink(id);
+    await this.loadLink(id);
     this.submittingUser = await api.getUser(this.link.userId);
     this.user = await api.getUser(1);
     this.userSavedLink = await api.checkUserSavedLink(this.user.id, this.link.id);
@@ -211,9 +230,8 @@ export default {
 }
 
 .content-preview {
-  margin: 20px;
   border: 1px solid #ccc;
-  width: 80%;
+  width: 100%;
   height: 800px;
   overflow: hidden;
 }
@@ -227,6 +245,34 @@ export default {
   display: flex;
   width: 80%;
   justify-content: space-between;
+}
+
+.link-top-buttons button{
+  margin: 0 10px;
+}
+
+.clip-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.clip-controls-time-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.clip-controls-title {
+  margin: 0px 20px;
+}
+
+.clip-controls-text-input {
+  width: 30px;
+}
+
+.create-clip-button {
+  margin: 10px;
 }
 
 .comments, .other-links {

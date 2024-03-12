@@ -68,4 +68,10 @@ export default class LinkController {
     return response.ok(comment);
   }
 
+  async deleteAll({ response }: HttpContext) {
+    await Comment.truncate(true);
+
+    return response.ok('All comments deleted');
+  }
+
 }

@@ -141,6 +141,9 @@ export default {
     }
   },
   async created() {
+    //set page title
+    this.$store.dispatch('savePageTitle', 'All Links');
+
     //attempt to load user from store
     await this.$store.dispatch('loadUser');
     if(!this.storedUser || !this.storedUser.id) {

@@ -1,49 +1,28 @@
 TODO:
 -------------
 
+PROJECT:
+
+
 USER:
-  - use sessions to authenticate and stay logged in
-  - stored in local storage
-  - first iteration, guest users only
-  - flow is:
-    - on first time:
-      * create guest user
-      * create session for guest user
-      * return session
-
-    - when returning:
-      * get session from local storage
-    
-    - while session is on client
-      * verify all requests using sessionToken
-        (check that session w that token exists for that user)
-
-    - if logging in from another device
-      * can log out of guest user and log into existing user
-
-    - to upgrade guest user
-      * add email, change name, create password
-
-  - authenticate user
+  - authenticate user for requests (done automatically?)
   - have log in page?
 
 BACKEND:
-- adding user data to links is done in a second call... combine?
 - check return types on DELETE endpoints. what is expected? boolean? the deleted record? null in case of failure?
-- move user action to inside the backend controller/service
 - consistency:
   - date different types - vine.date in validator, any in interface, dateTime coming from frontend
-  - primary id named "id" on backend, "linkId", "userId", etc on frontend
+  - primary id named "id" on backend, "linkId", "userId", etc on frontend DONE
   - vote has "linkId" but should be generic for tags etc
+  - taglink api call named "taggedLink"
 
   - should there be copies of tags by user? is it a global thing or a "subscribe to" kind of thing
 
 FRONTEND:
 
 - types, typescript?
-- cache links locally (store?), am regetting right now every page load
+- cache links locally (store?), am re-getting right now every page load
 - fix mobile layout (video wider, less black bars on top/bottom)
-- fix mock data, exporting from localStorage to file
 
 
 TESTING:
@@ -66,7 +45,7 @@ FEATURES:
 - add small toast on user action (success / fail)
 
 REAL STUFF:
-- get thumbnails of content
+- get thumbnails of content KINDA DONE
   -temporarily serving (only to sdwr.ca) with thum.io free trial
   -options:
     1 scrape image from actual page
@@ -79,7 +58,7 @@ REAL STUFF:
 
 
 LANDING PAGE:
-- drag and drop links into new link box
+- drag and drop links into new link box (impossible?)
 
 
 LINK PAGE:
@@ -88,8 +67,13 @@ LINK PAGE:
 - make title editable
 
 YOUTUBE PAGE:
-- fix "original video" button
-- 
+- may need to manipulate the video using youtube API (loop, autoplay, scrub)
+- fix autoplay + looping
+  - autoplay=1/loop=1 seems to not work for embedded vids
+- scrub to start of clip when using "start of clip" slider
+
+
+- fix "original video" button 
 - timestamped comments
 
 USER PAGE: 
@@ -109,6 +93,32 @@ API
 DONE:
 -----------
 
+PROJECT:
+
+USER:
+  - use sessions to authenticate and stay logged in DONE
+  - stored in local storage DONE
+  - first iteration, guest users only DONE
+  - flow is:
+    - on first time:
+      * create guest user
+      * create session for guest user
+      * return session
+
+    - when returning:
+      * get session from local storage
+    
+    - while session is on client
+      * verify all requests using sessionToken
+        (check that session w that token exists for that user)
+
+    - if logging in from another device
+      * can log out of guest user and log into existing user
+
+    - to upgrade guest user
+      * add email, change name, create password
+
+
 HOSTING:
 - ssh into server DONE 
 - install vue DONE
@@ -118,15 +128,15 @@ HOSTING:
 - install postgres DONE
 - install backend DONE
 
+BACKEND:
+- adding user data to links is done in a second call... combine? NOT FOR NOW
+- move user action to inside the backend controller/service DONE
 
-PROJECT:
 
 -make youtube pages based on contentId instead of URL DONE
 -trim title/url based on length DONE
 
 LANDING PAGE:
-
-- don't allow duplicate links DONE
 - strip params from link (at least for youtube) DONE
 - fix mock link lists DONE
 - verify that links go somewhere DONE

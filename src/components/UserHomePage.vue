@@ -78,6 +78,8 @@ export default {
     },
   },
   async created() {
+    this.$store.dispatch('savePageTitle', 'User Home');
+
     // Fetch the user data from the API
     let id = this.$route.params.id;
     id = parseInt(id);

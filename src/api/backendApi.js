@@ -86,6 +86,24 @@ const backendApi = {
     }
   },
 
+  // Delete table data
+  deleteTableData: async (tableName) => {
+    const url = `${BACKEND_URL}/${tableName}/deleteAll`;
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to delete table data, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(`Error deleting table data for ${tableName}:`, error.message);
+      return null;
+    }
+  },
+
   // User
   getAllUsers: async () => {
     const url = `${BACKEND_URL}${USERS_PATH}`;

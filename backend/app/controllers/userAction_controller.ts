@@ -59,5 +59,9 @@ export default class UserActionController {
     return response.json(userAction)
   }
 
+  async deleteAll({ response }: HttpContext) {
+    await UserAction.truncate(true)
 
+    return response.ok("All user actions deleted")
+  }
 }

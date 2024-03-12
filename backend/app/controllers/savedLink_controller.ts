@@ -87,4 +87,10 @@ export default class SavedLinkController {
 
     return response.ok(savedLink);
   }
+
+  async deleteAll({ response }: HttpContext) {
+    await SavedLink.truncate(true);
+
+    return response.ok("All savedLinks deleted!");
+  }
 }

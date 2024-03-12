@@ -1,7 +1,5 @@
 <template>
   <div class="linkpage">
-  <button @click="backToHome"> &lt; Back</button>
-  <h1 v-if="link">{{link.title || link.url}}</h1>
     <div class="content-preview">
       <iframe v-if="link" class="iframe" :src="embedLink"></iframe>
       <div class="not-embeddable-warning" v-else>
@@ -106,12 +104,17 @@ export default {
       this.$router.push({ path: `/tag/${tag.name}`})
     },
     async loadLink(linkId) {
+      
       let link = await api.getLink(linkId)
-      console.log(link)
       this.link = link
+      
+      this.$store.dispatch('savePageTitle', link.title)
     },
   },
   async created() {
+    // Set default page title - will be updated when link is loaded
+    this.$store.dispatch('savePageTitle', 'Link Page')
+
     await this.loadLink(this.$route.params.id)
   },
   mounted() {
@@ -128,9 +131,8 @@ export default {
 }
 
 .content-preview {
-  margin: 20px;
   border: 1px solid #ccc;
-  width: 80%;
+  width: 100%;
   height: 800px;
   overflow: auto;
 }

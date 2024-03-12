@@ -68,4 +68,10 @@ export default class TagController {
 
     return response.json(tag)
   }
+
+  async deleteAll({ response }: HttpContext) {
+    await Tag.truncate(true)
+
+    return response.json("All tags deleted!")
+  }
 }

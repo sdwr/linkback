@@ -61,5 +61,9 @@ export default class UserController {
     return response.json(user)
   }
 
+  async deleteAll({ response }: HttpContext) {
+    await User.truncate(true)
 
+    return response.ok("All users deleted")
+  }
 }

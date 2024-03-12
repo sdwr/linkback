@@ -50,6 +50,7 @@ router.post('/users/createGuest', [UserController, 'createGuest'])
 
 router.put('/users/:id', [UserController, 'update'])
 
+router.delete('/users/deleteAll', [UserController, 'deleteAll'])
 router.delete('/users/:id', [UserController, 'delete'])
 
 // user action routes
@@ -61,6 +62,7 @@ router.post('/useractions', [UserActionController, 'create'])
 
 router.put('/useractions/:id', [UserActionController, 'update'])
 
+router.delete('/useractions/deleteAll', [UserActionController, 'deleteAll'])
 router.delete('/useractions/:id', [UserActionController, 'delete'])
 
 // link routes
@@ -78,6 +80,7 @@ router.post('/links', [LinkController, 'create'])
 
 router.put('/links/:id', [LinkController, 'update'])
 
+router.delete('/links/deleteAll', [LinkController, 'deleteAll'])
 router.delete('/links/:id', [LinkController, 'delete'])
 
 // comment routes
@@ -90,6 +93,7 @@ router.post('/comments', [CommentController, 'create'])
 
 router.put('/comments/:id', [CommentController, 'update'])
 
+router.delete('/comments/deleteAll', [CommentController, 'deleteAll'])
 router.delete('/comments/:id', [CommentController, 'delete'])
 
 // tag routes
@@ -102,6 +106,7 @@ router.post('/tags', [TagController, 'create'])
 
 router.put('/tags/:id', [TagController, 'update'])
 
+router.delete('/tags/deleteAll', [TagController, 'deleteAll'])
 router.delete('/tags/:id', [TagController, 'delete'])
 
 // vote routes
@@ -115,6 +120,7 @@ router.post('/votes', [VoteController, 'create'])
 
 router.put('/votes/:id', [VoteController, 'update'])
 
+router.delete('/votes/deleteAll', [VoteController, 'deleteAll'])
 router.delete('/votes/:id', [VoteController, 'delete'])
 
 // tagLink routes
@@ -128,6 +134,7 @@ router.post('/taglinks', [TagLinkController, 'create'])
 
 router.put('/taglinks/:id', [TagLinkController, 'update'])
 
+router.delete('/taglinks/deleteAll', [TagLinkController, 'deleteAll'])
 router.delete('/taglinks/:id', [TagLinkController, 'delete'])
 
 // savedLink routes
@@ -141,4 +148,5 @@ router.post('/savedlinks/delete', [SavedLinkController, 'deleteByUserAndLink'])
 
 router.put('/savedlinks/:id', [SavedLinkController, 'update'])
 
+router.delete('/savedlinks/deleteAll', [SavedLinkController, 'deleteAll'])
 router.delete('/savedlinks/:id', [SavedLinkController, 'delete'])
