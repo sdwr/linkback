@@ -103,9 +103,14 @@ export default {
       data.forEach(obj => {
           const tr = document.createElement('tr');
           Object.keys(obj).forEach(key => {
-              const td = document.createElement('td');
-              td.textContent = obj[key];
+            const td = document.createElement('td');
               tr.appendChild(td);
+              //create a div inside the cell to force height and overflow
+              const div = document.createElement('div');
+              div.textContent = obj[key];
+              div.style.maxHeight = '70px';
+              div.style.overflow = 'auto';
+              td.appendChild(div);
           });
           tbody.appendChild(tr);
       });

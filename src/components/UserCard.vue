@@ -2,8 +2,8 @@
   <div class="user-card">
     <img class="user-thumbnail" :src="userThumbnail" alt="User thumbnail" />
     <div class="user-info">
-    <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUserPage()">{{user.username}}</a></div>
-    <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUserPage()">{{user.id}}</a></div>
+      <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUserPage()">{{user.username}}</a></div>
+      <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUserPage()">{{user.id}}</a></div>
     </div>
   </div>
 </template>
@@ -37,11 +37,10 @@ export default {
 }
 .user-info  {
   margin-left: 20px;
-  width: 150px;
 }
 .user-thumbnail {
   height: 100%;
-  width: 100px;
+  width: 80px;
   border-radius: 50%;
 }
 .user-link {
