@@ -7,6 +7,7 @@ export default interface ILink {
   contentId?: string;
   startTime?: number;
   endTime?: number;
+  duration?: number;
   
   isClip: boolean;
   loopClip: boolean;

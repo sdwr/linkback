@@ -21,6 +21,9 @@ export default class Link extends BaseModel {
   declare endTime: number | null
 
   @column()
+  declare duration: number | null
+
+  @column()
   declare isClip: boolean
 
   @column()

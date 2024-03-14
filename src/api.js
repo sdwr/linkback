@@ -118,6 +118,8 @@ const api = {
     let linkDto = createLinkDto(data);
     linkDto = await externalApi.addSiteData(linkDto);
 
+    console.log('addLink', linkDto)
+
     let duplicateUrl, duplicateContent;
     //dont add link if its a duplicate (same url or same contentId + domain)
     //TODO: MOVE TO BACKEND

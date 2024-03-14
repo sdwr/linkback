@@ -11,6 +11,7 @@ export default class LinksSchema extends BaseSchema {
       table.string('content_id', 255).nullable()
       table.integer('start_time').nullable()
       table.integer('end_time').nullable()
+      table.integer('duration').nullable()
       table.boolean('is_clip').defaultTo(false)
       table.boolean('loop_clip').defaultTo(false)
       table.boolean('embeddable').defaultTo(false)

@@ -8,6 +8,12 @@ create a .env file in the root directory with backend url and youtube api key:
   VITE_BACKEND_URL_DEV = "http://localhost:3333"
   VITE_YOUTUBE_API_KEY = "<KEY HERE>"
 
+---
+google signin ID + secret, configured to https://www.sdwr.ca/callback
+
+  CLIENT_ID = 1078294452749-cvcs1h8apb19th90eofd1lu2n16eocn8.apps.googleusercontent.com
+  CLIENT_SECRET = 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
+
 
 create a .env file to /backend, copied from .env.example
 make sure host is 0.0.0.0 for outside access

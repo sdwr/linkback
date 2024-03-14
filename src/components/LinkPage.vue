@@ -94,13 +94,11 @@ export default {
         this.newTagName = ''
         this.tags = await api.getTagsByLink(this.link.id)
       }
-      console.log(this.tags)
     },
     backToHome() {
       this.$router.push({ path:"/"})
     },
     goToTag(tag) {
-      console.log(tag)
       this.$router.push({ path: `/tag/${tag.name}`})
     },
     async loadLink(linkId) {

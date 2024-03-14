@@ -67,11 +67,10 @@ LINK PAGE:
 - make title editable
 
 YOUTUBE PAGE:
-- may need to manipulate the video using youtube API (loop, autoplay, scrub)
-- fix autoplay + looping
-  - autoplay=1/loop=1 seems to not work for embedded vids
-- scrub to start of clip when using "start of clip" slider
-
+- find some way to auto-unmute (or add huge unmute button on screen)
+- fix console errors (tries to hit player fns before startup and after close)
+- set clip range to actual length of video
+- set clipEnd to 5 seconds after clipStart if clipStart is moved too close, prevent short loop happening by accident
 
 - fix "original video" button 
 - timestamped comments
@@ -147,6 +146,11 @@ YOUTUBE PAGE:
 - fix multiple sets of url params in the link DONE
 - add a "restart" button for clips, remove loop flag (can't auto-loop) DONE
 - fix author vs submitter DONE
+
+- may need to manipulate the video using youtube API (loop, autoplay, scrub) DONE
+- fix autoplay + looping DONE
+  - autoplay=1/loop=1 seems to not work for embedded vids
+- scrub to start of clip when using "start of clip" slider DONE
 
 
 USER PAGE

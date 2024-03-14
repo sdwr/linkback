@@ -15,11 +15,11 @@ export async function fetchYoutubeData(videoId) {
       const title = data.items[0].snippet.title;
       const description = data.items[0].snippet.description;
       const duration = data.items[0].contentDetails.duration;
-
+      
       data.title = title;
       data.description = description;
       data.duration = convertTimeToSeconds(duration);
-
+      
       return data;
 
   } catch (error) {

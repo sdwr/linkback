@@ -19,6 +19,7 @@ export const createLinkValidator = vine.compile(
     contentId: vine.string().trim().optional(),
     startTime: vine.number().optional(),
     endTime: vine.number().optional(),
+    duration: vine.number().optional(),
     
     isClip: vine.boolean(),
     loopClip: vine.boolean(),

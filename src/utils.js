@@ -52,6 +52,7 @@ export function createLinkDto(data) {
         contentId: null,
         startTime: data.startTime || null,
         endTime: data.endTime || null,
+        duration: data.duration || null,
         isClip: data.isClip || false,
         //note: loopClip unused, set to true by default
         loopClip: data.loopClip || false,
@@ -211,7 +212,6 @@ export function loadYoutubeUrl(link) {
     }
 
     link.url = url;
-    console.log('url', url)
     return link;
 }
 

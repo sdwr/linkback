@@ -33,7 +33,6 @@ export default createStore({
             } catch (error) {
                 console.error('load user failed:', error);
             }
-            console.log('user', this.state.user)
         },
         async saveUser({ commit }, user) {
             try {

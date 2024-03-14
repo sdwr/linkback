@@ -9,7 +9,7 @@
     <a v-if="linkIsClip" :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
 
     <div class="content-preview">
-      <iframe class="iframe" id="iframe" v-if="link" :src="link.url"></iframe>
+      <div class="iframe" id="iframe" v-if="link"></div>
     </div>
 
     <div v-if="!linkIsClip" class="clip-controls">
@@ -77,6 +77,7 @@
 import VoteButton from '@/components/VoteButton.vue'
 import api from '@/api';
 import { loadYoutubeUrl } from '@/utils'
+import { createPlayer, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
 
 export default {
   components: {
@@ -84,6 +85,7 @@ export default {
   },
   data() {
     return {
+      youtubePlayer: null,
       user: null,
       link: {
         title: '',
@@ -116,6 +118,11 @@ export default {
   computed: {
     linkIsClip() {
       return this.link && this.link.isClip;
+    },
+  },
+  watch: {
+    loopClip: function() {
+      setIsLoop(this.loopClip);
     },
   },
   methods: {
@@ -151,7 +158,7 @@ export default {
     },
     goToLink(link) {
       if(link.domain === 'youtube.com') {
-        this.$router.push({ path: `/tube/${link.linidkId}`})
+        this.$router.push({ path: `/tube/${link.id}`})
       } else {
         this.$router.push({ path: `/link/${link.id}`})
       }
@@ -173,7 +180,9 @@ export default {
       // should do in youtube API instead
       // this.link.startTime = this.clipStart;
       // this.link.endTime = this.clipEnd;
-      // this.link = loadYoutubeUrl(this.link);
+      // this.link = loadYoutubeUrl(this.link);\
+      setLoopTimes(this.clipStart, this.clipEnd);
+
     },
     async refreshIframe() {
       let iframe = document.getElementById('iframe');
@@ -200,8 +209,6 @@ export default {
       link = loadYoutubeUrl(link);
       this.link = link;
 
-      console.log(this.link)
-      
       this.$store.dispatch('savePageTitle', link.title)
     }
   },
@@ -210,11 +217,19 @@ export default {
     this.$store.dispatch('savePageTitle', 'Link Page')
 
     let id = this.$route.params.id;
+    
     await this.loadLink(id);
     this.submittingUser = await api.getUser(this.link.userId);
     this.user = await api.getUser(1);
     this.userSavedLink = await api.checkUserSavedLink(this.user.id, this.link.id);
     this.tags = await api.getTagsByLink(this.link.id);
+
+    //load Youtube player
+    this.youtubePlayer = await createPlayer(this.link.contentId, null);
+    if (this.link.isClip) {
+      setLoopTimes(this.link.startTime, this.link.endTime);
+      setIsLoop(true);
+    }
   },
   mounted() {
   }

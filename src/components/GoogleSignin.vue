@@ -1,6 +1,6 @@
 <template>
   <div id="g_id_onload"
-      data-client_id="1078294452749-9a01cctu094i3v8p61u0uat7qk8ttu74.apps.googleusercontent.com"
+      data-client_id="1078294452749-cvcs1h8apb19th90eofd1lu2n16eocn8.apps.googleusercontent.com"
       data-callback="handleCredentialResponse"
       data-login_uri="localhost:8081"
       data-auto_prompt="false">
