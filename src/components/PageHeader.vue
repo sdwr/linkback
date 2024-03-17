@@ -112,6 +112,9 @@ export default {
 /* put the page title below the site buttons */
 .main-container-mobile {
   display: flex;
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
   flex-direction: column;
   align-items: center;
 }

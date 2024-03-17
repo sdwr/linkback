@@ -1,5 +1,17 @@
 <template>
   <div class="linkpage">
+    <div class="link-top-buttons">
+      <button v-if="!userSavedLink" @click="saveToLinks()">Save</button> <!-- Save to links button -->
+      <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave</button> <!-- Saved button -->
+      <button v-if="userIsOwner" @click="deleteLink()">Delete</button> <!-- Delete button -->
+      <span class="author-link">
+        Added by: <a 
+          :href="`/user`" 
+          @click.prevent="goToUser(submittingUser.id)">
+            {{submittingUser.username}}
+        </a>
+      </span>
+    </div>
     <div class="content-preview">
       <iframe v-if="link" class="iframe" :src="embedLink"></iframe>
       <div class="not-embeddable-warning" v-else>
@@ -57,6 +69,7 @@ export default {
   },
   data() {
     return {
+      user: null,
       link: {
         title: '',
         url: '',
@@ -72,6 +85,12 @@ export default {
       comments: [],
       otherLinks: [],
       tags: [],
+      submittingUser: {
+        username: '',
+        userId: null,
+      },
+      userSavedLink: false, // Flag to check if the user has saved the link
+  
     }
   },
   computed: {
@@ -82,9 +101,30 @@ export default {
     archiveLink() {
       if(!this.link) return null;
       return createArchiveLink(this.link);
+    },
+    userIsOwner() {
+      return this.user && this.user.id === this.link.userId;
     }
   },
   methods: {
+    async saveToLinks() {
+      let result = await api.saveLink(this.user.id, this.link.id);
+      if(result) {
+        this.userSavedLink = true;
+      }
+    },
+    async unsaveToLinks() {
+      let result = await api.unsaveLink(this.user.id, this.link.id);
+      if(result) {
+        this.userSavedLink = false;
+      }
+    },
+    async deleteLink() {
+      let result = await api.deleteLink(this.link.id);
+      if(result) {
+        this.$router.push({ path: "/"})
+      }
+    },
     async addTag() {
       if(this.newTagName && this.newTagName.length > 0) {
         await api.addTag({
@@ -97,6 +137,10 @@ export default {
     },
     backToHome() {
       this.$router.push({ path:"/"})
+    },
+    goToOriginal() {
+      this.$router.push({ path: `/tube/${this.link.originalLinkId}`})
+    
     },
     goToTag(tag) {
       this.$router.push({ path: `/tag/${tag.name}`})
@@ -114,6 +158,11 @@ export default {
     this.$store.dispatch('savePageTitle', 'Link Page')
 
     await this.loadLink(this.$route.params.id)
+    this.submittingUser = await api.getUser(this.link.userId);
+    this.user = await api.getUser(1);
+    this.userSavedLink = await api.checkUserSavedLink(this.user.id, this.link.id);
+    this.tags = await api.getTagsByLink(this.link.id);
+
   },
   mounted() {
   }
@@ -158,6 +207,14 @@ export default {
   display: flex;
   width: 80%;
   justify-content: space-between;
+}
+
+.link-top-buttons button{
+  margin: 0 5px;
+}
+
+.author-link{
+  margin: 0 10px;
 }
 
 .comments, .other-links {

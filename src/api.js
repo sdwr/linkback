@@ -148,7 +148,7 @@ const api = {
     return link;
   },
 
-  deleteLink : async (id) => {
+  deleteLink: async (id) => {
     let link = await backendApi.deleteLink(id);
     return link;
   },

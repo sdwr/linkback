@@ -192,6 +192,10 @@ export default {
     goToDebug() {
       this.$router.push({ path: `/debug`})
     },
+    goToOriginal() {
+      this.$router.push({ path: `/tube/${this.link.originalLinkId}`})
+    
+    },
     adjustRanges() {
       if (parseInt(this.clipStart) > parseInt(this.clipEnd)) {
         this.clipEnd = this.clipStart;
@@ -216,10 +220,6 @@ export default {
     },
     backToHome() {
       this.$router.push({ path:"/"})
-    },
-    goToOriginal() {
-      this.$router.push({ path: `/tube/${this.link.originalLinkId}`})
-    
     },
     goToTag(tag) {
       this.$router.push({ path: `/tag/${tag.id}`})
@@ -288,7 +288,7 @@ export default {
 
 .main-content {
   display: flex;
-  width: 100%%;
+  width: 100%;
   justify-content: space-between;
 }
 
