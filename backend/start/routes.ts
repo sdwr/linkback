@@ -75,7 +75,6 @@ router.get('/links/tag/:tagId', [LinkController, 'getLinksByTag'])
 router.get('/links/:id', [LinkController, 'getOne'])
 router.get('/links', [LinkController, 'index'])
 
-router.post('/links/getWithVotes', [LinkController, 'getWithVotes'])
 router.post('/links', [LinkController, 'create'])
 
 router.put('/links/:id', [LinkController, 'update'])

@@ -58,28 +58,12 @@ export default class LinkController {
     const amount = Number(request.input('amount', 10));
 
     const links = await Link.query()
-      .select('links.*')
-      .leftJoin('votes', 'links.id', 'votes.link_id')
-      .groupBy('links.id')
-      .orderByRaw('SUM(votes.vote_value) DESC')
+      .orderBy('vote_sum', 'desc')
       .limit(amount);
 
     return response.ok(links);
   }
-
-  async getWithVotes({ request, response }: HttpContext) {
-    const linkIds = request.input('linkIds');
-
-    const links = await Link.query()
-      .whereIn('links.id', linkIds)
-      .leftJoin('votes', 'links.id', 'votes.link_id')
-      .groupBy('links.id')
-      .sum('votes.vote_value as votesSum');
-
-    return response.ok(links);
-  }
     
-
   async create({ request, response }: HttpContext) {
     const validatedLink = await request.validateUsing(createLinkValidator);
     const iLink = validatedLink as ILink;

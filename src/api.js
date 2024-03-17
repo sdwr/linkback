@@ -101,24 +101,10 @@ const api = {
     mockUsers.push(user);
     return user;
   },
-
-  getTopLinksWithVotes: async (limit = 10) => {
-    let topLinks = await backendApi.getTopLinks(limit);
-    let topLinksWithVotes = await backendApi.getLinksWithVotes(topLinks);
-
-    return topLinksWithVotes;
-  },
-  getNewLinksWithVotes: async (limit = 10) => {
-    let newLinks = await backendApi.getNewLinks(limit);
-    let newLinksWithVotes = await backendApi.getLinksWithVotes(newLinks);
-
-    return newLinksWithVotes;
-  },
+  
   addLink: async (data) => {
     let linkDto = createLinkDto(data);
     linkDto = await externalApi.addSiteData(linkDto);
-
-    console.log('addLink', linkDto)
 
     let duplicateUrl, duplicateContent;
     //dont add link if its a duplicate (same url or same contentId + domain)

@@ -1,15 +1,26 @@
 <template>
   <div class="linkpage">
-    <h2>Added by: <a :href="`/user`" @click.prevent="goToUser(submittingUser.id)">{{submittingUser.username}}</a></h2> <!-- Author credit -->
     <div class="link-top-buttons">
       <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
       <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave from My Links</button> <!-- Saved button -->
-      <button @click="refreshIframe()">Restart</button>
+      <button @click="restartVideo()">Restart</button>
+      <span class="author-link">
+        Added by: <a 
+          :href="`/user`" 
+          @click.prevent="goToUser(submittingUser.id)">
+            {{submittingUser.username}}
+        </a>
+      </span>
+      <a v-if="linkIsClip" :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
     </div>
-    <a v-if="linkIsClip" :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
 
     <div class="content-preview">
       <div class="iframe" id="iframe" v-if="link"></div>
+      <PlayerOverlay 
+        :isReady="youtubePlayer !== null"
+        @play="playVideo()"
+      >
+      </PlayerOverlay>
     </div>
 
     <div v-if="!linkIsClip" class="clip-controls">
@@ -75,13 +86,15 @@
 </template>
 <script>
 import VoteButton from '@/components/VoteButton.vue'
+import PlayerOverlay from '@/components/PlayerOverlay.vue'
 import api from '@/api';
 import { loadYoutubeUrl } from '@/utils'
-import { createPlayer, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
+import { createPlayer, playPlayer, restartPlayer, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
 
 export default {
   components: {
-    VoteButton
+    VoteButton,
+    PlayerOverlay,
   },
   data() {
     return {
@@ -184,13 +197,6 @@ export default {
       setLoopTimes(this.clipStart, this.clipEnd);
 
     },
-    async refreshIframe() {
-      let iframe = document.getElementById('iframe');
-      let temp = iframe.src;
-      iframe.src = '';
-      iframe.src = temp;
-      iframe.click();
-    },
     async addTag() {
       if(this.newTagName && this.newTagName.length > 0) {
         await api.addTagToLink(this.user.id, this.link.id, this.newTagName);
@@ -203,6 +209,12 @@ export default {
     },
     goToTag(tag) {
       this.$router.push({ path: `/tag/${tag.id}`})
+    },
+    playVideo() {
+      playPlayer();
+    },
+    restartVideo() {
+      restartPlayer();
     },
     async loadLink(linkId) {
       let link = await api.getLink(linkId);
@@ -245,6 +257,7 @@ export default {
 }
 
 .content-preview {
+  position: relative;
   border: 1px solid #ccc;
   width: 100%;
   height: 800px;
@@ -252,6 +265,9 @@ export default {
 }
 
 .iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
 }
@@ -264,6 +280,10 @@ export default {
 
 .link-top-buttons button{
   margin: 0 10px;
+}
+
+.author-link{
+  margin: 0 20px;
 }
 
 .clip-controls {

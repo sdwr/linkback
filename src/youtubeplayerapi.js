@@ -16,20 +16,37 @@ const CHECK_INTERVAL = 250;
 //external functions
 export async function createPlayer(videoId, playerOptions) {
   resetPlayerVars();
-  player = new window.YT.Player(
-    'iframe',
-    {
-      videoId,
-      height: '100%',
-      width: '100%',
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange
-      }
+  return new Promise((resolve, reject) => {
+    try {
+      player = new window.YT.Player(
+        'iframe',
+        {
+          videoId,
+          height: '100%',
+          width: '100%',
+          events: {
+            onReady: (event) => {
+              onPlayerReady(event);
+              resolve(player);
+            },
+            onStateChange: onPlayerStateChange
+          }
+        }
+      );
+    } catch (error) {
+      reject(error);
     }
-  );
+  });
+}
 
-  return player;
+export function playPlayer() {
+  player.unMute();
+  player.playVideo();
+}
+
+export function restartPlayer() {
+  player.seekTo(startTime);
+  player.playVideo();
 }
 
 export function setIsLoop(loop) {
@@ -56,10 +73,8 @@ function resetPlayerVars() {
   clipTimesChanged = false;
 }
 
-//start muted to get around autoplay restrictions
 function onPlayerReady(event) {
-  event.target.mute();
-  event.target.playVideo();
+  //empty function for now, onReady is handled in promise return right now
 }
 
 function onPlayerStateChange(event) {
@@ -81,6 +96,7 @@ function shouldRestartLoop() {
   return (currentTime >= endTime || currentTime < startTime || clipTimesChanged);
 }
 
+
 //check if the player is playing and if the current time is outside the loop
 //only continue looping if the player is playing
 //if the player is paused, the loop will stop
@@ -89,7 +105,7 @@ function checkTimeAndLoop() {
   if(playerIsPlaying()) {
     if(shouldRestartLoop()) {
       clipTimesChanged = false;
-      player.seekTo(startTime);
+      restartPlayer();
     }
     setTimeout(checkTimeAndLoop, CHECK_INTERVAL);
   } 
