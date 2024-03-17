@@ -1,9 +1,10 @@
 <template>
   <div class="linkpage">
     <div class="link-top-buttons">
-      <button v-if="!userSavedLink" @click="saveToLinks()">Save to My Links</button> <!-- Save to links button -->
-      <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave from My Links</button> <!-- Saved button -->
+      <button v-if="!userSavedLink" @click="saveToLinks()">Save</button> <!-- Save to links button -->
+      <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave</button> <!-- Saved button -->
       <button @click="restartVideo()">Restart</button>
+      <button v-if="userIsOwner" @click="deleteLink()">Delete</button> <!-- Delete button -->
       <span class="author-link">
         Added by: <a 
           :href="`/user`" 
@@ -11,7 +12,7 @@
             {{submittingUser.username}}
         </a>
       </span>
-      <a v-if="linkIsClip" :href="originalVideoLink">Original Video</a> <!-- Link to original video -->
+      <a v-if="linkIsClip" :href="`/originalVideo`" @click.prevent="goToOriginal()">Original Video</a> <!-- Link to original video -->
     </div>
 
     <div class="content-preview">
@@ -119,7 +120,6 @@ export default {
         username: '',
         userId: null,
       },
-      originalVideoLink: '', // URL to the original video
       isClip: false, // Flag to check if it's the original video
       clipStart: 0, // Start time for the clip
       clipEnd: 0, // End time for the clip
@@ -132,6 +132,9 @@ export default {
     linkIsClip() {
       return this.link && this.link.isClip;
     },
+    userIsOwner() {
+      return this.user && this.user.id === this.link.userId;
+    }
   },
   watch: {
     loopClip: function() {
@@ -162,7 +165,7 @@ export default {
         endTime: this.clipEnd,
         isClip: true,
         loopClip: this.loopClip,
-        originalVideo: this.link.id,
+        originalLinkId: this.link.id,
         userId: this.user.id,
       })
       this.creatingClip = false;
@@ -206,6 +209,10 @@ export default {
     },
     backToHome() {
       this.$router.push({ path:"/"})
+    },
+    goToOriginal() {
+      this.$router.push({ path: `/tube/${this.link.originalLinkId}`})
+    
     },
     goToTag(tag) {
       this.$router.push({ path: `/tag/${tag.id}`})
@@ -274,16 +281,16 @@ export default {
 
 .main-content {
   display: flex;
-  width: 80%;
+  width: 100%%;
   justify-content: space-between;
 }
 
 .link-top-buttons button{
-  margin: 0 10px;
+  margin: 0 5px;
 }
 
 .author-link{
-  margin: 0 20px;
+  margin: 0 10px;
 }
 
 .clip-controls {

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!isOnMobile" class="main-container-desktop">
+  <!-- <div v-if="!isOnMobile" class="main-container-desktop">
     <div class="page-header">
       <h1>{{ siteTitle }}</h1>
       <div class="page-header-buttons">
@@ -15,8 +15,9 @@
     <div class="user-card">
       <UserCard :user="user" />
     </div>
-  </div>
-  <div v-else class="main-container-mobile">
+  </div> -->
+  <!-- USE ONLY MOBILE FOR NOW -->
+  <div class="main-container-mobile">
     <div class="page-header">
       <h1>{{ siteTitle }}</h1>
       <div class="page-header-buttons">
