@@ -156,6 +156,13 @@ export default {
       }
     },
 
+    async deleteLink() {
+      let result = await api.deleteLink(this.link.id);
+      if(result) {
+        this.$router.push({ path: "/"})
+      }
+    },
+
     async createClip() {
       this.creatingClip = true;
       let clip = await api.addLink({

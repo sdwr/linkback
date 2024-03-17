@@ -147,6 +147,11 @@ const api = {
     let link = await backendApi.updateLink(data);
     return link;
   },
+
+  deleteLink : async (id) => {
+    let link = await backendApi.deleteLink(id);
+    return link;
+  },
   //uses create or update so it will overwrite existing vote
   addVote: async (data) => {
     const voteDto = createVoteDto(data);

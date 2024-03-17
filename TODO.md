@@ -2,6 +2,10 @@ TODO:
 -------------
 
 PROJECT:
+  -deleting links might break dependencies (clips -> original)
+    make error page
+  -local dev broken on mobile (can't log in)
+  
 
 
 USER:
@@ -22,7 +26,7 @@ FRONTEND:
 
 - types, typescript?
 - cache links locally (store?), am re-getting right now every page load
-- fix mobile layout (video wider, less black bars on top/bottom)
+- fix mobile layout (video wider, less black bars on top/bottom) KINDA DONE
 
 
 TESTING:
@@ -31,7 +35,8 @@ TESTING:
 
 FEATURES:
 
-- add votes
+- add votes KINDA DONE
+    still need to grey out completed vote (add to add to site data)
 - add comments
 - archive URL if doesn't load, submit archive URL if doesn't already exist
 - allow importing bookmarks
@@ -67,12 +72,8 @@ LINK PAGE:
 - make title editable
 
 YOUTUBE PAGE:
-- find some way to auto-unmute (or add huge unmute button on screen)
-- fix console errors (tries to hit player fns before startup and after close)
-- set clip range to actual length of video
 - set clipEnd to 5 seconds after clipStart if clipStart is moved too close, prevent short loop happening by accident
 
-- fix "original video" button 
 - timestamped comments
 
 USER PAGE: 
@@ -151,6 +152,10 @@ YOUTUBE PAGE:
 - fix autoplay + looping DONE
   - autoplay=1/loop=1 seems to not work for embedded vids
 - scrub to start of clip when using "start of clip" slider DONE
+- find some way to auto-unmute (or add huge unmute button on screen) DONE
+- fix console errors (tries to hit player fns before startup and after close) DONE
+- set clip range to actual length of video DONE
+- fix "original video" button DONE
 
 
 USER PAGE
