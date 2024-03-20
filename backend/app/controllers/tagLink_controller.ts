@@ -49,13 +49,23 @@ export default class TagLinkController {
     return response.ok(tagLinks);
   }
 
-  async create({ request, response }: HttpContext) {
+  //should be unique for each linkId-tagId pair
+  async createOrGet({ request, response }: HttpContext) {
     const validatedData = await request.validateUsing(createTagLinkValidator);
     const iTagLink = validatedData as ITagLink;
 
-    const tagLink = await TagLink.create(iTagLink);
-
-    return response.ok(tagLink);
+    // Check if the tagLink already exists
+    const tagLink = await TagLink.query()
+      .where('linkId', iTagLink.linkId)
+      .where('tagId', iTagLink.tagId)
+      .first();
+    
+    if (tagLink) {
+      return response.ok(tagLink);
+    } else {
+      const newTagLink = await TagLink.create(iTagLink);
+      return response.ok(newTagLink);
+    }
   }
 
   async update({ request, response }: HttpContext) {

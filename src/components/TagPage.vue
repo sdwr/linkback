@@ -50,7 +50,7 @@ export default {
       this.tag = await api.getTag(this.tagId)
     },
     async loadLinks() {
-      this.links = await api.getLinksByTagWithUserData(this.user.id, this.tag)
+      this.links = await api.getLinksByTagWithUserData(this.user.id, this.tag.id)
     },
     goBack() {
       this.$router.go(-1);

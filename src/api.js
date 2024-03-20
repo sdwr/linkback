@@ -39,7 +39,7 @@ let mockVotes = [];
 let mockComments = [];
 let mockSavedLinks = [];
 let mockTags = [];
-let mockTaggedLinks = [];
+let mockTagLinks = [];
 let mockUserActions = [];
 
 let mockUser = {
@@ -59,7 +59,7 @@ mockUsers = mockUserData;
 //TODO: move checking for duplicates to backend (including returning the duplicate)
 // - check if link already exists
 // - check if tag already exists
-// - check if tagged link already exists
+// - check if tag link already exists
 // - check if saved link already exists
 
 
@@ -214,28 +214,28 @@ const api = {
     return tag;
   },
 
-  addTaggedLink: async (data) => {
-    const taggedLinkDto = createTagLinkDto(data);
+  addTagLink: async (data) => {
+    const tagLinkDto = createTagLinkDto(data);
     //TODO: move to backend
     //check if tag already exists, after creating dto (for validation)
-    // let taggedLinks = await api.getTaggedLinks();
-    // let oldTaggedLink = taggedLinks
-    //   .filter(t => t.tagId === taggedLink.tagId)
-    //   .find(t => t.linkId === taggedLink.linkId);
+    // let tagLinks = await api.getTagLinks();
+    // let oldtagLink = tagLinks
+    //   .filter(t => t.tagId === tagLink.tagId)
+    //   .find(t => t.linkId === tagLink.linkId);
 
-    // if (oldTaggedLink) {
-    //   console.log("addTaggedLink: tagged link already exists", oldTaggedLink);
-    //   return oldTaggedLink;
+    // if (oldtagLink) {
+    //   console.log("addtagLink: tag link already exists", oldtagLink);
+    //   return oldtagLink;
     // }
 
-    let taggedLink = await backendApi.createTagLink(taggedLinkDto);
-    if (!taggedLink) {
-      console.log("addTaggedLink: failed to create tagged link", taggedLink);
+    let tagLink = await backendApi.createTagLink(tagLinkDto);
+    if (!tagLink) {
+      console.log("addtagLink: failed to create tag link", tagLink);
       return null;
     }
-    await api.addUserAction({ userId: taggedLink.userId, actionType: ACTION_TAG, itemId: taggedLink.linkId });
+    await api.addUserAction({ userId: tagLink.userId, actionType: ACTION_TAG, itemId: tagLink.linkId });
     
-    return taggedLink;
+    return tagLink;
   },
 
   addUserAction: async (data) => {
@@ -282,9 +282,8 @@ const api = {
       console.log("addTagToLink: failed to create tag", tagName);
       return null;
     }
-    const taggedLink = await api.addTaggedLink({ userId, linkId, tagId: tag.id });
-    
-    return taggedLink;
+    const tagLink = await api.addTagLink({ userId, linkId, tagId: tag.id });
+    return tagLink;
   },
 
 
@@ -342,16 +341,16 @@ const api = {
     return votes;
   },
 
-  getTagsByLink: async (linkId) => {
-    let tags = backendApi.getTagsByLinkId(linkId);
+  getTagLinks: async () => {
+    let tagLinks = backendApi.getAllTagLinks();
+    return tagLinks;
+  },
+
+  getTagLinksByLink: async (linkId) => {
+    let tags = backendApi.getTagLinksByLinkId(linkId);
     return tags;
   },
-
-  getTaggedLinks: async () => {
-    let taggedLinks = backendApi.getAllTagLinks();
-    return taggedLinks;
-  },
-
+  
   getSavedLinks: async () => {
     let savedLinks = backendApi.getAllSavedLinks();
     return savedLinks;
@@ -412,6 +411,12 @@ const api = {
     return tags;
   },
 
+  //needs to get tag links and then get the tags
+  getTagsByLink: async (linkId) => {
+    let tags = await backendApi.getTagsByLinkId(linkId);
+    return tags;
+  },
+
   getLinksByTag: async (data) => {
     let links = await backendApi.getLinksByTag(data);
     return links;
@@ -433,8 +438,8 @@ const api = {
     return newLinks;
   },
 
-  getLinksByTagWithUserData: async (userId, data) => {
-    let links = await api.getLinksByTag(data);
+  getLinksByTagWithUserData: async (userId, tagId) => {
+    let links = await api.getLinksByTag(tagId);
     links = await api.addUserDataToLinks(userId, links);
 
     return links;

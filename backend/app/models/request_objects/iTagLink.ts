@@ -5,6 +5,9 @@ export default interface ITagLink {
   userId?: number;
   date: any;
 
+  //generated fields
+  voteSum?: number;
+  
   createdAt?: any;
   updatedAt?: any;
 }

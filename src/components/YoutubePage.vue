@@ -49,7 +49,9 @@
     </div>
     <div class="main-content">
       <div class="comments">
-        <h2>Comments</h2>
+        <div class="bottom-container-header">
+          <div>Comments</div>
+        </div>
         <!-- List of comments here -->
         <div v-for="comment in comments" :key="comment.id">
           {{comment.content}}
@@ -58,7 +60,9 @@
         <!-- Form to add a new comment -->
       </div>
       <div class="other-links">
-        <h2>Related Links</h2>
+        <div class="bottom-container-header">
+          <div>Related Links</div>
+        </div>
         <!-- List of other links here -->
         <div v-for="link in otherLinks" :key="link.id">
           <!-- Link preview here -->
@@ -67,19 +71,24 @@
         <!-- Form to add a new link -->
       </div>
       <div class="tags">
-        <h2>Tags</h2>
-        <!-- List of tags here -->
-        <div v-for="tag in tags" :key="tag.id">
-            <a :href="`/tag/${tag.name}`" @click.prevent="goToTag(tag)">{{tag.name}}</a>
-            <!-- Voting component for each tag -->
-            <VoteButton :tag-id="tag.id"></VoteButton>
+        <div class="bottom-container-header">
+          <div>Tags</div>
         </div>
-
+        <!-- List of tags here -->
+        <div class="tags-container">
+          <div
+            v-for="tag in tags" :key="tag.id">
+            <TagItem :tag="tag"></TagItem>
+          </div>
+        </div>
+        
         <!-- Form to add a new tag -->
-        <form @submit.prevent="addTag">
-            <input type="text" v-model="newTagName" @keyup.enter="addTag" placeholder="Enter new tag name">
-            <button type="submit" @click="addTag">Add Tag</button>
-        </form>
+        <div class="add-tag-form">
+          <form @submit.prevent="addTag">
+              <input type="text" v-model="newTagName" placeholder="Enter new tag name">
+              <button type="submit">Add Tag</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -88,6 +97,7 @@
 <script>
 import VoteButton from '@/components/VoteButton.vue'
 import PlayerOverlay from '@/components/PlayerOverlay.vue'
+import TagItem from '@/components/TagItem.vue'
 import api from '@/api';
 import { loadYoutubeUrl } from '@/utils'
 import { createPlayer, playPlayer, restartPlayer, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
@@ -96,6 +106,7 @@ export default {
   components: {
     VoteButton,
     PlayerOverlay,
+    TagItem,
   },
   data() {
     return {
@@ -246,7 +257,7 @@ export default {
     
     await this.loadLink(id);
     this.submittingUser = await api.getUser(this.link.userId);
-    this.user = await api.getUser(1);
+  this.user = await api.getUser(1);
     this.userSavedLink = await api.checkUserSavedLink(this.user.id, this.link.id);
     this.tags = await api.getTagsByLink(this.link.id);
 
@@ -324,12 +335,29 @@ export default {
   margin: 10px;
 }
 
-.comments, .other-links {
+.comments, .other-links, .tags {
   border: 1px solid #ccc;
-  padding: 10px;
-  width: 45%;
+  width: 33%;
   height: auto;
-  overflow: auto;
+  overflow: hidden;
+}
+
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0px;
+}
+
+.add-tag-form {
+  margin-top: 5px;
+}
+
+.bottom-container-header {
+  height: 30px;
+  font-size: 1.5em;
+  font-weight: bold;
+  padding-bottom: 10px;
 }
 
 .vote-button {

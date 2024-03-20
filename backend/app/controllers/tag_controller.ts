@@ -22,15 +22,6 @@ export default class TagController {
     return response.json(tag)
   }
 
-  async getTagsByLink({ request, response }: HttpContext) {
-    const linkId = request.param('linkId')
-
-    const tags = await Tag.query()
-      .where('linkId', linkId)
-
-    return response.json(tags)
-  }
-
   async getTagsByUser({ request, response }: HttpContext) {
     const userId = request.param('userId')
 
@@ -39,14 +30,33 @@ export default class TagController {
 
     return response.json(tags)
   }
+
+  async getTagsByLink({ request, response }: HttpContext) {
+    const linkId = request.param('linkId')
+
+    const tags = await Tag.query()
+      .select('tags.*')
+      .leftJoin('tag_links', 'tags.id', 'tag_links.tag_id')
+      .where('tag_links.link_id', linkId)
+
+    return response.json(tags)
+  }
   
-  async create({ request, response }: HttpContext) {
+  async createOrGet({ request, response }: HttpContext) {
     const validatedData = await request.validateUsing(createTagValidator)
     const iTag = validatedData as ITag
-    
-    const tag = await Tag.create(iTag)
 
-    return response.json(tag)
+    // Check if the tag already exists
+    const tag = await Tag.query()
+      .where('name', iTag.name)
+      .first()
+
+    if (tag) {
+      return response.json(tag)
+    } else {
+      const newTag = await Tag.create(iTag)
+      return response.json(newTag)
+    }
   }
 
   async update({ request, response }: HttpContext) {

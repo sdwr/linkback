@@ -8,6 +8,9 @@ export default class TagLinksSchema extends BaseSchema {
       table.increments('id').primary()
       table.integer('tag_id').unsigned().references('id').inTable('tags').onDelete('CASCADE')
       table.integer('link_id').unsigned().references('id').inTable('links').onDelete('CASCADE')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      
+      table.integer('vote_sum').defaultTo(0)
 
       table.timestamp('date').notNullable()
       table.timestamps(true)

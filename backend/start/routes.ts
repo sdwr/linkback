@@ -101,7 +101,7 @@ router.get('/tags/link/:linkId', [TagController, 'getTagsByLink'])
 router.get('/tags', [TagController, 'index'])
 router.get('/tags/:id', [TagController, 'getOne'])
 
-router.post('/tags', [TagController, 'create'])
+router.post('/tags', [TagController, 'createOrGet'])
 
 router.put('/tags/:id', [TagController, 'update'])
 
@@ -129,7 +129,7 @@ router.get('/taglinks/user/:userId', [TagLinkController, 'getTagLinksByUser'])
 router.get('/taglinks/:id', [TagLinkController, 'getOne'])
 router.get('/taglinks', [TagLinkController, 'index'])
 
-router.post('/taglinks', [TagLinkController, 'create'])
+router.post('/taglinks', [TagLinkController, 'createOrGet'])
 
 router.put('/taglinks/:id', [TagLinkController, 'update'])
 

@@ -48,7 +48,7 @@ let mockVotes = [];
 let mockComments = [];
 let mockSavedLinks = [];
 let mockTags = [];
-let mockTaggedLinks = [];
+let mocktagLinks = [];
 let mockUserActions = [];
 
 let mockUser = {

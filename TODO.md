@@ -18,9 +18,11 @@ BACKEND:
   - date different types - vine.date in validator, any in interface, dateTime coming from frontend
   - primary id named "id" on backend, "linkId", "userId", etc on frontend DONE
   - vote has "linkId" but should be generic for tags etc
-  - taglink api call named "taggedLink"
 
   - should there be copies of tags by user? is it a global thing or a "subscribe to" kind of thing
+  - search for tags when creating
+  - can't change tag name when updating (breaks uniqueness check)
+  - userId w tag should not matter
 
 FRONTEND:
 
@@ -37,6 +39,9 @@ FEATURES:
 
 - add votes KINDA DONE
     still need to grey out completed vote (add to add to site data)
+- make votes generic, so they can apply to tags as well
+    put a table name in the row and check table + id? otherwise the ids overlap, unless they are unique over the entire DB
+
 - add comments
 - archive URL if doesn't load, submit archive URL if doesn't already exist
 - allow importing bookmarks
@@ -135,6 +140,8 @@ BACKEND:
 
 -make youtube pages based on contentId instead of URL DONE
 -trim title/url based on length DONE
+- taglink api call named "taggedLink" DONE
+
 
 LANDING PAGE:
 - strip params from link (at least for youtube) DONE
@@ -201,7 +208,7 @@ DB TABLES THAT DEPEND ON EACH OTHER:
 
 
   CURRENT APPROACH:
-    link tables (taggedLink), GET over multiple tables
+    link tables (tagLink), GET over multiple tables
 
     ex. to populate the save / unsave button
 

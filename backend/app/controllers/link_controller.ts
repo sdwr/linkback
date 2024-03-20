@@ -35,9 +35,10 @@ export default class LinkController {
     const tagId = request.param('tagId');
 
     const links = await Link.query()
+      .distinct('links.id')
       .select('links.*')
       .leftJoin('tag_links', 'links.id', 'tag_links.link_id')
-      .where('tag_links.tag_id', tagId);
+      .where('tag_links.tag_id', tagId)
 
     return response.ok(links);
   }
