@@ -595,6 +595,26 @@ const backendApi = {
       return null;
     }
   },
+  getTopTags: async (amount) => {
+    //check amount is a number
+    if (isNaN(amount)) {
+      console.error('Error fetching top tags: amount is not a number');
+      return null;
+    }
+    const url = `${BACKEND_URL}${TAGS_PATH}/top?amount=${amount}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch top tags, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching top tags:', error.message);
+      return null;
+    }
+  },
+
   getTagById: async (id) => {
     const url = `${BACKEND_URL}${TAGS_PATH}/${id}`;
     try {

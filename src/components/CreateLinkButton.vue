@@ -21,8 +21,8 @@ export default {
 </script>
 <style scoped>
 .create-link-button {
-  width: 200px;
-  height: 150px;
+  width: 100px;
+  height: 75px;
 }
 .create-link-button-icon {
   height: 100%;

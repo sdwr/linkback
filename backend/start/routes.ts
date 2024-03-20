@@ -98,6 +98,7 @@ router.delete('/comments/:id', [CommentController, 'delete'])
 // tag routes
 router.get('/tags/user/:userId', [TagController, 'getTagsByUser'])
 router.get('/tags/link/:linkId', [TagController, 'getTagsByLink'])
+router.get('/tags/top', [TagController, 'getTopTags'])
 router.get('/tags', [TagController, 'index'])
 router.get('/tags/:id', [TagController, 'getOne'])
 

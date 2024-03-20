@@ -1,8 +1,19 @@
 <template>
   <div class="landing-page">
-    <div class="add-link">
-      Add a link
-      <CreateLinkButton/>
+    <div class="top-menu">
+
+      <div class="add-link">
+        Add a link
+        <CreateLinkButton/>
+      </div>
+      <div class="top-tags-container">
+        <h2>Top Tags</h2>
+        <div class="top-tags">
+          <div v-for="tag in topTags" :key="tag.id">
+            <TagItem :tag="tag"></TagItem>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="links-container">
       <div class="top-links">
@@ -39,11 +50,13 @@ import backendApi from '@/api/backendApi'
 import loginApi from '@/api/loginApi'
 import LinkItem from '@/components/LinkItem.vue'
 import CreateLinkButton from '@/components/CreateLinkButton.vue'
+import TagItem from '@/components/TagItem.vue'
 
 export default {
   components: {
     LinkItem,
     CreateLinkButton,
+    TagItem,
   },
   computed: {
       storedUser () {
@@ -59,6 +72,7 @@ export default {
   data() {
     return {
       newLink: '',
+      topTags: [],
       topLinks: [],
       recentLinks: [],
     }
@@ -86,11 +100,20 @@ export default {
         }
       }
     },
+    async getTopTags() {
+      this.topTags = [];
+      try {
+        const tags = await api.getTopTags();
+        this.topTags = tags;
+      } catch (error) {
+        console.error('Error fetching top tags:', error);
+      }
+    },
     async getTopLinks() {
       this.topLinks = [];
       try {
-        const links = await api.getTopLinksWithUserData(this.user.id);
-        this.topLinks = links;
+        const tags = await api.getTopLinks();
+        this.topLinks = tags;
         this.currentTab = 'top';
         
       } catch (error) {
@@ -135,6 +158,9 @@ export default {
     },
     checkUser() {
     },
+    async loadTags() {
+      await this.getTopTags();
+    },
     async loadLinks() {
       await this.getTopLinks();
       await this.getNewLinks();
@@ -167,6 +193,7 @@ export default {
       console.error('Error logging in as user :', this.storedUser, error);
     }
 
+    await this.loadTags();
     await this.loadLinks();
   },
 }
@@ -181,6 +208,22 @@ export default {
 
 .user-link {
   margin: 20px;
+}
+
+.top-menu {
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.top-tags-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.top-tags {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .add-link {

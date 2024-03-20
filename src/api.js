@@ -411,6 +411,11 @@ const api = {
     return tags;
   },
 
+  getTopTags: async (limit = 10) => {
+    let tags = await backendApi.getTopTags(limit);
+    return tags;
+  }, 
+
   //needs to get tag links and then get the tags
   getTagsByLink: async (linkId) => {
     let tags = await backendApi.getTagsByLinkId(linkId);

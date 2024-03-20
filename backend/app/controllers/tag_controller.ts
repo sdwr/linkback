@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import db from '@adonisjs/lucid/services/db'
 
 import Tag from '#models/tag'
 import ITag from '#models/request_objects/iTag'
@@ -38,6 +39,21 @@ export default class TagController {
       .select('tags.*')
       .leftJoin('tag_links', 'tags.id', 'tag_links.tag_id')
       .where('tag_links.link_id', linkId)
+
+    return response.json(tags)
+  }
+
+  //order by # of taglinks for each tag for now, later by # of votes
+  async getTopTags({ request, response }: HttpContext) {
+    const amount = Number(request.input('amount', 10))
+
+    const tags = await Tag.query()
+      .select('tags.*')
+      .select(db.raw('COUNT(tag_links.id) as tagLinksCount'))
+      .leftJoin('tag_links', 'tags.id', '=', 'tag_links.tag_id')
+      .groupBy('tags.id')
+      .orderBy(db.raw('COUNT(tag_links.id)'), 'desc')
+      .limit(amount);
 
     return response.json(tags)
   }
