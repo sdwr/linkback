@@ -40,7 +40,7 @@ export default {
 }
 .user-thumbnail {
   height: 100%;
-  width: 80px;
+  width: 40px;
   border-radius: 50%;
 }
 .user-link {

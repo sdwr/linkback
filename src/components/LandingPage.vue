@@ -1,25 +1,20 @@
 <template>
   <div class="landing-page">
     <div class="top-menu">
-
-      <div class="add-link">
-        Add a link
-        <CreateLinkButton/>
-      </div>
-      <div class="top-tags-container">
+      <!-- <div class="top-tags-container">
         <h2>Top Tags</h2>
         <div class="top-tags">
           <div v-for="tag in topTags" :key="tag.id">
             <TagItem :tag="tag"></TagItem>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="links-container">
-      <div class="top-links">
-        <h2>Top Links</h2>
-        <div v-for="link in topLinks" :key="link.id">
-          <LinkItem :link="link" 
+      <div class="recent-links">
+        <h2>Recent Links</h2>
+        <div v-for="link in recentLinks" :key="link.id">
+          <LinkItem :link="link" :hasVoting="false"
             @onClick="goToLink"
             @onSave="saveLink"
             @onUnsave="unsaveLink"
@@ -28,9 +23,9 @@
           <!-- Additional components here -->
         </div>
       </div>
-      <div v-if="!isOnMobile" class="recent-links">
-        <h2>Recent Links</h2>
-        <div v-for="link in recentLinks" :key="link.id">
+      <div v-if="!isOnMobile" class="top-links">
+        <h2>Top Links</h2>
+        <div v-for="link in topLinks" :key="link.id">
           <LinkItem :link="link" 
             @onClick="goToLink"
             @onSave="saveLink"

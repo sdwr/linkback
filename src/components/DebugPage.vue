@@ -42,7 +42,7 @@ export default {
       // Fetch the data from the API
       this.apiData.links = await api.getLinks();
       this.apiData.tags = await api.getTags();
-      this.apiData.savedlink = await api.getSavedLinks();
+      this.apiData.savedlinks = await api.getSavedLinks();
       this.apiData.taglinks = await api.getTagLinks();
       this.apiData.users = await api.getUsers();
       this.apiData.useractions = await api.getUserActions();

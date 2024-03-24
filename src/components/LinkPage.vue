@@ -51,7 +51,7 @@
 
         <!-- Form to add a new tag -->
         <form @submit.prevent="addTag">
-            <input type="text" v-model="newTagName" @keyup.enter="addTag" placeholder="Enter new tag name">
+            <input type="text" v-model="newTagName" @keyup.enter="addTag" placeholder="Enter new tag">
             <button type="submit" @click="addTag">Add Tag</button>
         </form>
       </div>

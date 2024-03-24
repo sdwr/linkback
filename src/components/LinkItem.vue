@@ -1,10 +1,11 @@
 <template>
-  <div class="link-item" style="display: flex; align-items: center; height: 100px; width: 100%;">
+  <div class="link-item"
+    @click="clickLink()">
     <!-- Voting Section -->
-    <div class="voting">
-      <button @click="upvote">🔼</button>
+    <div v-if="hasVoting" class="voting">
+      <button @click.stop="upvote">🔼</button>
       <div>{{ link.votes }}</div>
-      <button @click="downvote">🔽</button>
+      <button @click.stop="downvote">🔽</button>
     </div>
 
     <!-- Thumbnail -->
@@ -13,27 +14,39 @@
     </div>
 
     <!-- Link Details -->
-    <a :href=link.url class="details" @click.prevent="clickLink()">
-      <div class="detail-title" style="font-size: 1.2em; font-weight: bold;">{{ link.title || "No title" }}</div>
-      <div class="details-url" style="font-size: 0.8em;">{{ link.url }}</div>
-    </a>
+    <div class="details">
+      <div class="details-title">{{ link.title || "No title" }}</div>
+      <a :href="link.url" @click.stop class="details-url">{{ trimmedUrl }}</a>
+      <div class="additional-info">
+        <div class="time-ago">{{ timeAgo }}</div>
+        <div class="uploaded-by"> by USER</div>
+        <div v-if="duration" class="duration"> length: {{ duration }}s</div>
+        <div class="tags">
+          <span v-for="tag in link.tags" :key="tag.id">
+            <a :href="`/tag/${tag.name}`" @click.prevent="goToTag(tag)">{{tag.name}}</a>
+          </span>
+        </div>
+      </div>
+    </div>
 
     <!-- Duration -->
-    <div v-if="duration" class="duration" style="flex-shrink: 0; padding: 0 10px;">
+    <!-- <div v-if="duration" class="duration" style="flex-shrink: 0; padding: 0 10px;">
       length: {{ duration }}s
-    </div>
+    </div> -->
 
     <!-- Save Link -->
-    <div class="save-link" style="flex-shrink: 0; padding: 0 10px;">
-      <button type="button" @click="saveLink()" v-if="!link.saved">💾</button>
-      <button type="button" @click="unsaveLink()" v-else>❌</button>
-    </div>
+    <!-- <div class="save-link" style="flex-shrink: 0; padding: 0 10px;">
+      Save / Unsave:
+      <button type="button" @click.stop="saveLink()" v-if="!link.saved">💾</button>
+      <button type="button" @click.stop="unsaveLink()" v-else>❌</button>
+    </div> -->
   </div>
 </template>
 <script>
 import defaultThumbnail from '@/assets/tiny-default-thumbnail.png';
 import backendApi from '@/api/backendApi';
 import api from '@/api.js';
+import { trimUrlForDisplay, convertDateToTimeAgo } from '@/utils';
 
 export default {
   name: 'LinkItem',
@@ -41,6 +54,10 @@ export default {
     link: {
       type: Object,
       required: true,
+    },
+    hasVoting: {
+      type: Boolean,
+      default: true,
     },
   },
   emits: 
@@ -63,6 +80,14 @@ export default {
       return this.link.startTime && this.link.endTime
         ? this.link.endTime - this.link.startTime
         : this.link.duration
+    },
+    trimmedUrl() {
+      if(!this.link) return '';
+      return trimUrlForDisplay(this.link.url);
+    },
+    timeAgo() {
+      if(!this.link) return '';
+      return convertDateToTimeAgo(this.link.createdAt);
     },
   },
   methods: {
@@ -103,6 +128,7 @@ export default {
 </script>
 <style scoped>
 .link-item {
+  cursor: pointer;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -114,7 +140,7 @@ export default {
   padding: 0 10px;
 }
 .thumbnail {
-  padding: 0 10px;
+  padding: 0 5px;
 }
 .thumbnail-img {
   height: 80px;
@@ -124,20 +150,50 @@ export default {
 .details {
   flex: 1;
   min-width: 0;
-  padding: 0px 30px;
+  max-width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 15px;
+  padding-left: 10px;
+  text-align: left;
 }
 .details-title {
-  font-size: 1.2em;
-  font-weight: bold;
+  font-size: 1.3em;
 }
 .details-url {
+  display: block;
   font-size: 0.8em;
+  max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  text-decoration: none;
+  transition: text-decoration 0.3s ease;
 }
-.duration {
-  flex-shrink: 0;
-  padding: 0 10px;
+
+.details-url:hover {
+  text-decoration: underline;
+  
+}
+
+.additional-info {
+  margin-top: 5px;
+  font-size: 0.8em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.save-link {
+  display: flex;
+  font-size: 0.6em;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.save-link button {
+  width: auto;
 }
 </style>

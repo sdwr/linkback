@@ -1,31 +1,14 @@
 <template>
 <div>
-  <!-- <div v-if="!isOnMobile" class="main-container-desktop">
+  <div class="main-container">
     <div class="page-header">
-      <h1>{{ siteTitle }}</h1>
-      <div class="page-header-buttons">
-        <button @click="goToLanding">Home</button>
-        <button @click="goToDebug">Debug</button>
-        <button @click="goToCreateLink">Create Link</button>
+      <div class="left-side">
+        <span class="page-title" @click="goToLanding()">{{ siteTitle }}</span>
+        <div class="page-header-buttons">
+          <CreateLinkButton/>
+        </div>
       </div>
-    </div>
-    <div class="page-title">
-      <h1>{{ pageTitle }}</h1>
-    </div>
-    <div class="user-card">
-      <UserCard :user="user" />
-    </div>
-  </div> -->
-  <!-- USE ONLY MOBILE FOR NOW -->
-  <div class="main-container-mobile">
-    <div class="page-header">
-      <h1>{{ siteTitle }}</h1>
-      <div class="page-header-buttons">
-        <button @click="goToLanding">Home</button>
-        <button @click="goToDebug">Debug</button>
-        <button @click="goToCreateLink">Create Link</button>
-      </div>
-      <div class="user-card-mobile">
+      <div class="user-card">
         <UserCard :user="user" />
       </div>
     </div>
@@ -41,10 +24,12 @@
 import UserCard from '@/components/UserCard.vue'
 import { mapGetters } from 'vuex'
 import api from '@/api'
+import CreateLinkButton from './CreateLinkButton.vue'
 
 export default {
   components: {
-    UserCard
+    UserCard,
+    CreateLinkButton,
   },
   computed: {
     isOnMobile() {
@@ -66,37 +51,34 @@ export default {
     goToLanding() {
       this.$router.push('/')
     },
-    goToDebug() {
-      this.$router.push('/debug')
-    },
-    goToCreateLink() {
-      this.$router.push('/createLink')
-    }
   }
 }
 </script>
 <style scoped>
-/* different version of header for desktop vs mobile */
-.main-container-desktop {
-  display: flex;
-  width: 100%;
-  height: 100px;
-  overflow: hidden;
-  justify-content: space-between; /* This spreads out the children to each end */
-  align-items: center; /* This ensures they are aligned in the center vertically */
-  margin-bottom: 20px;
-}
 
 .page-header {
   display: flex;
   align-items: center;
   width: 100%;
+  height: 100%;
   justify-content: space-between;
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 24px;
+  font-style: underline;
+  cursor: pointer;
+
 }
 
 .page-header-buttons {
   display: flex;
-  margin-left: 10px;
+  margin-left: 20px;
   gap: 10px; /* Adds some space between buttons */
 }
 
@@ -108,18 +90,13 @@ export default {
   /* Additional styling for the user card */
 }
 
-/* mobile version */
-/* put the page title below the site buttons */
-.main-container-mobile {
+.main-container {
   display: flex;
   width: 100%;
-  height: 100px;
+  height: 50px;
   overflow: hidden;
   flex-direction: column;
   align-items: center;
 }
 
-.page-title-mobile {
-
-}
 </style>

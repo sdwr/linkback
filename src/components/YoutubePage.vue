@@ -85,7 +85,7 @@
         <!-- Form to add a new tag -->
         <div class="add-tag-form">
           <form @submit.prevent="addTag">
-              <input type="text" v-model="newTagName" placeholder="Enter new tag name">
+              <input type="text" v-model="newTagName" placeholder="Enter new tag">
               <button type="submit">Add Tag</button>
           </form>
         </div>
@@ -199,9 +199,6 @@ export default {
     },
     goToUser(id) {
       this.$router.push({ path: `/user/${id}`})
-    },
-    goToDebug() {
-      this.$router.push({ path: `/debug`})
     },
     goToOriginal() {
       this.$router.push({ path: `/tube/${this.link.originalLinkId}`})

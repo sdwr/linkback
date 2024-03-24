@@ -2,13 +2,24 @@ TODO:
 -------------
 
 PROJECT:
+  - remove add link button from landing page, replaced with top button
+  - how to remove tags from link
+    x to remove
+    x to vote to hide
+
+  - should tags have separate vote count?
+    would need to make votes generic
+    think about full generic items (probably crazy!)
+
+  -add pinned bottom bar? (comments, tags, add link as slideouts from bottom)
   -deleting links might break dependencies (clips -> original)
     make error page
-  -local dev broken on mobile (can't log in)
-  
 
 
 USER:
+  - make sure guest account is created correctly on first login
+  - ability to upgrade guest to real account (change username, set password, set email)
+    with email accept confirmation
   - authenticate user for requests (done automatically?)
   - have log in page?
 
@@ -82,6 +93,7 @@ YOUTUBE PAGE:
 - timestamped comments
 
 USER PAGE: 
+- fix saved links not loading correctly
 - make history look nice
 - make save/unsave/history for user looked at, not current user
 
@@ -99,6 +111,9 @@ DONE:
 -----------
 
 PROJECT:
+  -local dev broken on mobile (can't log in) DONE
+- remove debug button from top bar (secret access at /debug) DONE 
+
 
 USER:
   - use sessions to authenticate and stay logged in DONE

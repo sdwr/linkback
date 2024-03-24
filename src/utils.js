@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
 
 
 export function isOnMobile() {
@@ -223,4 +223,21 @@ export function encodeURIComponent(str) {
         .replace(/\)/g, '%29')
         .replace(/\*/g, '%2A')
         .replace(/~/g, '%7E');
+}
+
+//trim the http:// or https:// from the url for display
+export function trimUrlForDisplay(url) {
+    if (!url) {
+        return '';
+    }
+    return url.replace(/^(https?:\/\/)?(www\.)?/, '');
+}
+
+export function convertDateToTimeAgo(date) {
+    console.log(date)
+    if (!date) {
+        return '';
+    }
+    let parsedDate = DateTime.fromISO(date);
+    return parsedDate.toRelative();
 }

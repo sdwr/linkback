@@ -1,10 +1,9 @@
 <template>
   <div class="user-home">
-    <div><a :href="`/`" @click.prevent="goBack">Go back</a></div>
     <h1>{{ user.username }}</h1>
     <div class="sections">
       <div class="section">
-        <h2>User History</h2>
+        <h2>History</h2>
         <ul>
           <li v-for="historyItem in userHistory" :key="historyItem.id">{{ historyItem.actionType }}</li>
         </ul>
@@ -68,9 +67,6 @@ export default {
         this.$router.push({ path: `/link/${link.id}`})
       }
     },
-    goBack() {
-      this.$router.go(-1)
-    },
     async loadLinks() {
       this.userHistory = await api.getUserActionsByUser(this.user.id);
       this.submittedLinks = await api.getSubmittedLinksWithUserData(this.user.id);
@@ -103,5 +99,7 @@ export default {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 </style>
