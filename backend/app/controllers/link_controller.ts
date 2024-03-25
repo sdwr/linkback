@@ -17,7 +17,11 @@ export default class LinkController {
   async getOne({ request, response }: HttpContext) {
     const id = request.param('id');
 
-    const link = await Link.findOrFail(id);
+    const link = await Link.query()
+      .where('id', id)
+      .preload('user')
+      .preload('tags')
+      .firstOrFail();
 
     return response.ok(link);
   }
@@ -27,6 +31,8 @@ export default class LinkController {
 
     const links = await Link.query()
       .where('userId', userId)
+      .preload('user')
+      .preload('tags');
 
     return response.ok(links);
   }
@@ -38,6 +44,8 @@ export default class LinkController {
       .select('links.*')
       .innerJoin('saved_links', 'links.id', 'saved_links.link_id')
       .where('saved_links.user_id', userId)
+      .preload('user')
+      .preload('tags');
 
     return response.ok(links);
   }
@@ -50,6 +58,8 @@ export default class LinkController {
       .select('links.*')
       .leftJoin('tag_links', 'links.id', 'tag_links.link_id')
       .where('tag_links.tag_id', tagId)
+      .preload('user')
+      .preload('tags');
 
     return response.ok(links);
   }
@@ -60,7 +70,9 @@ export default class LinkController {
 
     const links = await Link.query()
       .orderBy('created_at', 'desc')
-      .limit(amount);
+      .limit(amount)
+      .preload('user')
+      .preload('tags');
 
     return response.ok(links);
   }
@@ -71,7 +83,9 @@ export default class LinkController {
 
     const links = await Link.query()
       .orderBy('vote_sum', 'desc')
-      .limit(amount);
+      .limit(amount)
+      .preload('user')
+      .preload('tags');
 
     return response.ok(links);
   }

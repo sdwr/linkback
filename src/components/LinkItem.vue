@@ -19,12 +19,12 @@
       <a :href="link.url" @click.stop class="details-url">{{ trimmedUrl }}</a>
       <div class="additional-info">
         <div class="time-ago">{{ timeAgo }}</div>
-        <div class="uploaded-by"> by USER</div>
+        <div class="uploaded-by"  @click.stop="goToUser(submittedUser)"> by {{submittedUser.username}}</div>
         <div v-if="duration" class="duration"> length: {{ duration }}s</div>
-        <div class="tags">
-          <span v-for="tag in link.tags" :key="tag.id">
-            <a :href="`/tag/${tag.name}`" @click.prevent="goToTag(tag)">{{tag.name}}</a>
-          </span>
+      </div>
+      <div class="tags-container">
+        <div v-for="tag in link.tags">
+          <TagItem :tag="tag"></TagItem>
         </div>
       </div>
     </div>
@@ -47,9 +47,13 @@ import defaultThumbnail from '@/assets/tiny-default-thumbnail.png';
 import backendApi from '@/api/backendApi';
 import api from '@/api.js';
 import { trimUrlForDisplay, convertDateToTimeAgo } from '@/utils';
+import TagItem from './TagItem.vue';
 
 export default {
   name: 'LinkItem',
+  components: {
+    TagItem,
+  },
   props: {
     link: {
       type: Object,
@@ -89,6 +93,9 @@ export default {
       if(!this.link) return '';
       return convertDateToTimeAgo(this.link.createdAt);
     },
+    submittedUser() {
+      return this.link.user || {};
+    },
   },
   methods: {
     async upvote() {
@@ -117,7 +124,14 @@ export default {
     },
     clickLink() {
       this.$emit('on-click', this.link)
-    }
+    },
+    goToUser(user) {
+      this.$router.push({ path: `/user/${user.id}` });
+    },
+    goToTag(tag) {
+      console.log('goToTag', tag)
+      // this.$router.push({ path: `/tag/${tag.id}` });
+    },
   },
   async created() {
     // Fetch the thumbnail for the link
@@ -153,7 +167,7 @@ export default {
   max-width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding-top: 15px;
+  padding-top: 10px;
   padding-left: 10px;
   text-align: left;
 }
@@ -169,6 +183,7 @@ export default {
   text-overflow: ellipsis;
 
   text-decoration: none;
+  color: #007bff; /* A shade of blue commonly used for links */
   transition: text-decoration 0.3s ease;
 }
 
@@ -183,6 +198,25 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+}
+
+.uploaded-by {
+  color: #007bff; /* A shade of blue commonly used for links */
+
+}
+
+.uploaded-by:hover {
+  text-decoration: underline;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5px;
+  margin-top: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+
 }
 
 .save-link {

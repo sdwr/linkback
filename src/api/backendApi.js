@@ -1023,11 +1023,14 @@ const backendApi = {
     const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/user/${userId}/link/${linkId}`;
     try {
       const response = await fetch(url);
-      if (!response.ok) {
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else if(response.status === 404) {
+        return null;
+      } else {
         throw new Error(`Failed to fetch saved link, status code: ${response.status}`);
       }
-      const data = await response.json();
-      return data;
     } catch (error) {
       console.error('Error fetching saved link:', error.message);
       return null;

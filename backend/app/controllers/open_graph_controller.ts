@@ -23,6 +23,9 @@ export default class OpenGraphController {
             // Extract the og:image content
             const image = $('meta[property="og:image"]').attr('content');
 
+            if(!image) {
+                return response.json(null);
+            }
             // Return the og:image URL
             return response.json({ image });
         } catch (error) {

@@ -2,7 +2,6 @@ TODO:
 -------------
 
 PROJECT:
-  - remove add link button from landing page, replaced with top button
   - how to remove tags from link
     x to remove
     x to vote to hide
@@ -15,38 +14,14 @@ PROJECT:
   -deleting links might break dependencies (clips -> original)
     make error page
 
-
-USER:
-  - make sure guest account is created correctly on first login
-  - ability to upgrade guest to real account (change username, set password, set email)
-    with email accept confirmation
-  - authenticate user for requests (done automatically?)
-  - have log in page?
-
-BACKEND:
-- check return types on DELETE endpoints. what is expected? boolean? the deleted record? null in case of failure?
-- consistency:
-  - date different types - vine.date in validator, any in interface, dateTime coming from frontend
-  - primary id named "id" on backend, "linkId", "userId", etc on frontend DONE
-  - vote has "linkId" but should be generic for tags etc
-
-  - should there be copies of tags by user? is it a global thing or a "subscribe to" kind of thing
-  - search for tags when creating
-  - can't change tag name when updating (breaks uniqueness check)
-  - userId w tag should not matter
-
-FRONTEND:
-
-- types, typescript?
-- cache links locally (store?), am re-getting right now every page load
-- fix mobile layout (video wider, less black bars on top/bottom) KINDA DONE
-
-
-TESTING:
-- write backend tests for create/update/delete 
-- test validation + duplicate checking
-
 FEATURES:
+  FIX ARCHIVE FLOW
+    - archive URL if doesn't load, submit archive URL if doesn't already exist
+    - figure out if page is already cached (read screen?)
+    - send async request to archive.is to cache page if not (CANT DO FROM IFRAME!!)
+    - once cached, need to hard refresh the page? looks like the failure screen on archive.is is cached
+    - keep track of what has saved pages / does not in DB
+    - BONUS: fix scrolling (cut size of page, no double scroll bars)
 
 - add votes KINDA DONE
     still need to grey out completed vote (add to add to site data)
@@ -54,7 +29,6 @@ FEATURES:
     put a table name in the row and check table + id? otherwise the ids overlap, unless they are unique over the entire DB
 
 - add comments
-- archive URL if doesn't load, submit archive URL if doesn't already exist
 - allow importing bookmarks
 - add search?
 - how should recommended work
@@ -83,19 +57,14 @@ LANDING PAGE:
 
 
 LINK PAGE:
-- feature parity with youtube page
 - get title from page somehow
 - make title editable
 
 YOUTUBE PAGE:
+- have custom time bar for clips, hide controls
 - set clipEnd to 5 seconds after clipStart if clipStart is moved too close, prevent short loop happening by accident
 
 - timestamped comments
-
-USER PAGE: 
-- fix saved links not loading correctly
-- make history look nice
-- make save/unsave/history for user looked at, not current user
 
 API
 - save DB state as file, to import as test data
@@ -107,11 +76,43 @@ API
 - add try/catch for all the api calls
 
 
+USER:
+  - ability to upgrade guest to real account (change username, set password, set email)
+    with email accept confirmation
+  - authenticate user for requests (done automatically?)
+  - have log in page?
+
+BACKEND:
+- return null instead of 404, avoid error messages in console
+- check return types on DELETE endpoints. what is expected? boolean? the deleted record? null in case of failure?
+- consistency:
+  - date different types - vine.date in validator, any in interface, dateTime coming from frontend
+  - primary id named "id" on backend, "linkId", "userId", etc on frontend DONE
+  - vote has "linkId" but should be generic for tags etc
+
+  - should there be copies of tags by user? is it a global thing or a "subscribe to" kind of thing
+  - search for tags when creating
+  - can't change tag name when updating (breaks uniqueness check)
+  - userId w tag should not matter
+
+FRONTEND:
+
+- types, typescript?
+- cache links locally (store?), am re-getting right now every page load
+- fix mobile layout (video wider, less black bars on top/bottom) KINDA DONE
+
+
+TESTING:
+- write backend tests for create/update/delete 
+- test validation + duplicate checking
+
+
 DONE:
 -----------
 
 PROJECT:
-  -local dev broken on mobile (can't log in) DONE
+- remove add link button from landing page, replaced with top button DONE
+-local dev broken on mobile (can't log in) DONE
 - remove debug button from top bar (secret access at /debug) DONE 
 
 
@@ -157,11 +158,19 @@ BACKEND:
 -trim title/url based on length DONE
 - taglink api call named "taggedLink" DONE
 
+DB:
+  - figure out how table linking is supposed to work DONE
+    - links need to return user data for voting / saved
+    - savedLinks actually need to return links
+
 
 LANDING PAGE:
 - strip params from link (at least for youtube) DONE
 - fix mock link lists DONE
 - verify that links go somewhere DONE
+
+LINK PAGE:
+- feature parity with youtube page DONE
 
 
 YOUTUBE PAGE:
@@ -184,6 +193,9 @@ USER PAGE
 - make save / unsave icons work like landing page DONE
 - lists not displaying DONE
 - add history DONE
+- fix saved links not loading correctly DONE 
+- make history look nice DONE
+- make save/unsave/history for user looked at, not current user DONE
 
 TAG PAGE:
   - show list of links DONE

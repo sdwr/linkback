@@ -1,5 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, belongsTo, manyToMany  } from '@adonisjs/lucid/orm'
+
+import User from '#models/user'
+import Tag from '#models/tag'
 
 export default class Link extends BaseModel {
   @column({ isPrimary: true })
@@ -43,6 +47,14 @@ export default class Link extends BaseModel {
 
   @column()
   declare userId: number
+
+  @belongsTo(() => User)
+  declare user: BelongsTo<typeof User>
+
+  @manyToMany(() => Tag, {
+    pivotTable: 'tag_links'
+  })
+  declare tags: ManyToMany<typeof Tag>
 
   @column()
   declare originalLinkId: number | null
