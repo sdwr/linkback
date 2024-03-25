@@ -16,11 +16,11 @@ import {
 } from "@/utils"
 
 import { 
-  ACTION_SUBMIT,
-  ACTION_SAVE,
-  ACTION_UNSAVE,
-  ACTION_TAG,
-  ACTION_CREATETAG,
+  SUBMIT,
+  SAVE,
+  UNSAVE,
+  TAG,
+  CREATETAG,
 } from "@/consts"
 
 import {
@@ -338,8 +338,8 @@ const backendApi = {
       return null;
     }
   },
-  getLinksByUserId: async (userId) => {
-    const url = `${BACKEND_URL}${LINKS_PATH}/user/${userId}`;
+  getSubmittedLinksByUserId: async (userId) => {
+    const url = `${BACKEND_URL}${LINKS_PATH}/user/${userId}/submitted`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -1034,7 +1034,7 @@ const backendApi = {
     }
   },
   getSavedLinksByUserId: async (userId) => {
-    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/user/${userId}`;
+    const url = `${BACKEND_URL}${LINKS_PATH}/user/${userId}/saved`;
     try {
       const response = await fetch(url);
       if (!response.ok) {

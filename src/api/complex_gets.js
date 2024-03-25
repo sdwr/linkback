@@ -6,7 +6,7 @@ const complex_requests = {
   //complex get requests
 
   //already handled by findBy in backend?
-  getLinksByUser: null,
+  getSubmittedLinksByUser: null,
   getCommmentsByLink: null,
   getVotesByLink: null,
   getTagsByLink: null,

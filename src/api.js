@@ -16,14 +16,14 @@ import {
 } from "@/utils"
 
 import { 
-  ACTION_SUBMIT,
-  ACTION_SAVE,
-  ACTION_UNSAVE,
-  ACTION_TAG,
-  ACTION_CREATETAG,
-  ACTION_VOTE,
-  ACTION_COMMENT,
-  ACTION_UNCOMMENT,
+  SUBMIT,
+  SAVE,
+  UNSAVE,
+  TAG,
+  CREATETAG,
+  VOTE,
+  COMMENT,
+  UNCOMMENT,
 
  } from "@/consts"
 
@@ -129,7 +129,7 @@ const api = {
       return null;
     }
 
-    await api.addUserAction({ userId: link.userId, actionType: ACTION_SUBMIT, itemId: link.id });
+    await api.addUserAction({ userId: link.userId, actionType: SUBMIT, itemId: link.id });
 
     return link;
   },
@@ -161,7 +161,7 @@ const api = {
       console.log("addVote: failed to add vote", vote);
       return null;
     }
-    await api.addUserAction({ userId: vote.userId, actionType: ACTION_VOTE, itemId: vote.linkId });
+    await api.addUserAction({ userId: vote.userId, actionType: VOTE, itemId: vote.linkId });
 
     return vote;
   },
@@ -174,7 +174,7 @@ const api = {
       console.log("addComment: failed to create comment", comment);
       return null;
     }
-    await api.addUserAction({ userId: comment.userId, actionType: ACTION_COMMENT, itemId: comment.linkId });
+    await api.addUserAction({ userId: comment.userId, actionType: COMMENT, itemId: comment.linkId });
 
     return comment;
   },
@@ -188,7 +188,7 @@ const api = {
       console.log("addSavedLink: failed to create saved link", savedLink);
       return null;
     }
-    await api.addUserAction({ userId: savedLink.userId, actionType: ACTION_SAVE, itemId: savedLink.linkId });
+    await api.addUserAction({ userId: savedLink.userId, actionType: SAVE, itemId: savedLink.linkId });
 
 
     return savedLink;
@@ -209,7 +209,7 @@ const api = {
       console.log("addTag: failed to create tag", tag);
       return null;
     }
-    await api.addUserAction({ userId: tag.userId, actionType: ACTION_CREATETAG, itemId: tag.id });
+    await api.addUserAction({ userId: tag.userId, actionType: CREATETAG, itemId: tag.id });
 
     return tag;
   },
@@ -233,7 +233,7 @@ const api = {
       console.log("addtagLink: failed to create tag link", tagLink);
       return null;
     }
-    await api.addUserAction({ userId: tagLink.userId, actionType: ACTION_TAG, itemId: tagLink.linkId });
+    await api.addUserAction({ userId: tagLink.userId, actionType: TAG, itemId: tagLink.linkId });
     
     return tagLink;
   },
@@ -268,7 +268,7 @@ const api = {
       console.log("unsaveLink: failed to unsave link", savedLink);
       return false;
     }
-    await api.addUserAction({ userId, actionType: ACTION_UNSAVE, itemId: linkId });
+    await api.addUserAction({ userId, actionType: UNSAVE, itemId: linkId });
 
     return true;
   },
@@ -326,8 +326,8 @@ const api = {
     return updatedLinks;
   },
 
-  getLinksByUser: async (userId) => {
-    let links = backendApi.getLinksByUserId(userId);
+  getSubmittedLinksByUser: async (userId) => {
+    let links = backendApi.getSubmittedLinksByUserId(userId);
     return links;
   },
 
@@ -458,7 +458,7 @@ const api = {
   },
 
   getSubmittedLinksWithUserData: async (userId) => {
-    let submittedLinks = await api.getLinksByUser(userId);
+    let submittedLinks = await api.getSubmittedLinksByUser(userId);
     submittedLinks = await api.addUserDataToLinks(userId, submittedLinks);
 
     return submittedLinks;

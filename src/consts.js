@@ -1,26 +1,30 @@
 
-export const ACTION_SUBMIT = 'submit';
-export const ACTION_EDIT = 'edit';
-export const ACTION_UNSUBMIT = 'unsubmit';
-export const ACTION_VOTE = 'vote';
-export const ACTION_COMMENT = 'comment';
-export const ACTION_UNCOMMENT = 'uncomment';
-export const ACTION_SAVE = 'save';
-export const ACTION_UNSAVE = 'unsave';
-export const ACTION_TAG = 'tag';
-export const ACTION_UNTAG = 'untag';
-export const ACTION_CREATETAG = 'createTag';
+export const SUBMIT = 'submit';
+export const EDIT = 'edit';
+export const UNSUBMIT = 'unsubmit';
+export const VOTE = 'vote';
+export const COMMENT = 'comment';
+export const UNCOMMENT = 'uncomment';
+export const SAVE = 'save';
+export const UNSAVE = 'unsave';
+export const TAG = 'tag';
+export const UNTAG = 'untag';
+export const CREATETAG = 'createTag';
 
-export const ACTION_TYPES = {
-    ACTION_SUBMIT,
-    ACTION_EDIT,
-    ACTION_UNSUBMIT,
-    ACTION_VOTE,
-    ACTION_COMMENT,
-    ACTION_UNCOMMENT,
-    ACTION_SAVE,
-    ACTION_UNSAVE,
-    ACTION_TAG,
-    ACTION_UNTAG,
-    ACTION_CREATETAG,
+export const ACTION = {
+    //link actions
+    SUBMIT,
+    EDIT,
+    UNSUBMIT,
+    VOTE,
+    //comment actions
+    COMMENT,
+    UNCOMMENT,
+    //savedlink actions
+    SAVE,
+    UNSAVE,
+    //tag actions
+    TAG,
+    UNTAG,
+    CREATETAG,
 };

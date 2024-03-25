@@ -117,6 +117,7 @@ node ace migration:rollback
 
 install nginx
 use nginx-conf file
+add frontend and backend to /etc/nginx/sites-enabled
 
 make sure the env files are created
 .env

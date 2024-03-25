@@ -66,7 +66,8 @@ router.delete('/useractions/deleteAll', [UserActionController, 'deleteAll'])
 router.delete('/useractions/:id', [UserActionController, 'delete'])
 
 // link routes
-router.get('/links/user/:userId', [LinkController, 'getLinksByUser'])
+router.get('/links/user/:userId/saved', [LinkController, 'getSavedLinksByUser'])
+router.get('/links/user/:userId/submitted', [LinkController, 'getSubmittedLinksByUser'])
 //query params: amount
 router.get('/links/new', [LinkController, 'getNewLinks'])
 //query params: amount

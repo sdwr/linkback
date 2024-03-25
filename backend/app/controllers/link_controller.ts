@@ -22,11 +22,22 @@ export default class LinkController {
     return response.ok(link);
   }
 
-  async getLinksByUser({ request, response }: HttpContext) {
+  async getSubmittedLinksByUser({ request, response }: HttpContext) {
     const userId = request.param('userId');
 
     const links = await Link.query()
       .where('userId', userId)
+
+    return response.ok(links);
+  }
+
+  async getSavedLinksByUser({ request, response }: HttpContext) {
+    const userId = request.param('userId');
+
+    const links = await Link.query()
+      .select('links.*')
+      .innerJoin('saved_links', 'links.id', 'saved_links.link_id')
+      .where('saved_links.user_id', userId)
 
     return response.ok(links);
   }
