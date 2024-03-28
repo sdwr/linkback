@@ -1,4 +1,5 @@
 import { createStore } from 'vuex';
+import api from '../api';
 
 export default createStore({
     state() {
@@ -6,6 +7,7 @@ export default createStore({
             user: null,
             isOnMobile: false,
             pageTitle: '',
+            allTags: [],
         };
     },
     mutations: {
@@ -17,6 +19,9 @@ export default createStore({
         },
         setPageTitle(state, title) {
             state.pageTitle = title;
+        },
+        setAllTags(state, tags) {
+            state.allTags = tags;
         },
     },
     actions: {
@@ -55,6 +60,17 @@ export default createStore({
             commit('setPageTitle', title);
         },
 
+        //Tag actions
+        async loadAllTags({ commit }) {
+            try {
+                api.getTags().then(tags => {
+                    commit('setAllTags', tags);
+                });
+            } catch (error) {
+                console.error('load all tags failed:', error);
+            }
+        },
+
     },
     getters: {
         getUser(state) {
@@ -65,6 +81,9 @@ export default createStore({
         },
         getPageTitle(state) {
             return state.pageTitle;
+        },
+        getAllTags(state) {
+            return state.allTags;
         },
     }
 });

@@ -83,21 +83,23 @@
         </div>
         
         <!-- Form to add a new tag -->
-        <div class="add-tag-form">
-          <form @submit.prevent="addTag">
-              <input type="text" v-model="newTagName" placeholder="Enter new tag">
-              <button type="submit">Add Tag</button>
-          </form>
-        </div>
+        <AddTagForm
+          :user="user"
+          :link="link"
+          :existingTags="tags"
+          @addTag="onAddTag"
+        />
       </div>
     </div>
   </div>
   
 </template>
 <script>
+import Fuse from 'fuse.js'
 import VoteButton from '@/components/VoteButton.vue'
 import PlayerOverlay from '@/components/PlayerOverlay.vue'
 import TagItem from '@/components/TagItem.vue'
+import AddTagForm from '@/components/AddTagForm.vue'
 import api from '@/api';
 import { loadYoutubeUrl } from '@/utils'
 import { createPlayer, playPlayer, restartPlayer, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
@@ -107,6 +109,7 @@ export default {
     VoteButton,
     PlayerOverlay,
     TagItem,
+    AddTagForm,
   },
   data() {
     return {
@@ -145,7 +148,7 @@ export default {
     },
     userIsOwner() {
       return this.user && this.user.id === this.link.userId;
-    }
+    },
   },
   watch: {
     loopClip: function() {
@@ -219,12 +222,8 @@ export default {
       setLoopTimes(this.clipStart, this.clipEnd);
 
     },
-    async addTag() {
-      if(this.newTagName && this.newTagName.length > 0) {
-        await api.addTagToLink(this.user.id, this.link.id, this.newTagName);
+    async onAddTag(tag) {
         this.tags = await api.getTagsByLink(this.link.id)
-
-      }
     },
     backToHome() {
       this.$router.push({ path:"/"})
@@ -282,7 +281,7 @@ export default {
   position: relative;
   border: 1px solid #ccc;
   width: 100%;
-  height: 800px;
+  height: 60vh;
   overflow: hidden;
 }
 
@@ -335,7 +334,7 @@ export default {
 .comments, .other-links, .tags {
   border: 1px solid #ccc;
   width: 33%;
-  height: auto;
+  height: 20vh;
   overflow: hidden;
 }
 
@@ -344,10 +343,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 0px;
-}
-
-.add-tag-form {
-  margin-top: 5px;
 }
 
 .bottom-container-header {
