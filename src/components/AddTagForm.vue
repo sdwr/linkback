@@ -64,9 +64,12 @@ export default {
     }
   },
   methods: {
+    //delay clearing the input so the click has time to register
+    //clearing the input clears the suggestions, so we need to wait
     handleFormDeselection(event) {
-      console.log(event)
-      this.newTagName = '';
+      setTimeout(() => {
+        this.newTagName = '';
+      }, 100);
     },
     async selectTag(tag) {
       this.newTagName = tag;
@@ -77,6 +80,7 @@ export default {
       if(this.newTagName && this.newTagName.length > 0) {
         await api.addTagToLink(this.user.id, this.link.id, this.newTagName);
         
+        this.$store.dispatch('loadAllTags');
         this.$emit('addTag');
         
       }

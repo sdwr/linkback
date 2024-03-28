@@ -21,7 +21,7 @@ export default class LinkController {
       .where('id', id)
       .preload('user')
       .preload('tags')
-      .firstOrFail();
+      .first();
 
     return response.ok(link);
   }

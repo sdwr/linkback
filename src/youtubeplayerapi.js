@@ -39,14 +39,26 @@ export async function createPlayer(videoId, playerOptions) {
   });
 }
 
+//the player starts at the beginning, then jumps to clip start time
+//so mute it to avoid sound at the beginning
+// temporary fix??
 export function playPlayer() {
-  player.unMute();
+  player.mute();
   player.playVideo();
+  setTimeout(() => {
+    player.unMute();
+  }, 500)
 }
 
+//do the same thing to avoid audio hiccup
+//in the future, respect the user's volume settings?
 export function restartPlayer() {
   player.seekTo(startTime);
+  player.mute();
   player.playVideo();
+  setTimeout(() => {
+    player.unMute();
+  }, 500)
 }
 
 export function setIsLoop(loop) {
@@ -84,7 +96,7 @@ function onPlayerStateChange(event) {
 }
 
 function playerIsPlaying() {
-  return player && player.getPlayerState() === window.YT.PlayerState.PLAYING;
+  return player && (player.getPlayerState() === window.YT.PlayerState.PLAYING);
 }
 
 //restart loop if clip times have changed

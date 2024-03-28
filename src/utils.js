@@ -103,7 +103,7 @@ export function createSavedLinkDto(data) {
 export function createTagDto(data) {
     assertHasProperties(data, ['name', 'userId']);
     return {
-        name: data.name,
+        name: data.name.toLowerCase(),
         userId: data.userId,
         date: getDateTimeStringNow()
     };

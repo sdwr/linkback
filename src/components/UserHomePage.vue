@@ -1,6 +1,6 @@
 <template>
   <div class="user-home">
-    <h1>{{ user.username }}</h1>
+    <EditTextField :value="user.username" :canEdit="true" @edit="onChangeName"></EditTextField>
     <div class="sections">
       <div class="section">
         <h2>History</h2>
@@ -36,6 +36,7 @@
 <script>
 import api from '@/api';
 import LinkItem from '@/components/LinkItem.vue';
+import EditTextField from '@/components/EditTextField.vue';
 import {ACTION} from '@/consts'
 export default {
   data() {
@@ -50,6 +51,7 @@ export default {
   },
   components: {
     LinkItem,
+    EditTextField,
   },
   methods: {
     async saveLink(link) {
@@ -59,6 +61,12 @@ export default {
     async unsaveLink(link) {
       await api.unsaveLink(this.user.id, link.id);
       await this.loadLinks();
+    },
+    async onChangeName(newName) {
+      await api.updateUser(this.user.id, { username: newName });
+      // reload the user data
+      this.user = await api.getUser(this.user.id);
+      // relload the user in the store
     },
     goToLink(link) {
       if(link.domain === 'youtube.com') {
@@ -84,6 +92,10 @@ export default {
       } else if(LINK_ACTIONS.includes(userAction.actionType)) {
         this.$router.push({ path: `/link/${userAction.itemId}`})
       }
+    },
+    // update when auth is implemented
+    userIsOwner() {
+      return false;
     },
     async loadLinks() {
       this.userHistory = await api.getUserActionsByUser(this.user.id);

@@ -21,6 +21,7 @@
         <div class="time-ago">{{ timeAgo }}</div>
         <div class="uploaded-by"  @click.stop="goToUser(submittedUser)"> by {{submittedUser.username}}</div>
         <div v-if="duration" class="duration"> length: {{ duration }}s</div>
+        <div v-if="link.isClip">✂️</div>
       </div>
       <div class="tags-container">
         <div v-for="tag in link.tags">

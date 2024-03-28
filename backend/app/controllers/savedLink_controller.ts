@@ -38,7 +38,7 @@ export default class SavedLinkController {
     const savedLink = await SavedLink.query()
       .where('userId', userId)
       .andWhere('linkId', linkId)
-      .firstOrFail()
+      .first()
 
     return response.ok(savedLink);
   }
@@ -59,7 +59,7 @@ export default class SavedLinkController {
     const savedLink = await SavedLink.query()
       .where('userId', userId)
       .andWhere('linkId', linkId)
-      .firstOrFail()
+      .first()
 
     if (savedLink) {
       await savedLink.delete();

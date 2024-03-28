@@ -114,7 +114,7 @@ export default {
   data() {
     return {
       youtubePlayer: null,
-      user: null,
+      user: {},
       link: {
         title: '',
         url: '',

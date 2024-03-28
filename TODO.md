@@ -77,9 +77,15 @@ API
 
 
 USER:
+  - authenticate user for requests (done automatically?)
+    - add passwords
+    - verify logins
+    - have single point of signon that connects to store
+    - and fns that verify on frontend if user can modify data (username, link name)
+    - verify it works on backend
+    
   - ability to upgrade guest to real account (change username, set password, set email)
     with email accept confirmation
-  - authenticate user for requests (done automatically?)
   - have log in page?
 
 BACKEND:
