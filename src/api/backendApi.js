@@ -122,7 +122,11 @@ const backendApi = {
   getUserById: async (id) => {
     const url = `${BACKEND_URL}${USERS_PATH}/${id}`;
     try {
-      const response = await fetch(url);
+      const response = await fetch(url,
+        {
+          credentials: 'include'
+        }
+        );
       if (!response.ok) {
         throw new Error(`Failed to fetch user, status code: ${response.status}`);
       }
@@ -173,11 +177,32 @@ const backendApi = {
       return null;
     }
   },
+  upgradeGuestUser: async (id, userData) => {
+    const url = `${BACKEND_URL}${USERS_PATH}/upgradeGuest/${id}`;
+    try {
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to upgrade guest user, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error upgrading guest user:', error.message);
+      return null;
+    }
+  },
   updateUser: async (id, userData) => {
     const url = `${BACKEND_URL}${USERS_PATH}/${id}`;
     try {
       const response = await fetch(url, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },

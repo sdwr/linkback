@@ -20,6 +20,8 @@ import VoteController from '#controllers/vote_controller'
 import TagLinkController from '#controllers/tagLink_controller'
 import SavedLinkController from '#controllers/savedLink_controller'
 
+import { middleware } from '#start/kernel'
+
 router.get('/', async () => {
   return `<html>
     <head><title>Server Status</title></head>
@@ -47,8 +49,8 @@ router.get('/users', [UserController, 'index'])
 
 router.post('/users', [UserController, 'create'])
 router.post('/users/createGuest', [UserController, 'createGuest'])
-
-router.put('/users/:id', [UserController, 'update'])
+router.put('/users/upgradeGuest/:id', [UserController, 'upgradeGuest'])
+router.put('/users/:id', [UserController, 'update']).use(middleware.auth())
 
 router.delete('/users/deleteAll', [UserController, 'deleteAll'])
 router.delete('/users/:id', [UserController, 'delete'])

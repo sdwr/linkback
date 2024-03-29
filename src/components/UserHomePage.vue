@@ -1,6 +1,10 @@
 <template>
   <div class="user-home">
-    <EditTextField :value="user.username" :canEdit="true" @edit="onChangeName"></EditTextField>
+    <div class="user-title">
+      <EditTextField :value="user.username" :canEdit="canEdit" @edit="onChangeName"></EditTextField>
+      <button v-if="user.isGuest" @click="showUpgradeModal = true">Upgrade</button>
+      <UpgradeModal v-if="showUpgradeModal" @close="showUpgradeModal = false"></UpgradeModal>
+    </div>
     <div class="sections">
       <div class="section">
         <h2>History</h2>
@@ -37,6 +41,8 @@
 import api from '@/api';
 import LinkItem from '@/components/LinkItem.vue';
 import EditTextField from '@/components/EditTextField.vue';
+import UpgradeModal from '@/components/UpgradeModal.vue';
+
 import {ACTION} from '@/consts'
 export default {
   data() {
@@ -47,11 +53,21 @@ export default {
       userHistory: [],
       submittedLinks: [],
       savedLinks: [],
+      showUpgradeModal: false,
     }
   },
   components: {
     LinkItem,
     EditTextField,
+    UpgradeModal,
+  },
+  computed: {
+    storedUser () {
+      return this.$store.getters.getUser
+    },
+    canEdit() {
+      return this.user.id === this.storedUser.id && !this.storedUser.isGuest;
+    }
   },
   methods: {
     async saveLink(link) {
@@ -63,7 +79,7 @@ export default {
       await this.loadLinks();
     },
     async onChangeName(newName) {
-      await api.updateUser(this.user.id, { username: newName });
+      await api.updateUser({ id: this.user.id, username: newName });
       // reload the user data
       this.user = await api.getUser(this.user.id);
       // relload the user in the store
@@ -113,6 +129,7 @@ export default {
     // Fetch the user history
 
     await this.loadLinks();
+    console.log(this.user)
 
   }
 }
@@ -123,6 +140,15 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.user-title {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: center;
+
 }
 
 .sections .section {

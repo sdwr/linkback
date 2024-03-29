@@ -8,6 +8,7 @@ export default class SavedLinksSchema extends BaseSchema {
       table.increments('id')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('link_id').unsigned().references('id').inTable('links').onDelete('CASCADE')
+      table.unique(['user_id', 'link_id'])
 
       table.timestamp('date').notNullable()
       table.timestamps(true)

@@ -27,7 +27,7 @@ function assertHasProperties(obj, properties) {
 }
 
 // create DTOs
-export function createUserDto(data) {
+export function  createUserDto(data) {
     assertHasProperties(data, ['username', 'email', 'password']);
     return {
         username: data.username,
@@ -36,6 +36,29 @@ export function createUserDto(data) {
         date: getDateTimeStringNow()
     };
 }
+
+export function updateUserDto(data) {
+    assertHasProperties(data, ['username']);
+    return {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        date: getDateTimeStringNow()
+    };
+}
+
+export function upgradeGuestUserDto(data) {
+    console.log(data)
+    assertHasProperties(data, ['id', 'email', 'password']);
+    return {
+        id: data.id,
+        email: data.email,
+        password: data.password,
+        date: getDateTimeStringNow()
+    };
+}
+
+
 
 export function createGuestUserDto(data) {
     return {

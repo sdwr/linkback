@@ -6,6 +6,7 @@ export default class VotesSchema extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
+      // could make generic for any type of vote, but for now just link votes
       table.integer('link_id').unsigned().references('id').inTable('links').onDelete('CASCADE')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('vote_value').notNullable()

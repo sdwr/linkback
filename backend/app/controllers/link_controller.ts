@@ -99,11 +99,19 @@ export default class LinkController {
     return response.ok(link);
   }
 
-  async update({ request, response }: HttpContext) {
+  async update({ request, response, auth }: HttpContext) {
+    const id = request.param('id');
+
     const validatedLink = await request.validateUsing(updateLinkValidator);
     const iLink = validatedLink as ILink;
 
     const link = await Link.findOrFail(iLink.id);
+
+    //verify that the user owns the link
+    if(!auth.user?.id || link.userId !== auth.user.id) {
+      return response.unauthorized('You can only update your own links');
+    }
+    
     link.merge(iLink);
     await link.save();
 

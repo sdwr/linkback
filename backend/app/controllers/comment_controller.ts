@@ -48,11 +48,19 @@ export default class LinkController {
     return response.ok(comment);
   }
 
-  async update({ request, response }: HttpContext) {
+  async update({ request, response, auth }: HttpContext) {
+    const id = request.param('id');
+
     const validatedData = await request.validateUsing(updateCommentValidator);
     const iComment = validatedData as IComment;
 
-    const comment = await Comment.findOrFail(iComment.id);
+    const comment = await Comment.findOrFail(id);
+
+    //verify that the user owns the comment
+    if(!auth.user?.id || comment.userId !== auth.user.id) {
+      return response.unauthorized('You can only update your own comments');
+    }
+
     comment.merge(iComment);
     await comment.save();
 

@@ -68,11 +68,20 @@ export default class SavedLinkController {
     return response.ok(savedLink);
   }
 
-  async update({ request, response }: HttpContext) {
+  //update doesn't really make sense, is binary exists/not exists
+  async update({ request, response, auth }: HttpContext) {
+    const id = request.param('id');
+
     const validatedData = await request.validateUsing(updateSavedLinkValidator);
     const iSavedLink = validatedData as ISavedLink;
 
-    const savedLink = await SavedLink.findOrFail(iSavedLink.id);
+    const savedLink = await SavedLink.findOrFail(id);
+
+    //verify that the user owns the savedLink
+    if (!auth.user?.id || savedLink.userId !== auth.user.id) {
+      return response.unauthorized('You cannot update a savedLink that is not yours');
+    }
+
     savedLink.merge(iSavedLink);
     await savedLink.save();
 

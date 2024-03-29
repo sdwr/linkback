@@ -13,11 +13,6 @@ export const createUserActionValidator = vine.compile(
 
 export const updateUserActionValidator = vine.compile(
   vine.object({
-    id: vine.number().positive().withoutDecimals(),
-    userId: vine.number().positive().withoutDecimals(),
-    itemId: vine.number().positive().withoutDecimals(),
-    actionType: vine.string().trim(),
-
     date: vine.string().trim(),
   })
 )

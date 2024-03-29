@@ -174,6 +174,13 @@ export default {
 }
 .details-title {
   font-size: 1.3em;
+  max-height: 60%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* Limits the text to 2 lines */
+  line-clamp: 2; /* Standard property, for future compatibility */
+  box-orient: vertical; /* Standard property, for future compatibility */
 }
 .details-url {
   display: block;

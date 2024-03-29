@@ -9,8 +9,8 @@ export default class UsersSchema extends BaseSchema {
       table.string('username').unique()
       table.string('email', 255).unique()
       table.string('password')
-      table.string('verified_email').notNullable().defaultTo('false')
-      table.string('is_guest').notNullable().defaultTo('false')
+      table.boolean('verified_email').notNullable().defaultTo(false)
+      table.boolean('is_guest').notNullable().defaultTo(false)
 
       table.timestamp('date').notNullable()
       table.timestamps(true)

@@ -68,11 +68,19 @@ export default class TagLinkController {
     }
   }
 
-  async update({ request, response }: HttpContext) {
+  async update({ request, response, auth }: HttpContext) {
+    const id = request.param('id');
+
     const validatedData = await request.validateUsing(updateTagLinkValidator);
     const iTagLink = validatedData as ITagLink;
 
-    const tagLink = await TagLink.findOrFail(iTagLink.id);
+    const tagLink = await TagLink.findOrFail(id);
+
+    //verify that the user owns the tagLink
+    if (!auth.user?.id || tagLink.userId !== auth.user.id) {
+      return response.unauthorized('You can only update your own tagLink information');
+    }
+
     tagLink.merge(iTagLink);
     await tagLink.save();
 

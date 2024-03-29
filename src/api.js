@@ -2,7 +2,9 @@ import externalApi from "./externalApi";
 import backendApi from "@/api/backendApi";
 
 import { 
-  createUserDto, 
+  createUserDto,
+  updateUserDto,
+  upgradeGuestUserDto,
   createLinkDto, 
   createVoteDto,
   createCommentDto, 
@@ -96,9 +98,29 @@ const api = {
   },
 
   //API adds
-  addUser: async (data) => {
-    const user = createUserDto(data);
-    mockUsers.push(user);
+
+  upgradeGuestUser: async (data) => {
+    let id = parseInt(data.id);
+    if(!id) {
+      console.log("upgradeGuestUser: invalid id", id, data)
+      return null;
+    }
+    const userDto = upgradeGuestUserDto(data);
+    userDto.id = id;
+
+    let user = await backendApi.upgradeGuestUser(id, userDto);
+    return user;
+  },
+  updateUser: async (data) => {
+    let id = parseInt(data.id);
+    if(!id) {
+      console.log("updateUser: invalid id", id, data)
+      return null;
+    }
+    let userDto = updateUserDto(data);
+    userDto.id = id;
+
+    let user = await backendApi.updateUser(id, userDto);
     return user;
   },
   
@@ -144,7 +166,7 @@ const api = {
     let linkDto = createLinkDto(data);
     linkDto.id = id;
 
-    let link = await backendApi.updateLink(data);
+    let link = await backendApi.updateLink(id, data);
     return link;
   },
 

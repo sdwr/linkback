@@ -40,6 +40,9 @@ export default class VoteController {
     return response.ok(votes);
   }
 
+  //create / update validators have different requirements
+  //needs to be fixed later
+  //in general, userId should be supplied by the auth token?
   async createOrUpdate({ request, response }: HttpContext) {
     const validatedData = await request.validateUsing(createVoteValidator);
     const iVote = validatedData as IVote;
@@ -68,11 +71,19 @@ export default class VoteController {
     return response.ok(vote);
   }
 
-  async update({ request, response }: HttpContext) {
+  async update({ request, response, auth }: HttpContext) {
+    const id = request.param('id');
+
     const validatedData = await request.validateUsing(updateVoteValidator);
     const iVote = validatedData as IVote;
 
-    const vote = await Vote.findOrFail(iVote.id);
+    const vote = await Vote.findOrFail(id);
+
+    //verify that the user owns the vote
+    if (!auth.user?.id || vote.userId !== auth.user.id) {
+      return response.unauthorized('You can only update your own vote information');
+    }
+
     vote.merge(iVote);
     await vote.save();
 

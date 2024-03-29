@@ -88,6 +88,13 @@ USER:
     with email accept confirmation
   - have log in page?
 
+ARCHITECTURE:
+  - supply userId from authentication instead of passed in
+  - standardize api params (id + data, id in data?)
+  - attach item to userAction in backend
+    - tag vs link 
+
+
 BACKEND:
 - return null instead of 404, avoid error messages in console
 - check return types on DELETE endpoints. what is expected? boolean? the deleted record? null in case of failure?

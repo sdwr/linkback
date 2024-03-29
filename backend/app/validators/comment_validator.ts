@@ -16,7 +16,6 @@ export const createCommentValidator = vine.compile(
 
 export const updateCommentValidator = vine.compile(
   vine.object({
-    id: vine.number().positive().withoutDecimals(),
     content: vine.string().trim(),
 
     linkId: vine.number().positive().withoutDecimals(),

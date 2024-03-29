@@ -39,11 +39,19 @@ export default class UserActionController {
     return response.json(userAction)
   }
 
-  async update({ request, response }: HttpContext) {
+  async update({ request, response, auth }: HttpContext) {
+    const id = request.param('id')
+
     const validatedData = await request.validateUsing(updateUserActionValidator)
     const iUserAction = validatedData as IUserAction
 
     const userAction = await UserAction.findOrFail(iUserAction.id)
+
+    //verify that the user is updating their own information
+    if (!auth.user?.id || userAction.userId !== auth.user.id) {
+      return response.unauthorized('You cannot update another user\'s user action')
+    }
+    
     userAction.merge(iUserAction)
     await userAction.save()
 

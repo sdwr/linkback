@@ -75,11 +75,18 @@ export default class TagController {
     }
   }
 
-  async update({ request, response }: HttpContext) {
+  async update({ request, response, auth }: HttpContext) {
+    const id = request.param('id')
     const validatedData = await request.validateUsing(updateTagValidator)
     const iTag = validatedData as ITag
 
-    const tag = await Tag.findOrFail(iTag.id)
+    const tag = await Tag.findOrFail(id)
+
+    //verify that the user owns the tag
+    if (!auth.user?.id || tag.userId !== auth.user.id) {
+      return response.unauthorized('You can only update your own tag information')
+    }
+    
     tag.merge(iTag)
     await tag.save()
 

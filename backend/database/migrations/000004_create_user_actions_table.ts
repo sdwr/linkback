@@ -9,6 +9,8 @@ export default class UserActionsSchema extends BaseSchema {
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.string('action_type').notNullable()
       table.integer('item_id').notNullable()
+      // need to implement this still, blank for now
+      table.string('item_type')
       
       table.timestamp('date', { useTz: true }).notNullable().defaultTo(this.now())
       table.timestamps(true)

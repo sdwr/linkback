@@ -3,7 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import IUser from '#models/request_objects/iUser'
 
-import { createGuestUserValidator, createUserValidator, updateUserValidator } from '#validators/user_validator'
+import { createGuestUserValidator, createUserValidator, updateUserValidator, upgradeGuestUserValidator } from '#validators/user_validator'
 export default class UserController {
   constructor() {}
 
@@ -41,11 +41,37 @@ export default class UserController {
     return response.json(user)
   }
 
-  async update({ request, response }: HttpContext) {
+  async upgradeGuest({ request, response }: HttpContext) {
+    const id = request.param('id')
+    
+    const validatedData = await request.validateUsing(upgradeGuestUserValidator)
+    const iUser = validatedData as IUser
+    iUser.isGuest = false
+
+    const user = await User.findOrFail(id)
+    user.merge(iUser)
+    user.save()
+
+    return response.json(user)
+  }
+
+  async update({ request, response, auth }: HttpContext) {
+    const id = request.param('id')
+
+    if(!auth.isAuthenticated) {
+      return response.unauthorized('You must be logged in to update your user information')
+    }
+
     const validatedData = await request.validateUsing(updateUserValidator)
     const iUser = validatedData as IUser
 
-    const user = await User.findOrFail(iUser.id)
+    const user = await User.findOrFail(id)
+
+    //verify that the user is updating their own information
+    if (!auth.user?.id || user.id !== auth.user.id) {
+      return response.unauthorized('You can only update your own user information')
+    }
+
     user.merge(iUser)
     await user.save()
 

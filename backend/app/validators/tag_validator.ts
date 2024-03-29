@@ -18,8 +18,6 @@ export const createTagValidator = vine.compile(
  */
 export const updateTagValidator = vine.compile(
   vine.object({
-    id: vine.number().positive().withoutDecimals(),
-    userId: vine.number().positive().withoutDecimals(),
     date: vine.string().trim(),
   })
 )
