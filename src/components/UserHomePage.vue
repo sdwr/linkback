@@ -2,7 +2,7 @@
   <div class="user-home">
     <div class="user-title">
       <EditTextField :value="user.username" :canEdit="canEdit" @edit="onChangeName"></EditTextField>
-      <button v-if="user.isGuest" @click="showUpgradeModal = true">Upgrade</button>
+      <button v-if="canUpgrade" @click="showUpgradeModal = true">Upgrade</button>
       <UpgradeModal v-if="showUpgradeModal" @close="showUpgradeModal = false"></UpgradeModal>
     </div>
     <div class="sections">
@@ -67,6 +67,9 @@ export default {
     },
     canEdit() {
       return this.user.id === this.storedUser.id && !this.storedUser.isGuest;
+    },
+    canUpgrade() {
+      return this.user.id === this.storedUser.id && this.storedUser.isGuest;
     }
   },
   methods: {
@@ -129,7 +132,6 @@ export default {
     // Fetch the user history
 
     await this.loadLinks();
-    console.log(this.user)
 
   }
 }

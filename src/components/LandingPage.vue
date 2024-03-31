@@ -165,29 +165,6 @@ export default {
     //set page title
     this.$store.dispatch('savePageTitle', 'All Links');
 
-    //attempt to load user from store
-    await this.$store.dispatch('loadUser');
-    if(!this.storedUser || !this.storedUser.id) {
-      //if no user, create a guest user
-      let user = await backendApi.createGuestUser({isGuest: true});
-      this.$store.dispatch('saveUser', user);
-    }
-
-    if(!this.storedUser || !this.storedUser.id) {
-      throw new Error('User not found: ', this.storedUser);
-    }
-
-    // user should be loaded from store, try to login
-    try {
-      let userResponse = await loginApi.login(this.storedUser);
-      // check if the response is a user object
-      if(!userResponse.id) {}
-      this.$store.dispatch('saveUser', userResponse);
-
-    } catch (error) {
-      console.error('Error logging in as user :', this.storedUser, error);
-    }
-
     await this.loadTags();
     await this.loadLinks();
   },

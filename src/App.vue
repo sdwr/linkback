@@ -8,20 +8,28 @@
 <script>
 import PageHeader from '@/components/PageHeader.vue';
 import { isOnMobile } from '@/utils'
+import userLogin from '@/api/userLogin';
 
 export default {
   name: 'App',
   components: {
     PageHeader,
   },
+  computed: {
+    storedUser () {
+      return this.$store.getters.getUser
+    },
+  },
   methods: {
     handleResize() {
       this.$store.dispatch('saveIsOnMobile', isOnMobile())
-    }
+    },
+    async loadUser() {
+
+    },
   },
   created() {
-    //load user from local storage, if it exists 
-    this.$store.dispatch('loadUser');
+    userLogin.loadUserAndLogin();
     //check if the user is on mobile
     this.$store.dispatch('saveIsOnMobile', isOnMobile())
     
@@ -43,4 +51,4 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-</style>
+</style>@/api/userLogin

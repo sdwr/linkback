@@ -29,7 +29,6 @@ export const upgradeGuestUserValidator = vine.compile(
 export const updateUserValidator = vine.compile(
   vine.object({
     username: vine.string().trim(),
-    email: vine.string().email(),
 
     date: vine.string().trim(),
   })

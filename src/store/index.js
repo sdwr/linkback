@@ -5,6 +5,7 @@ export default createStore({
     state() {
         return {
             user: null,
+            isLoggedIn: false,
             isOnMobile: false,
             pageTitle: '',
             allTags: [],
@@ -13,6 +14,9 @@ export default createStore({
     mutations: {
         setUser(state, user) {
             state.user = user;
+        },
+        setIsLoggedIn(state, isLoggedIn) {
+            state.isLoggedIn = isLoggedIn;
         },
         setIsOnMobile(state, isOnMobile) {
             state.isOnMobile = isOnMobile;
@@ -50,6 +54,11 @@ export default createStore({
             }
         },
 
+        //Login actions
+        async saveIsLoggedIn({ commit }, isLoggedIn) {
+            commit('setIsLoggedIn', isLoggedIn);
+        },
+
         //Mobile actions
         async saveIsOnMobile({ commit }, isOnMobile) {
             commit('setIsOnMobile', isOnMobile);
@@ -75,6 +84,9 @@ export default createStore({
     getters: {
         getUser(state) {
             return state.user;
+        },
+        getIsLoggedIn(state) {
+            return state.isLoggedIn;
         },
         getIsOnMobile(state) {
             return state.isOnMobile;

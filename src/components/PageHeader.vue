@@ -9,7 +9,11 @@
         </div>
       </div>
       <div class="user-card">
-        <UserCard :user="user" />
+        <UserCard v-if="isLoggedIn" :user="user" />
+        <div v-else>
+          <button @click="login()">Login</button>
+          <button @click="loginAsGuest()">Login as Guest</button>
+        </div>
       </div>
     </div>
     <div class="page-title-mobile">
@@ -25,6 +29,7 @@ import UserCard from '@/components/UserCard.vue'
 import { mapGetters } from 'vuex'
 import api from '@/api'
 import CreateLinkButton from './CreateLinkButton.vue'
+import userLogin from '@/api/userLogin'
 
 export default {
   components: {
@@ -34,6 +39,9 @@ export default {
   computed: {
     isOnMobile() {
       return this.$store.getters.getIsOnMobile
+    },
+    isLoggedIn() {
+      return this.$store.getters.getIsLoggedIn
     },
     user() {
       return this.$store.getters.getUser || {}
@@ -48,6 +56,12 @@ export default {
     }
   },
   methods: {
+    login() {
+      //popup login modal
+    },
+    loginAsGuest() {
+      userLogin.loginAsGuest()
+    },
     goToLanding() {
       this.$router.push('/')
     },

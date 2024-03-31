@@ -48,19 +48,24 @@ export default class UserController {
     const iUser = validatedData as IUser
     iUser.isGuest = false
 
-    const user = await User.findOrFail(id)
-    user.merge(iUser)
-    user.save()
+    try {
+      const user = await User.findOrFail(id)
+      user.merge(iUser)
+      user.save()
+      return response.json(user)
+    } catch (error) {
+      console.log(error)
+      return response.status(500).json({ error: 'An unexpected error occured' })
+    }
 
-    return response.json(user)
   }
 
   async update({ request, response, auth }: HttpContext) {
     const id = request.param('id')
 
-    if(!auth.isAuthenticated) {
-      return response.unauthorized('You must be logged in to update your user information')
-    }
+    // if(!auth.isAuthenticated) {
+    //   return response.unauthorized('You must be logged in to update your user information')
+    // }
 
     const validatedData = await request.validateUsing(updateUserValidator)
     const iUser = validatedData as IUser
@@ -68,9 +73,9 @@ export default class UserController {
     const user = await User.findOrFail(id)
 
     //verify that the user is updating their own information
-    if (!auth.user?.id || user.id !== auth.user.id) {
-      return response.unauthorized('You can only update your own user information')
-    }
+    // if (!auth.user?.id || user.id !== auth.user.id) {
+    //   return response.unauthorized('You can only update your own user information')
+    // }
 
     user.merge(iUser)
     await user.save()

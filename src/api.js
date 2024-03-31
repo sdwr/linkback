@@ -1,6 +1,8 @@
 import externalApi from "./externalApi";
 import backendApi from "@/api/backendApi";
 
+import store from "@/store";
+
 import { 
   createUserDto,
   updateUserDto,
@@ -26,6 +28,8 @@ import {
   VOTE,
   COMMENT,
   UNCOMMENT,
+  UPGRADEACCOUNT,
+  EDITACCOUNT,
 
  } from "@/consts"
 
@@ -109,6 +113,10 @@ const api = {
     userDto.id = id;
 
     let user = await backendApi.upgradeGuestUser(id, userDto);
+    if(user) {
+      store.dispatch('saveUser', user);
+      await api.addUserAction({ userId: user.id, actionType: UPGRADEACCOUNT, itemId: user.id }); 
+    }
     return user;
   },
   updateUser: async (data) => {
@@ -121,6 +129,10 @@ const api = {
     userDto.id = id;
 
     let user = await backendApi.updateUser(id, userDto);
+    if(user) {
+      store.dispatch('saveUser', user);
+      await api.addUserAction({ userId: user.id, actionType: EDITACCOUNT, itemId: user.id }); 
+    }
     return user;
   },
   

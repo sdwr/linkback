@@ -23,8 +23,10 @@ export default {
     userThumbnail() {
       return this.user.thumbnail || defaultThumbnail || null;
     },
+  },
+  methods: {
     goToUserPage() {
-      this.$router.push({ name: 'userpage', params: { id: this.user.id } });
+      this.$router.push({ path: `/user/${this.user.id}`});
     },
   },
 };

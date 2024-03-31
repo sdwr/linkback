@@ -73,7 +73,7 @@ router.get('/links/user/:userId/submitted', [LinkController, 'getSubmittedLinksB
 //query params: amount
 router.get('/links/new', [LinkController, 'getNewLinks'])
 //query params: amount
-router.get('/links/top', [LinkController, 'getTopLinks'])
+router.get('/links/top', [LinkController, 'getTopLinks']).use(middleware.auth())
 router.get('/links/tag/:tagId', [LinkController, 'getLinksByTag'])
 router.get('/links/:id', [LinkController, 'getOne'])
 router.get('/links', [LinkController, 'index'])

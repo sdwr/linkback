@@ -114,7 +114,6 @@ export default {
   data() {
     return {
       youtubePlayer: null,
-      user: {},
       link: {
         title: '',
         url: '',
@@ -143,6 +142,9 @@ export default {
     }
   },
   computed: {
+    user() {
+      return this.$store.getters.getUser || {}
+    },
     linkIsClip() {
       return this.link && this.link.isClip;
     },
@@ -253,7 +255,6 @@ export default {
     
     await this.loadLink(id);
     this.submittingUser = await api.getUser(this.link.userId);
-    this.user = await api.getUser(1);
     this.userSavedLink = await api.checkUserSavedLink(this.user.id, this.link.id);
     this.tags = await api.getTagsByLink(this.link.id);
 

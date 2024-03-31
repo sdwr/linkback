@@ -77,14 +77,12 @@ API
 
 
 USER:
-  - authenticate user for requests (done automatically?)
-    - add passwords
-    - verify logins
-    - have single point of signon that connects to store
-    - and fns that verify on frontend if user can modify data (username, link name)
-    - verify it works on backend
+    LOGIN VERY BROKEN RIGHT NOW
+    states to watch for:
+    - on user edit, breaks stored user object
+    - gives up sometimes and makes new account
     
-  - ability to upgrade guest to real account (change username, set password, set email)
+  - ability to upgrade guest to real account (change username, set password, set email) DONE
     with email accept confirmation
   - have log in page?
 
@@ -96,6 +94,7 @@ ARCHITECTURE:
 
 
 BACKEND:
+- returns merged incorrect objects from requests, if they fail to merge?? need try/catch on every single update??
 - return null instead of 404, avoid error messages in console
 - check return types on DELETE endpoints. what is expected? boolean? the deleted record? null in case of failure?
 - consistency:
@@ -209,6 +208,11 @@ USER PAGE
 - fix saved links not loading correctly DONE 
 - make history look nice DONE
 - make save/unsave/history for user looked at, not current user DONE
+- add passwords DONE
+- verify logins DONE
+- have single point of signon that connects to store DONE-ish
+- and fns that verify on frontend if user can modify data (username, link name) DONE
+- verify it works on backend DONE
 
 TAG PAGE:
   - show list of links DONE

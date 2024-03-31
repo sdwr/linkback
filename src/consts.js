@@ -11,6 +11,9 @@ export const TAG = 'tag';
 export const UNTAG = 'untag';
 export const CREATETAG = 'createTag';
 
+export const UPGRADEACCOUNT = 'upgradeAccount';
+export const EDITACCOUNT = 'editAccount';
+
 export const ACTION = {
     //link actions
     SUBMIT,
@@ -27,4 +30,7 @@ export const ACTION = {
     TAG,
     UNTAG,
     CREATETAG,
+    //user actions
+    UPGRADEACCOUNT,
+    EDITACCOUNT,
 };
