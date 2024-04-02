@@ -3,7 +3,6 @@ import LinkPage from './components/LinkPage.vue'
 import LandingPage from './components/LandingPage.vue'
 import TagPage from './components/TagPage.vue'
 import UserHomePage from './components/UserHomePage.vue'
-import YoutubePage from './components/YoutubePage.vue'
 
 import CreateLinkPage from './components/CreateLinkPage.vue'
 
@@ -11,8 +10,7 @@ import DebugPage from './components/DebugPage.vue'
 
 const routes = [
     { path: '/', component: LandingPage, name: 'landingpage' },
-    { path: '/link/:id',  component: LinkPage, name: 'linkpageid'},
-    { path: '/tube/:id', component: YoutubePage, name: 'youtubepageid'},
+    { path: '/link/:id', component: LinkPage, name: 'linkpage'},
     { path: '/tag/:id', component: TagPage, name: 'tagpage'},
     { path: '/user/:id', component: UserHomePage, name: 'userpage'},
     

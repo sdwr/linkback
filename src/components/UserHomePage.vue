@@ -88,11 +88,7 @@ export default {
       // relload the user in the store
     },
     goToLink(link) {
-      if(link.domain === 'youtube.com') {
-        this.$router.push({ path: `/tube/${link.id}`})
-      } else {
-        this.$router.push({ path: `/link/${link.id}`})
-      }
+      this.$router.push({ path: `/link/${link.id}`})
     },
     goToItem(userAction) {
       let TAG_ACTIONS = [ACTION.CREATETAG];

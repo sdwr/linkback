@@ -59,7 +59,6 @@ export default {
     newTagName: function() {
       if(this.fuseSearch && this.newTagName.length > 0) {
         this.filteredTags = this.fuseSearch.search(this.newTagName);
-        console.log(this.filteredTags)
       }
     }
   },

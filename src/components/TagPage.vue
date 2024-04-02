@@ -32,11 +32,7 @@ export default {
   },
   methods: {
     goToLink(link) {
-      if(link.domain === 'youtube.com') {
-        this.$router.push({ path: `/tube/${link.id}`})
-      } else {
-        this.$router.push({ path: `/link/${link.id}`})
-      }
+      this.$router.push({ path: `/link/${link.id}`})
     },
     async saveLink(link) {
       await api.saveLink(this.user.id, link.id);
