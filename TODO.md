@@ -1,6 +1,16 @@
 TODO:
 -------------
 
+STAGES:
+  stage 1:
+    make sure the youtube link clipper works standalone
+      - add loop toggle to clips, to stop looping
+      - change clip to HH:MM:SS, don't scrub when moving end time
+      - make sure the link page functions as a landing page
+        - make the add link page landing as well? NO
+      - pretty up the UI
+      - make sure user 
+
 PROJECT:
   - how to remove tags from link
     x to remove
@@ -22,6 +32,10 @@ FEATURES:
     - once cached, need to hard refresh the page? looks like the failure screen on archive.is is cached
     - keep track of what has saved pages / does not in DB
     - BONUS: fix scrolling (cut size of page, no double scroll bars)
+
+  AND FIX THUMBNAILS
+    -get 2 previews
+      thumbnail size and 
 
 - add votes KINDA DONE
     still need to grey out completed vote (add to add to site data)
