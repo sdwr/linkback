@@ -8,6 +8,7 @@ import {
   updateUserDto,
   upgradeGuestUserDto,
   createLinkDto, 
+  updateLinkDto,
   createVoteDto,
   createCommentDto, 
   createSavedLinkDto, 
@@ -175,7 +176,7 @@ const api = {
       return null;
     }
 
-    let linkDto = createLinkDto(data);
+    let linkDto = updateLinkDto(data);
     linkDto.id = id;
 
     let link = await backendApi.updateLink(id, data);

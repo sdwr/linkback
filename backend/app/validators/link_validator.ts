@@ -39,13 +39,11 @@ export const createLinkValidator = vine.compile(
  */
 export const updateLinkValidator = vine.compile(
   vine.object({
-    url: vine.string().trim().url(),
+    id: vine.number().positive().withoutDecimals(),
     
-    isClip: vine.boolean(),
-    loopClip: vine.boolean(),
-    embeddable: vine.boolean(),
-    title: vine.string().trim(),
-    description: vine.string().trim(),
+    loopClip: vine.boolean().optional(),
+    title: vine.string().trim().optional(),
+    description: vine.string().trim().optional(),
     date: vine.string().trim(),
   })
 )

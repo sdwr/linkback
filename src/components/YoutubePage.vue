@@ -1,5 +1,6 @@
 <template>
   <div class="linkpage">
+    <EditTextField :value="link.title" :canEdit="canEditTitle" @edit="onChangeTitle"></EditTextField>
     <div class="link-top-buttons">
       <button v-if="!userSavedLink" @click="saveToLinks()">Save</button> <!-- Save to links button -->
       <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave</button> <!-- Saved button -->
@@ -95,11 +96,11 @@
   
 </template>
 <script>
-import Fuse from 'fuse.js'
 import VoteButton from '@/components/VoteButton.vue'
 import PlayerOverlay from '@/components/PlayerOverlay.vue'
 import TagItem from '@/components/TagItem.vue'
 import AddTagForm from '@/components/AddTagForm.vue'
+import EditTextField from './EditTextField.vue'
 import api from '@/api';
 import { loadYoutubeUrl } from '@/utils'
 import { createPlayer, playPlayer, restartPlayer, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
@@ -110,6 +111,7 @@ export default {
     PlayerOverlay,
     TagItem,
     AddTagForm,
+    EditTextField,
   },
   data() {
     return {
@@ -144,6 +146,9 @@ export default {
   computed: {
     user() {
       return this.$store.getters.getUser || {}
+    },
+    canEditTitle() {
+      return this.user.id === this.link.userId;
     },
     linkIsClip() {
       return this.link && this.link.isClip;
@@ -193,7 +198,11 @@ export default {
       })
       this.creatingClip = false;
       this.goToLink(clip);
-
+    },
+    async onChangeTitle(newTitle) {
+      await api.updateLink({ id: this.link.id, userId: this.user.id, title: newTitle });
+      this.link.title = newTitle;
+      await this.loadLink(this.link.id);
     },
     goToLink(link) {
       if(link.domain === 'youtube.com') {

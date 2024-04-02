@@ -52,14 +52,15 @@ export default {
 <style scoped>
 .edit-text-field {
   display: flex;
-  justify-content: center;
   align-items: center;
+  padding-bottom: 5px;
 }
 .edit-field-input {
   text-align: center;
   font-size: 25px;
   flex-grow: 0;
-  width: auto;
+  width: fit-content;
+  max-width: 80%;
   margin-right: 10px;
 
 }

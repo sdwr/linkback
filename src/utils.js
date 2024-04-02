@@ -91,7 +91,14 @@ export function createLinkDto(data) {
     link = processLink(link);
     
     return link;
+}
 
+export function updateLinkDto(data) {
+    assertHasProperties(data, ['id']);
+
+    data.date = getDateTimeStringNow();
+    
+    return data;
 }
 
 export function createVoteDto(data) {

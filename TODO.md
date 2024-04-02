@@ -77,13 +77,8 @@ API
 
 
 USER:
-    LOGIN VERY BROKEN RIGHT NOW
-    states to watch for:
-    - on user edit, breaks stored user object
-    - gives up sometimes and makes new account
-    
-  - ability to upgrade guest to real account (change username, set password, set email) DONE
-    with email accept confirmation
+  - 
+  - verify confirmation
   - have log in page?
 
 ARCHITECTURE:
@@ -128,7 +123,8 @@ PROJECT:
 - remove debug button from top bar (secret access at /debug) DONE 
 
 
-USER:
+USER:  
+  - ability to upgrade guest to real account (change username, set password, set email) DONE
   - use sessions to authenticate and stay logged in DONE
   - stored in local storage DONE
   - first iteration, guest users only DONE

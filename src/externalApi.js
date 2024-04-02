@@ -13,6 +13,10 @@ const externalApi = {
             link.description = data.description;
             link.duration = data.duration;
         }
+        //add (clip) to title if it's a clip
+        if(link.isClip) {
+            link.title = link.title + " (clip)";
+        }
     } else {
         //TODO: get title and description for other sites
     }

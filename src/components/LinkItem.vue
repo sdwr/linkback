@@ -129,10 +129,6 @@ export default {
     goToUser(user) {
       this.$router.push({ path: `/user/${user.id}` });
     },
-    goToTag(tag) {
-      console.log('goToTag', tag)
-      // this.$router.push({ path: `/tag/${tag.id}` });
-    },
   },
   async created() {
     // Fetch the thumbnail for the link

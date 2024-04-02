@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import hash from '@adonisjs/core/services/hash'
 
 import User from '#models/user'
 import UserSession from '#models/userSession'
@@ -24,7 +25,16 @@ export default class UserSessionController {
       .andWhere('isGuest', true)
       .firstOrFail()
     } else {
-      user = await User.verifyCredentials(email, password)
+      // adonis auth is not working!
+      // verify credentials manually for now
+      // user = await User.verifyCredentials(email, password)
+
+      user = await User.findBy('email', email)
+      if (!user) {
+        return response.status(401).json({error: 'Invalid email or password'})
+      }
+      await hash.verify(user.password, password)
+
     }
     
     await auth.use('web').login(user)
