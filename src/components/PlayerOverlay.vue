@@ -15,7 +15,10 @@
 export default {
   name: 'PlayerOverlay',
   props: {
-    isReady: Boolean = false,
+    isReady: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
