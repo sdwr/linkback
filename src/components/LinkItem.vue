@@ -170,7 +170,7 @@ export default {
 }
 .details-title {
   font-size: 1.3em;
-  max-height: 60%;
+  max-height: 30%;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -217,7 +217,7 @@ export default {
   display: flex;
   flex-wrap: nowrap;
   gap: 5px;
-  margin-top: 5px;
+  margin-top: 3px;
   overflow: hidden;
   white-space: nowrap;
 

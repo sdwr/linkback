@@ -223,32 +223,33 @@ export function processLink(link) {
 
 //save the youube URL query params as fields in the link object
 // then when the link is loaded, add the query params to the youtube url
-export function loadYoutubeUrl(link) {
-    let url = link.url;
-    let paramsList = [];
-    if(link.isClip && link.startTime && link.endTime) {
-        paramsList.push("start=" + link.startTime);
-        paramsList.push("end=" + link.endTime);
+// this is handled in youtubeplayerapi.js, dead code for now
+// export function loadYoutubeUrl(link) {
+//     let url = link.url;
+//     let paramsList = [];
+//     if(link.isClip && link.startTime && link.endTime) {
+//         paramsList.push("start=" + link.startTime);
+//         paramsList.push("end=" + link.endTime);
 
-        //clips should loop by default
-        paramsList.push("loop=1");
-        //clips should turn off controls by default
-        paramsList.push("controls=0");
-    }
+//         //clips should loop by default
+//         paramsList.push("loop=1");
+//         //clips should turn off controls by default
+//         paramsList.push("controls=0");
+//     }
 
-    //turn off related videos by default
-    paramsList.push("rel=0");
+//     //turn off related videos by default
+//     paramsList.push("rel=0");
 
-    //autoplay should be a user setting, set to true by default
-    paramsList.push("autoplay=1");
+//     //autoplay should be a user setting, set to true by default
+//     paramsList.push("autoplay=1");
 
-    if(paramsList.length > 0) {
-        url += "?" + paramsList.join("&");
-    }
+//     if(paramsList.length > 0) {
+//         url += "?" + paramsList.join("&");
+//     }
 
-    link.url = url;
-    return link;
-}
+//     link.url = url;
+//     return link;
+// }
 
 export function encodeURIComponent(str) {
     return str
@@ -269,7 +270,6 @@ export function trimUrlForDisplay(url) {
 }
 
 export function convertDateToTimeAgo(date) {
-    console.log(date)
     if (!date) {
         return '';
     }

@@ -13,7 +13,8 @@
             {{submittingUser.username}}
         </a>
       </span>
-      <a v-if="linkIsClip" :href="`/originalVideo`" @click.prevent="goToOriginal()">Original Video</a> <!-- Link to original video -->
+      -
+      <a v-if="linkIsClip" :href="`/originalVideo`" @click.prevent="goToOriginal()">Original</a> <!-- Link to original video -->
     </div>
 
     <div v-if="linkIsYoutube" class="content-preview">
@@ -109,7 +110,6 @@ import EditTextField from './EditTextField.vue'
 import PageEmbedding from './PageEmbedding.vue'
 
 import api from '@/api';
-import { loadYoutubeUrl } from '@/utils'
 import { createPlayer, playPlayer, restartPlayer, setStartTime, setEndTime, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
 
 export default {
@@ -216,6 +216,9 @@ export default {
         originalLinkId: this.link.id,
         userId: this.user.id,
       })
+      if(clip && clip.id) {
+        let tagLink = await api.addTagToLink(this.user.id, clip.id, 'clip')
+      }
       this.creatingClip = false;
       this.goToLink(clip);
     },
@@ -268,7 +271,6 @@ export default {
     },
     async loadLink(linkId) {
       let link = await api.getLink(linkId);
-      link = loadYoutubeUrl(link);
       this.link = link;
 
       this.$store.dispatch('savePageTitle', link.title)
@@ -344,7 +346,7 @@ export default {
 }
 
 .author-link{
-  margin: 0 10px;
+  margin: 0 0px;
 }
 
 .clip-controls {

@@ -304,6 +304,9 @@ const api = {
       return null;
     }
     const tagLink = await api.addTagLink({ userId, linkId, tagId: tag.id });
+    if(tagLink) {
+      store.dispatch('saveToast', { text: 'Tag added', type: TOAST_TYPE.SUCCESS });
+    }
     return tagLink;
   },
 
