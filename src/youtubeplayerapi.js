@@ -2,11 +2,14 @@ let player;
 let startTime = 0;
 let endTime = -1;
 
+let progress = 0;
+
 //this should disable controls if video is a clip
 let isClip = false;
 
 let loopClip = false;
-let clipTimesChanged = false;
+let startTimeChanged = false;
+let endTimeChanged = false;
 
 let isCheckingLoop = false;
 
@@ -50,6 +53,15 @@ export function playPlayer() {
   }, 500)
 }
 
+export function scrubPlayerTo(time) {
+  player.seekTo(time);
+  player.mute();
+  player.playVideo();
+  setTimeout(() => {
+    player.unMute();
+  }, 500)
+}
+
 //do the same thing to avoid audio hiccup
 //in the future, respect the user's volume settings?
 export function restartPlayer() {
@@ -68,7 +80,18 @@ export function setIsLoop(loop) {
 export function setLoopTimes(start, end) {
   startTime = start;
   endTime = end;
-  clipTimesChanged = true;
+  startTimeChanged = true;
+  endTimeChanged = true;
+}
+
+export function setStartTime(time) {
+  startTime = time;
+  startTimeChanged = true;
+}
+
+export function setEndTime(time) {
+  endTime = time;
+  endTimeChanged = true;
 }
 
 export function endPlayerLoop() {
@@ -82,7 +105,8 @@ function resetPlayerVars() {
   startTime = 0;
   endTime = -1;
   loopClip = false;
-  clipTimesChanged = false;
+  startTimeChanged = false;
+  endTimeChanged = false;
 }
 
 function onPlayerReady(event) {
@@ -105,7 +129,29 @@ function shouldRestartLoop() {
   if (!loopClip) return false;
 
   let currentTime = player.getCurrentTime();
-  return (currentTime >= endTime || currentTime < startTime || clipTimesChanged);
+  
+  return (currentTime >= endTime || currentTime < startTime || startTimeChanged);
+}
+
+//extra functionality for making clips
+// if the end time has changed, go to 5 seconds before the end time
+//or the start time if that is closer
+function shouldScrubPlayer() {
+  if (!playerIsPlaying()) return false;
+  if (!loopClip) return false;
+
+  let newTime = endTime - 5;
+  if (startTime > newTime) {
+    newTime = startTime;
+  }
+  return newTime;
+}
+
+function calculateProgress() {
+  let currentTime = player.getCurrentTime();
+  let duration = endTime - startTime;
+  let progress = (currentTime - startTime) / duration;
+
 }
 
 
@@ -115,9 +161,17 @@ function shouldRestartLoop() {
 //the loop should restart when the player is played again (in onPlayerStateChange)
 function checkTimeAndLoop() {
   if(playerIsPlaying()) {
+    calculateProgress();
     if(shouldRestartLoop()) {
-      clipTimesChanged = false;
+      startTimeChanged = false;
+      endTimeChanged = false;
       restartPlayer();
+    } else if(endTimeChanged) {
+      endTimeChanged = false;
+      let scrubTime = shouldScrubPlayer();
+      if(scrubTime) {
+        scrubPlayerTo(scrubTime);
+      }
     }
     setTimeout(checkTimeAndLoop, CHECK_INTERVAL);
   } 

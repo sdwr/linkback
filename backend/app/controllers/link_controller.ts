@@ -89,10 +89,40 @@ export default class LinkController {
 
     return response.ok(links);
   }
+
+  async createOrGet({ request, response }: HttpContext) {
+    const validatedLink = await request.validateUsing(createLinkValidator);
+    const iLink = validatedLink as ILink;
+
+    //verify that the link is unique
+    //except for clips
+    if(!iLink.isClip) {
+      const linkExists = await Link.query()
+        .where('url', iLink.url)
+        .first();
+      
+      if (linkExists) {
+        return response.ok(linkExists);
+      }
+    }
+    
+    const link = await Link.create(iLink);
+
+    return response.ok(link);
+  }
     
   async create({ request, response }: HttpContext) {
     const validatedLink = await request.validateUsing(createLinkValidator);
     const iLink = validatedLink as ILink;
+
+    //verify that the link is unique
+    const linkExists = await Link.query()
+      .where('url', iLink.url)
+      .first();
+    
+    if (linkExists) {
+      return response.badRequest('Link already exists');
+    }
     
     const link = await Link.create(iLink);
 

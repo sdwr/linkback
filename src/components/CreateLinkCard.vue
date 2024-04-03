@@ -4,8 +4,7 @@
       <h2>Create a new link:</h2>
       <div class="create-link-card-buttons">
         <input type="text" v-model="url" placeholder="URL" />
-        <input type="text" v-model="title" placeholder="Title" />
-        <input type="text" v-model="description" placeholder="Description" />
+        <input type="text" v-model="title" placeholder="Title (optional)" />
         <button @click="createLink()" :disabled="disableCreateLink">Create Link</button>
       </div>
     </div>
@@ -20,7 +19,6 @@ export default {
     return {
       url: '',
       title: '',
-      description: '',
     }
   },
   computed: {
@@ -28,19 +26,20 @@ export default {
       return this.$store.getters.getUser || {}
     },
     disableCreateLink() {
-      return !this.url || !this.title || !this.description || !this.user.id
+      return !this.url  || !this.user.id
     }
   },
   methods: {
     async createLink() {
       let newLink = {
         title: this.title,
-        description: this.description,
         url: this.url,
         userId: this.user.id
       }
       let link = await api.addLink(newLink)
-      this.goToLink(link)
+      if(link) {
+        this.goToLink(link)
+      }
     },
     goToLink(link) {
       this.$router.push({ path: `/link/${link.id}`})

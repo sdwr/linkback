@@ -34,3 +34,10 @@ export const ACTION = {
     UPGRADEACCOUNT,
     EDITACCOUNT,
 };
+
+export const TOAST_TYPE = {
+    SUCCESS: 'success',
+    ERROR: 'error',
+    WARNING: 'warning',
+    INFO: 'info',
+};

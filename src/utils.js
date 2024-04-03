@@ -179,6 +179,11 @@ export function extractDomain(link) {
     // Remove any trailing slashes from the domain name
     domainName = domainName.replace(/\/$/, '');
 
+    // If domain starts with 'm.', remove it
+    if (domainName.startsWith('m.')) {
+        domainName = domainName.slice(2);
+    }
+
     link.domain = domainName;
     return link;
 }

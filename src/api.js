@@ -32,6 +32,8 @@ import {
   UPGRADEACCOUNT,
   EDITACCOUNT,
 
+  TOAST_TYPE,
+
  } from "@/consts"
 
 import {
@@ -95,7 +97,7 @@ const api = {
 
   deleteTable: async (tableName) => {
     if (api.tableList.includes(tableName)) {
-      return backendApi.deleteTableData(tableName);
+      backendApi.deleteTableData(tableName);
     } else {
       console.error("deleteTable: invalid table name", tableName);
       return null;
@@ -141,29 +143,13 @@ const api = {
     let linkDto = createLinkDto(data);
     linkDto = await externalApi.addSiteData(linkDto);
 
-    let duplicateUrl, duplicateContent;
-    //dont add link if its a duplicate (same url or same contentId + domain)
-    //TODO: MOVE TO BACKEND
-    // if(!link.isClip) {
-    //   duplicateUrl = mockLinks.find(l => l.url === link.url);
-    //   if(link.contentId && link.domain) {
-    //     duplicateContent = mockLinks.find(l => l.contentId === link.contentId && l.domain === link.domain);
-    //   }
-    // } else {
-    //   // allow duplicate clips for now
-    // }
-
-    if (duplicateUrl || duplicateContent) {
-      console.log('duplicate link', linkDto);
-      return null;
-    }
-
     let link = await backendApi.createLink(linkDto);
     if (!link) {
-      console.log("addLink: failed to create link", link);
+      store.dispatch('saveToast', { text: 'Failed to add link', type: TOAST_TYPE.ERROR });
       return null;
     }
 
+    store.dispatch('saveToast', { text: 'Link added', type: TOAST_TYPE.SUCCESS });
     await api.addUserAction({ userId: link.userId, actionType: SUBMIT, itemId: link.id });
 
     return link;

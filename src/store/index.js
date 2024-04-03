@@ -9,6 +9,7 @@ export default createStore({
             isOnMobile: false,
             pageTitle: '',
             allTags: [],
+            toast: { text: '', type: ''},
         };
     },
     mutations: {
@@ -26,6 +27,9 @@ export default createStore({
         },
         setAllTags(state, tags) {
             state.allTags = tags;
+        },
+        setToast(state, toast) {
+            state.toast = toast;
         },
     },
     actions: {
@@ -80,6 +84,12 @@ export default createStore({
             }
         },
 
+        //Toast message actions
+        async saveToast({ commit }, message) {
+            console.log('saveToast:', message)
+            commit('setToast', message);
+        },
+
     },
     getters: {
         getUser(state) {
@@ -96,6 +106,9 @@ export default createStore({
         },
         getAllTags(state) {
             return state.allTags;
+        },
+        getToast(state) {
+            return state.toast;
         },
     }
 });

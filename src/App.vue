@@ -1,12 +1,14 @@
 <template>
   <div id="app">
   <PageHeader/>
+  <ToastNotification/>
   <router-view :key="$route.path" />
   </div>
 </template>
 
 <script>
 import PageHeader from '@/components/PageHeader.vue';
+import ToastNotification from '@/components/ToastNotification.vue';
 import { isOnMobile } from '@/utils'
 import userLogin from '@/api/userLogin';
 
@@ -14,6 +16,7 @@ export default {
   name: 'App',
   components: {
     PageHeader,
+    ToastNotification,
   },
   computed: {
     storedUser () {

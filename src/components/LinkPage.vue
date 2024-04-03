@@ -35,10 +35,10 @@
 
       <!-- Range Sliders -->
       <div class="clip-controls-time-controls">
-        <input type="range" v-model="clipStart" @input="adjustRanges" min="0" :max="link.duration" step="1">
+        <input type="range" v-model="clipStart" @input="adjustStartTime" min="0" :max="link.duration" step="1">
         <input class="clip-controls-text-input" type="text" disabled="true" v-model="clipStart">
       
-        <input type="range" v-model="clipEnd" @input="adjustRanges" :min="0" :max="link.duration" step="1">
+        <input type="range" v-model="clipEnd" @input="adjustEndTime" :min="0" :max="link.duration" step="1">
         <input class="clip-controls-text-input" type="text" disabled="true" v-model="clipEnd">
       </div>
       
@@ -49,6 +49,8 @@
       </div>
 
       <button class="create-clip-button" @click="createClip">Create Clip</button>
+    </div>
+    <div v-if="showClipDuration" class="clip-duration">
     </div>
     <div class="main-content">
       <div class="comments">
@@ -107,7 +109,7 @@ import PageEmbedding from './PageEmbedding.vue'
 
 import api from '@/api';
 import { loadYoutubeUrl } from '@/utils'
-import { createPlayer, playPlayer, restartPlayer, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
+import { createPlayer, playPlayer, restartPlayer, setStartTime, setEndTime, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
 
 export default {
   components: {
@@ -163,6 +165,9 @@ export default {
     },
     showClipControls() {
       return this.linkIsYoutube && !this.linkIsClip;
+    },
+    showClipDuration() {
+      return this.linkIsClip;
     },
     userIsOwner() {
       return this.user && this.user.id === this.link.userId;
@@ -225,19 +230,21 @@ export default {
       this.$router.push({ path: `/link/${this.link.originalLinkId}`})
     
     },
+    adjustStartTime() {
+      this.adjustRanges();
+      setStartTime(this.clipStart);
+    },
+    adjustEndTime() {
+      this.adjustRanges();
+      setEndTime(this.clipEnd);
+    },
     adjustRanges() {
       if (parseInt(this.clipStart) > parseInt(this.clipEnd)) {
         this.clipEnd = this.clipStart;
       } else if (parseInt(this.clipEnd) < parseInt(this.clipStart)) {
         this.clipStart = this.clipEnd;
       }
-
-      // update the iframe based on the new clip times
-      // should do in youtube API instead
-      // this.link.startTime = this.clipStart;
-      // this.link.endTime = this.clipEnd;
-      // this.link = loadYoutubeUrl(this.link);\
-      setLoopTimes(this.clipStart, this.clipEnd);
+      
 
     },
     async onAddTag(tag) {
@@ -309,7 +316,11 @@ export default {
   width: 100%;
   height: 100%;
 }
+.clip-duration {
+  width: 100%;
+  height: 20px;
 
+}
 .main-content {
   display: flex;
   width: 100%;

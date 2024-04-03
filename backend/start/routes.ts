@@ -78,7 +78,7 @@ router.get('/links/tag/:tagId', [LinkController, 'getLinksByTag'])
 router.get('/links/:id', [LinkController, 'getOne'])
 router.get('/links', [LinkController, 'index'])
 
-router.post('/links', [LinkController, 'create'])
+router.post('/links', [LinkController, 'createOrGet'])
 
 router.put('/links/:id', [LinkController, 'update'])
 
