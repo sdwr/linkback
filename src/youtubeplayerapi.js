@@ -1,3 +1,6 @@
+import store from "@/store";
+
+
 let player;
 let startTime = 0;
 let endTime = -1;
@@ -151,7 +154,8 @@ function calculateProgress() {
   let currentTime = player.getCurrentTime();
   let duration = endTime - startTime;
   let progress = (currentTime - startTime) / duration;
-
+  progress = progress * 100;
+  store.dispatch('saveClipProgress', progress);
 }
 
 

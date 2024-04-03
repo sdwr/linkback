@@ -10,6 +10,9 @@ export default createStore({
             pageTitle: '',
             allTags: [],
             toast: { text: '', type: ''},
+
+            //save player progress here for now, move player API to separate component later
+            clipProgress: 0,
         };
     },
     mutations: {
@@ -31,6 +34,9 @@ export default createStore({
         setToast(state, toast) {
             state.toast = toast;
         },
+        setClipProgress(state, progress) {
+            state.clipProgress = progress;
+        }
     },
     actions: {
         //User actions
@@ -90,6 +96,11 @@ export default createStore({
             commit('setToast', message);
         },
 
+        //Player actions
+        async saveClipProgress({ commit }, progress) {
+            commit('setClipProgress', progress);
+        }
+
     },
     getters: {
         getUser(state) {
@@ -110,5 +121,8 @@ export default createStore({
         getToast(state) {
             return state.toast;
         },
+        getClipProgress(state) {
+            return state.clipProgress;
+        }
     }
 });

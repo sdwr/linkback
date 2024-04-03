@@ -51,6 +51,7 @@
       <button class="create-clip-button" @click="createClip">Create Clip</button>
     </div>
     <div v-if="showClipDuration" class="clip-duration">
+      <div class="clip-duration-bar" :style="{width: clipProgress + '%'}"></div>
     </div>
     <div class="main-content">
       <div class="comments">
@@ -153,6 +154,9 @@ export default {
   computed: {
     user() {
       return this.$store.getters.getUser || {}
+    },
+    clipProgress() {
+      return this.$store.getters.getClipProgress || 0;
     },
     canEditTitle() {
       return this.user.id === this.link.userId;
@@ -319,7 +323,15 @@ export default {
 .clip-duration {
   width: 100%;
   height: 20px;
-
+  background-color: #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.clip-duration-bar {
+  height: 100%;
+  background-color: #007bff;
+  transition: width 0.5s ease-out;
+  border-radius: 4px;
 }
 .main-content {
   display: flex;
