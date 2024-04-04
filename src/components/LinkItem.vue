@@ -145,6 +145,7 @@ export default {
   overflow: hidden;
   border: 1px solid #ccc;
   height: 100px;
+  min-height: 100px;
   width: 100%;
 }
 .voting {

@@ -1,15 +1,43 @@
 TODO:
 -------------
 
+REWARDS:
+  notification / score for # of views, votes, links, tags on uploaded content
+  MAKE SURE USER FUNCTIONALITY IS SOLID
+    - want to have 1 account per user (or device at least)
+    - edge cases are:
+      - access site in multiple tabs
+      - access site for first time
+      - access site for first time on server restart
+
+      - what happens when failed to log in
+      - what happens when have saved user and failed to log in
+      - what happens when user creates and failed to log in (same as above?)
+      
+
 STAGES:
   stage 1:
     make sure the youtube link clipper works standalone
-      - add loop toggle to clips, to stop looping
-      - change clip to HH:MM:SS, don't scrub when moving end time
+      - add loop toggle to clips, to stop looping NO
+      - change clip to HH:MM:S (NO) or allow text input to scrub sliders
       - make sure the link page functions as a landing page
-        - make the add link page landing as well? NO
       - pretty up the UI
-      - make sure user 
+        -2 versions of clip page?
+          - hide all controls/data if coming from URL
+          - and show all if coming from within the site
+      - make sure guest user is created immediately on page load
+  
+  stage 2:
+    make tag page work as "fan page" for subcommunities
+      - some way of sorting on tag page
+        - change list to table, allow sorting by new / top
+        - add voting on tag page for tags
+          - negative score removes the tag from the item
+        
+      - related links functionality on link page
+        - need some way to add links easily (search bar that searches title, url, tags, my links)
+
+
 
 PROJECT:
   - how to remove tags from link
@@ -30,12 +58,14 @@ FEATURES:
     - figure out if page is already cached (read screen?)
     - send async request to archive.is to cache page if not (CANT DO FROM IFRAME!!)
     - once cached, need to hard refresh the page? looks like the failure screen on archive.is is cached
+    - fallback to fullsize thumbnail instead of empty archive page (click goes to actual page?)
     - keep track of what has saved pages / does not in DB
     - BONUS: fix scrolling (cut size of page, no double scroll bars)
 
   AND FIX THUMBNAILS
     -get 2 previews
-      thumbnail size and 
+      thumbnail size and full size
+
 
 - add votes KINDA DONE
     still need to grey out completed vote (add to add to site data)
@@ -66,18 +96,15 @@ REAL STUFF:
   - done CORS OG passthrough, will hook up when server is hooked up
 
 
-LANDING PAGE:
+CREATE LINK:
 - drag and drop links into new link box (impossible?)
+- bookmarklet for adding links
 
 
 LINK PAGE:
 - get title from page somehow
-- make title editable
 
 YOUTUBE PAGE:
-- have custom time bar for clips, hide controls
-- set clipEnd to 5 seconds after clipStart if clipStart is moved too close, prevent short loop happening by accident
-
 - timestamped comments
 
 API
@@ -193,6 +220,7 @@ LANDING PAGE:
 
 LINK PAGE:
 - feature parity with youtube page DONE
+- make title editable DONE
 
 
 YOUTUBE PAGE:
@@ -209,6 +237,9 @@ YOUTUBE PAGE:
 - fix console errors (tries to hit player fns before startup and after close) DONE
 - set clip range to actual length of video DONE
 - fix "original video" button DONE
+
+- have custom time bar for clips, hide controls DONE (can't hide controls?)
+- set clipEnd to 5 seconds after clipStart if clipStart is moved too close, prevent short loop happening by accident DONE (not fully tested)
 
 
 USER PAGE

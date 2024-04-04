@@ -6,26 +6,35 @@
       <UpgradeModal v-if="showUpgradeModal" @close="showUpgradeModal = false"></UpgradeModal>
     </div>
     <div class="sections">
-      <div class="section">
-        <h2>History</h2>
-        <div class="history-items">
+      <div class="section-container">
+        <div class="section-header" @click.stop="collapseHistory">
+          <h2>History</h2>   
+          <i class="fas fa-chevron-down" :class="{'fa-chevron-up': showHistory, 'fa-chevron-down': !showHistory}"></i>
+        </div>
+        <div v-if="showHistory" class="section">
           <a v-for="historyItem in userHistory" @click="goToItem(historyItem)" :href="''">{{ historyItem.actionType }}</a>
         </div>
       </div>
-      <div class="section">
-        <h2>Submitted Links</h2>
-        <div v-for="link in submittedLinks" :key="link.id">
-          <LinkItem :link="link" :hasVoting="false"
+      <div class="section-container">
+        <div class="section-header" @click.stop="collapseSubmitted">
+          <h2>Submitted Links</h2>
+          <i class="fas fa-chevron-down" :class="{'fa-chevron-up': showSubmitted, 'fa-chevron-down': !showSubmitted}"></i>
+        </div>
+        <div class="section" v-if="showSubmitted">
+          <LinkItem v-for="link in submittedLinks" v-bind:key="link.id" :link="link" :hasVoting="false"
             @onClick="goToLink"
             @onSave="saveLink"
             @onUnsave="unsaveLink"
           ></LinkItem>
         </div>
       </div>
-      <div class="section">
-        <h2>Saved Links</h2>
-        <div v-for="link in savedLinks" :key="link.id">
-          <LinkItem :link="link" :hasVoting="false"
+      <div class="section-container">
+        <div class="section-header" @click.stop="collapseSaved">
+          <h2>Saved Links</h2>
+          <i class="fas fa-chevron-down" :class="{'fa-chevron-up': showSaved, 'fa-chevron-down': !showSaved}"></i>
+        </div>
+        <div class="section" v-if="showSaved">
+          <LinkItem v-for="link in savedLinks" v-bind:key="link.id" :link="link" :hasVoting="false"
             @onClick="goToLink"
             @onSave="saveLink"
             @onUnsave="unsaveLink"
@@ -54,6 +63,10 @@ export default {
       submittedLinks: [],
       savedLinks: [],
       showUpgradeModal: false,
+
+      showHistory: true,
+      showSubmitted: true,
+      showSaved: true,
     }
   },
   components: {
@@ -108,9 +121,20 @@ export default {
         this.$router.push({ path: `/link/${userAction.itemId}`})
       }
     },
-    // update when auth is implemented
-    userIsOwner() {
-      return false;
+    async collapseHistory(event) {
+      const header = event.currentTarget;
+      header.classList.toggle('expanded');
+      this.showHistory = !this.showHistory;
+    },
+    async collapseSubmitted(event) {
+      const header = event.currentTarget;
+      header.classList.toggle('expanded');
+      this.showSubmitted = !this.showSubmitted;
+    },
+    async collapseSaved(event) {
+      const header = event.currentTarget;
+      header.classList.toggle('expanded');
+      this.showSaved = !this.showSaved;
     },
     async loadLinks() {
       this.userHistory = await api.getUserActionsByUser(this.user.id);
@@ -149,14 +173,26 @@ export default {
 
 }
 
-.sections .section {
+.sections .section-container {
   border: 1px solid #ccc;
   padding: 10px;
-  margin-bottom: 20px;
+}
+.section {
+  display: flex;
+  flex-direction: column;
   max-height: 300px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
+.section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
 
+}
 .history-items a {
   display: block;
   margin-bottom: 5px;
