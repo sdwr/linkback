@@ -22,6 +22,7 @@ const CHECK_INTERVAL = 250;
 //external functions
 export async function createPlayer(videoId, playerOptions) {
   resetPlayerVars();
+  store.dispatch('saveClipProgress', 0);
   return new Promise((resolve, reject) => {
     try {
       player = new window.YT.Player(
