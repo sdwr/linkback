@@ -72,7 +72,7 @@ export default {
   }),
   computed: {
     user() {
-      return this.$store.getters.getUser || {};
+      return this.$store.getters.getUser;
     },
     thum_thumbnail() {
       let thum = "//image.thum.io/get/width/80/" + this.link.url;

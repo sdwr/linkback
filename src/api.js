@@ -107,20 +107,27 @@ const api = {
   //API adds
 
   upgradeGuestUser: async (data) => {
-    let id = parseInt(data.id);
-    if(!id) {
-      console.log("upgradeGuestUser: invalid id", id, data)
+    try{
+      let id = parseInt(data.id);
+      if(!id) {
+        console.log("upgradeGuestUser: invalid id", id, data)
+        return null;
+      }
+      const userDto = upgradeGuestUserDto(data);
+      userDto.id = id;
+  
+      let user = await backendApi.upgradeGuestUser(id, userDto);
+      if(user) {
+        store.dispatch('saveUser', user);
+        await api.addUserAction({ userId: user.id, actionType: UPGRADEACCOUNT, itemId: user.id }); 
+      }
+      store.dispatch('saveToast', { text: 'User upgraded', type: TOAST_TYPE.SUCCESS });
+      return user;
+    } catch(error) {
+      console.log("upgradeGuestUser: error", error);
+      store.dispatch('saveToast', { text: 'Failed to upgrade user', type: TOAST_TYPE.ERROR });
       return null;
     }
-    const userDto = upgradeGuestUserDto(data);
-    userDto.id = id;
-
-    let user = await backendApi.upgradeGuestUser(id, userDto);
-    if(user) {
-      store.dispatch('saveUser', user);
-      await api.addUserAction({ userId: user.id, actionType: UPGRADEACCOUNT, itemId: user.id }); 
-    }
-    return user;
   },
   updateUser: async (data) => {
     let id = parseInt(data.id);

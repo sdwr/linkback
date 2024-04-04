@@ -1,10 +1,12 @@
 import { createStore } from 'vuex';
 import api from '../api';
+import { createBlankUserDto } from '@/utils';
 
 export default createStore({
     state() {
         return {
             user: null,
+            userCredentials: null,
             isLoggedIn: false,
             isOnMobile: false,
             pageTitle: '',
@@ -18,6 +20,9 @@ export default createStore({
     mutations: {
         setUser(state, user) {
             state.user = user;
+        },
+        setUserCredentials(state, userCredentials) {
+            state.userCredentials = userCredentials;
         },
         setIsLoggedIn(state, isLoggedIn) {
             state.isLoggedIn = isLoggedIn;
@@ -64,8 +69,33 @@ export default createStore({
             }
         },
 
+        loadUserCredentials({ commit }) {
+            try {
+                // Load user credentials from localStorage
+                const userCredentialsData = localStorage.getItem('userCredentials');
+                if (userCredentialsData) {
+                    let userCredentials = JSON.parse(userCredentialsData);
+                    commit('setUserCredentials', userCredentials);
+                }
+            } catch(error) {
+                console.info('load user credentials failed:', error);
+            }
+        },
+
+        async saveUserCredentials({ commit }, userCredentials) {
+            try {
+                // Save user credentials to localStorage
+                localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
+
+                commit('setUserCredentials', userCredentials);
+            } catch (error) {
+                console.error('Save user credentials failed:', error);
+            }
+        },
+
         //Login actions
         async saveIsLoggedIn({ commit }, isLoggedIn) {
+            console.log('saveIsLoggedIn:', isLoggedIn)
             commit('setIsLoggedIn', isLoggedIn);
         },
 
@@ -104,7 +134,10 @@ export default createStore({
     },
     getters: {
         getUser(state) {
-            return state.user;
+            return state.user || createBlankUserDto();
+        },
+        getUserCredentials(state) {
+            return state.userCredentials;
         },
         getIsLoggedIn(state) {
             return state.isLoggedIn;

@@ -54,11 +54,8 @@ export default {
     TagItem,
   },
   computed: {
-      storedUser () {
-        return this.$store.getters.getUser
-      },
       user() {
-        return this.$store.getters.getUser || {}
+        return this.$store.getters.getUser
       },
       isOnMobile() {
         return this.$store.getters.getIsOnMobile

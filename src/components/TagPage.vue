@@ -30,6 +30,11 @@ export default {
       links: [],
     }
   },
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
+    }
+  },
   methods: {
     goToLink(link) {
       this.$router.push({ path: `/link/${link.id}`})
@@ -56,7 +61,8 @@ export default {
     let id = this.$route.params.id;
     id = parseInt(id);
     this.tagId = id;
-    this.user = await api.getUser(1);
+    
+    //if this is the first page loaded, the user might not be loaded yet??
     
     await this.loadTag();
     await this.loadLinks();

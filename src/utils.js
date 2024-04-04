@@ -1,5 +1,5 @@
 import { DateTime, Duration } from 'luxon';
-
+import store from "@/store";
 
 export function isOnMobile() {
     return window.innerWidth < 800;
@@ -13,7 +13,12 @@ export function getDateTimeString(date) {
     return DateTime.fromJSDate(date).toFormat('yyyy-MM-dd HH:mm:ss');
 }
 
-function assertHasProperties(obj, properties) {
+export function assertHasProperties(obj, properties) {
+    if(!obj) {
+        console.log('Object is null or undefined');
+        throw new Error('Object is null or undefined');
+    }
+
     let missingProperties = [];
     properties.forEach(property => {
         if (!Object.prototype.hasOwnProperty.call(obj, property)) {
@@ -26,8 +31,27 @@ function assertHasProperties(obj, properties) {
     }
 }
 
+// backend API helpers
+export function buildAuthHeader() {
+    let user = store.getters.getUser;
+    if (!user) {
+        return null;
+    }
+
+    let username = user.username;
+    let password = user.password;
+
+    console.log('building auth header for user:', username, password)
+
+    const base64Credentials = btoa(username + ':' + password);
+
+    return {
+        'Authorization': 'Basic ' + base64Credentials
+    };
+} 
+
 // create DTOs
-export function  createUserDto(data) {
+export function createUserDto(data) {
     assertHasProperties(data, ['username', 'email', 'password']);
     return {
         username: data.username,
@@ -58,11 +82,29 @@ export function upgradeGuestUserDto(data) {
     };
 }
 
-
-
 export function createGuestUserDto(data) {
     return {
         isGuest: true,
+        date: getDateTimeStringNow()
+    };
+}
+
+//frontend only DTOs
+export function createUserCredentialsDto(data) {
+    assertHasProperties(data, ['username']);
+    return {
+        username: data.username,
+        password: data.password || null
+    };
+}
+
+export function createBlankUserDto() {
+    return {
+        id: 0,
+        username: '',
+        email: '',
+        password: '',
+        thumbnail: '',
         date: getDateTimeStringNow()
     };
 }

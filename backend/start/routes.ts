@@ -39,6 +39,7 @@ router.get('/opengraph/fetchImage', [OpenGraphController, 'fetchImage'])
 // user session routes
 router.post('/usersessions/logout', [UserSessionController, 'logout'])
 router.post('/usersessions/login', [UserSessionController, 'login'])
+router.post('/usersessions/loginGuest', [UserSessionController, 'loginGuest'])
 router.get('/usersessions', [UserSessionController, 'index'])
 
 

@@ -19,6 +19,7 @@
 </template>
 <script>
 import api from '@/api.js';
+import userLogin from '@/api/userLogin.js';
 
 export default {
   data() {
@@ -48,17 +49,23 @@ export default {
   },
   methods: {
     async upgradeGuest() {
+      let userCredentials = {
+        email: this.email,
+        password: this.password,
+      }
       let userDto = {
         email: this.email,
         password: this.password,
         id: this.user.id,
       }
+      //upgrade user
       let user = await api.upgradeGuestUser(userDto);
       if (!user) {
-        alert('Email already in use (or registration failed)');
         return;
       }
-      this.$store.dispatch('saveUser', user);
+      //try to login with new credentials
+      await userLogin.loginWithCredentials(userCredentials);
+
       this.$emit('upgrade');
       this.$emit('close');
     },

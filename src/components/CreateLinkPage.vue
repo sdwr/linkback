@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     storedUser () {
-      return this.$store.getters.getUser || {}
+      return this.$store.getters.getUser
     }
   },
   methods: {

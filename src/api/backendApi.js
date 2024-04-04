@@ -12,6 +12,7 @@ import {
   createTagLinkDto,
 
   encodeURIComponent,
+  buildAuthHeader,
 
 } from "@/utils"
 
@@ -422,8 +423,16 @@ const backendApi = {
     let url = `${BACKEND_URL}${LINKS_PATH}/top`;
     url = url + '?amount=' + amount;
 
+    let authHeader = buildAuthHeader();
+
     try {
-      const response = await fetch(url);
+      const response = await fetch(url,
+        {
+          method: 'GET',
+          headers: authHeader
+        }
+      );
+
       if (!response.ok) {
         throw new Error(`Failed to fetch top links, status code: ${response.status}`);
       }

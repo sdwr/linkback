@@ -2,9 +2,9 @@ TODO:
 -------------
 
 REWARDS:
-  notification / score for # of views, votes, links, tags on uploaded content
   MAKE SURE USER FUNCTIONALITY IS SOLID
-    - want to have 1 account per user (or device at least)
+    -login flow:
+
     - edge cases are:
       - access site in multiple tabs
       - access site for first time
@@ -14,6 +14,7 @@ REWARDS:
       - what happens when have saved user and failed to log in
       - what happens when user creates and failed to log in (same as above?)
       
+  notification / score for # of views, votes, links, tags on uploaded content
 
 STAGES:
   stage 1:
@@ -36,6 +37,12 @@ STAGES:
         
       - related links functionality on link page
         - need some way to add links easily (search bar that searches title, url, tags, my links)
+
+
+-------------------
+BUGS:
+  - tried to delete link with ID of 1, failed because other clips reference it
+  - youtube player sometimes is called before its instantiated
 
 
 
@@ -108,6 +115,8 @@ YOUTUBE PAGE:
 - timestamped comments
 
 API
+- backend returns some errors are {errors: []} objects
+  which are being accepted as valid responses by the frontend API
 - save DB state as file, to import as test data
 - verify data doesn't already exist in DB 
   - link is checked already

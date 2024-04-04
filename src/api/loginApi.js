@@ -23,9 +23,33 @@ const loginApi = {
         },
         body: JSON.stringify(userDto)
       })
-      return response.json()
+      let data = response.json()
+      if(data && data.errors) {
+        throw new Error(response.errors)
+      }
+      return data
     } catch (error) {
       console.error('Error logging in:', error)
+    }
+  },
+
+  loginGuest: async (userDto) => {
+    const url = `${BACKEND_URL}${USER_SESSIONS_PATH}/loginGuest`
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userDto)
+      })
+      let data = response.json()
+      if(data && data.errors) {
+        throw new Error(response.errors)
+      }
+      return data
+    } catch (error) {
+      console.error('Error logging in as guest:', error)
     }
   },
 
@@ -39,7 +63,11 @@ const loginApi = {
         },
         body: JSON.stringify(userDto)
       })
-      return response.json()
+      let data = response.json()
+      if(data && data.errors) {
+        throw new Error(response.errors)
+      }
+      return data
     } catch (error) {
       console.error('Error logging out:', error)
     }

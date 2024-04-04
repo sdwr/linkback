@@ -2,69 +2,99 @@ import store from  '@/store';
 import loginApi from '@/api/loginApi';
 import backendApi from '@/api/backendApi';
 
+import { assertHasProperties } from '@/utils';
+
 const userLogin = {
+  //prefer to use credentials from store, if they exist
+  //fallback to stored user as guest
   loginFromStore: async () => {
+    await store.dispatch('loadUserCredentials');
+    await store.dispatch('loadUser');
+    let userCredentials = store.state.userCredentials;
     let user = store.state.user;
-    if(!user || !user.id) {
-      throw new Error('User not found: ', user);
+
+    //both of these will error without an API call
+    //if the data is not present in the store
+    await userLogin.loginWithCredentials(userCredentials);
+    if(store.state.isLoggedIn) {
+      return true;
     }
-    console.log('Attempting to login as user:', user)
+    await userLogin.loginAsGuest(user);
+    if(store.state.isLoggedIn) {
+      return true;
+    }
+
+    //if we get here, we failed to login
+    //clear out any existing user data
+    store.dispatch('saveUser', null);
+    store.dispatch('saveUserCredentials', null);
+    store.dispatch('saveIsLoggedIn', false);
+
+    return false;
+  },
+  loginWithCredentials: async (credentials) => {
+    console.log('Attempting to login with credentials:', credentials)
     try {
-      let userResponse = await loginApi.login(user);
+      assertHasProperties(credentials, ['email', 'password']);
+      let userResponse = await loginApi.login(credentials);
+
       // check if the response is a user object
       if(!userResponse) {
-        throw new Error('Error logging in as user:', user);
+        throw new Error('Error logging in with credentials:', credentials);
       }
       store.dispatch('saveUser', userResponse);
+      store.dispatch('saveUserCredentials', credentials);
       store.dispatch('saveIsLoggedIn', true);
+      return true;
+
+    } catch(error) {
+      store.dispatch('saveUser', null);
+      store.dispatch('saveIsLoggedIn', false);
+      return false;
+    }
+  },
+  loginAsGuest: async (user) => {
+    console.log('Attempting to login as guest:', user)
+    try {
+      assertHasProperties(user, ['id', 'isGuest']);
+      let userResponse = await loginApi.loginGuest(user)
+      // check if the response is a user object
+      if(!userResponse) {
+        throw new Error('Error logging in as guest:', user);
+      }
+
+      store.dispatch('saveUser', userResponse);
+      store.dispatch('saveUserCredentials', null);
+      store.dispatch('saveIsLoggedIn', true);
+      
+      return true;
+
     } catch(error) {
       store.dispatch('saveIsLoggedIn', false);
-      console.error(error);
+
+      return false;
     }
   },
   loadUserAndLogin: async () => {
-    console.log('Loading user')
-    //load user from local storage, if it exists 
-    store.dispatch('loadUser');
-    let storedUser = store.state.user;
-
-    //if no user, create a guest user
-    if(!storedUser || !storedUser.id) {
-      let user = await backendApi.createGuestUser({isGuest: true});
-      store.dispatch('saveUser', user);
-      storedUser = store.state.user;
-    }
-    //if still no user, throw an error
-    if(!storedUser || !storedUser.id) {
-      throw new Error('User not found: ', storedUser);
-    }
-    
-    // user should be loaded from store, try to login
-    try {
-      if(!storedUser || !storedUser.id) {
-        throw new Error('User not found: ', storedUser);
-      }
-      console.log('Attempting to login as user:', storedUser)
-      let userResponse = await loginApi.login(storedUser);
-      // check if the response is a user object
-      if(!userResponse) {
-        throw new Error('Error logging in as user:', storedUser);
-      }
-      store.dispatch('saveUser', userResponse);
-      store.dispatch('saveIsLoggedIn', true);
-
-    } catch (error) {
-      store.dispatch('saveIsLoggedIn', false);
-      console.error(error);
-    }
-
+    await userLogin.loginFromStore();
   },
-  loginAsGuest: async () => {
-    let user = await backendApi.createGuestUser({isGuest: true});
-    store.dispatch('saveUser', user);
+  createNewGuest: async () => {
+    //clear out any existing user data
+    store.dispatch('saveUser', null);
+    store.dispatch('saveUserCredentials', null);
 
-    // try to login
-    userLogin.loginFromStore();
+    try {
+      let user = await backendApi.createGuestUser({});
+      if(!user) {
+        throw new Error('Error creating guest user');
+      }
+      store.dispatch('saveUser', user);
+      store.dispatch('saveUserCredentials', null);
+
+      userLogin.loginAsGuest(user);
+    } catch(error) {
+    }
+
   },
 }
 
