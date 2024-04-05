@@ -3,6 +3,7 @@ import loginApi from '@/api/loginApi';
 import backendApi from '@/api/backendApi';
 
 import { assertHasProperties } from '@/utils';
+import { TOAST_TYPE } from '@/consts';
 
 const userLogin = {
   //prefer to use credentials from store, if they exist
@@ -13,13 +14,12 @@ const userLogin = {
     let userCredentials = store.state.userCredentials;
     let user = store.state.user;
 
-    //both of these will error without an API call
-    //if the data is not present in the store
-    await userLogin.loginWithCredentials(userCredentials);
-    if(store.state.isLoggedIn) {
-      return true;
+    if(userCredentials?.email && userCredentials?.password) {
+      await userLogin.loginWithCredentials(userCredentials);
+    } else if(user?.id && user?.isGuest) {
+      await userLogin.loginAsGuest(user);
     }
-    await userLogin.loginAsGuest(user);
+
     if(store.state.isLoggedIn) {
       return true;
     }
@@ -33,7 +33,6 @@ const userLogin = {
     return false;
   },
   loginWithCredentials: async (credentials) => {
-    console.log('Attempting to login with credentials:', credentials)
     try {
       assertHasProperties(credentials, ['email', 'password']);
       let userResponse = await loginApi.login(credentials);
@@ -50,11 +49,11 @@ const userLogin = {
     } catch(error) {
       store.dispatch('saveUser', null);
       store.dispatch('saveIsLoggedIn', false);
+
       return false;
     }
   },
   loginAsGuest: async (user) => {
-    console.log('Attempting to login as guest:', user)
     try {
       assertHasProperties(user, ['id', 'isGuest']);
       let userResponse = await loginApi.loginGuest(user)
@@ -91,10 +90,12 @@ const userLogin = {
       store.dispatch('saveUser', user);
       store.dispatch('saveUserCredentials', null);
 
-      userLogin.loginAsGuest(user);
+      return userLogin.loginAsGuest(user);
     } catch(error) {
+      //nothing to clear here, as we didn't save anything
+      //anything that goes wrong in loginAsGuest will be handled there
+      return false;
     }
-
   },
 }
 

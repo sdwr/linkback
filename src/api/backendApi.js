@@ -1,4 +1,5 @@
-import externalApi from "@/externalApi";
+import store from "@/store";
+import { TOAST_TYPE } from "@/consts";
 
 import { 
   createUserDto,
@@ -169,6 +170,7 @@ const backendApi = {
         body: JSON.stringify(createGuestUserDto(userData))
       });
       if (!response.ok) {
+        store.dispatch('saveToast', { text: `Failed to create guest user`, type: TOAST_TYPE.ERROR });
         throw new Error(`Failed to create guest user, status code: ${response.status}`);
       }
       const data = await response.json();

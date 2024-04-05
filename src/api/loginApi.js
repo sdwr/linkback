@@ -1,5 +1,7 @@
 
 import { USER_SESSIONS_PATH } from "./api_routes"
+import store from "@/store";
+import { TOAST_TYPE } from "@/consts";
 
 //load the backend url from environment variables
 let backendUrl;
@@ -23,13 +25,17 @@ const loginApi = {
         },
         body: JSON.stringify(userDto)
       })
-      let data = response.json()
+      let data = await response.json()
       if(data && data.errors) {
-        throw new Error(response.errors)
+        throw new Error(data.errors)
       }
+
+      store.dispatch('saveToast', { text: `Logged in as ${data?.username}`, type: TOAST_TYPE.SUCCESS });
       return data
+
     } catch (error) {
-      console.error('Error logging in:', error)
+      store.dispatch('saveToast', { text: `Failed to login`, type: TOAST_TYPE.ERROR });
+      return null;
     }
   },
 
@@ -43,13 +49,16 @@ const loginApi = {
         },
         body: JSON.stringify(userDto)
       })
-      let data = response.json()
+      let data = await response.json()
       if(data && data.errors) {
-        throw new Error(response.errors)
+        throw new Error(data.errors)
       }
+
+      store.dispatch('saveToast', { text: `Logged in as guest ${data?.username}`, type: TOAST_TYPE.SUCCESS });
       return data
     } catch (error) {
-      console.error('Error logging in as guest:', error)
+      store.dispatch('saveToast', { text: `Failed to login`, type: TOAST_TYPE.ERROR });
+      return null;
     }
   },
 
@@ -63,13 +72,15 @@ const loginApi = {
         },
         body: JSON.stringify(userDto)
       })
-      let data = response.json()
+      let data = await response.json()
       if(data && data.errors) {
-        throw new Error(response.errors)
+        throw new Error(data.errors)
       }
+      store.dispatch('saveToast', { text: `Logged out`, type: TOAST_TYPE.SUCCESS });
       return data
     } catch (error) {
-      console.error('Error logging out:', error)
+      store.dispatch('saveToast', { text: `Failed to logout`, type: TOAST_TYPE.ERROR });
+      return null;
     }
   },
 }

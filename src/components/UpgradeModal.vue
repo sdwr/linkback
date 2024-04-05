@@ -67,9 +67,10 @@ export default {
       await userLogin.loginWithCredentials(userCredentials);
 
       this.$emit('upgrade');
-      this.$emit('close');
+      this.close();
     },
     close() {
+      this.$emit('close');
     }
   }
 }

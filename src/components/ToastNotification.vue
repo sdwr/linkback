@@ -33,7 +33,6 @@ export default {
   },
   created() {
     this.toast = useToast()
-    console.log('toast', this.toast)
   }
 }
 

@@ -1,5 +1,6 @@
 <template>
 <div class="user-card-wrapper">
+  <LoginModal v-if="showLoginModal" @close="showLoginModal = false"/>
   <div v-if="isLoggedIn" class="user-card">
     <img class="user-thumbnail" :src="userThumbnail" alt="User thumbnail" />
     <div class="user-info">
@@ -9,19 +10,28 @@
     <button class="logout-button" @click="logout">Logout</button>
   </div>
   <div v-else>
-    <button @click="login()">Login</button>
+    <button @click="openLoginModal()">Login</button>
     <button @click="createNewGuest()">Sign in as Guest</button>
   </div>
 </div>
 </template>
 
 <script>
+import LoginModal from '@/components/LoginModal.vue';
 import defaultThumbnail from '@/assets/default-user-thumbnail.png';
 import loginApi from '@/api/loginApi';
 import userLogin from '@/api/userLogin'
 
 export default {
   name: 'UserCard',
+  components: {
+    LoginModal,
+  },
+  data() {
+    return {
+      showLoginModal: false,
+    }
+  },
   computed: {
     user() {
       return this.$store.getters.getUser;
@@ -37,8 +47,8 @@ export default {
     goToUserPage() {
       this.$router.push({ path: `/user/${this.user.id}`});
     },
-    login() {
-      //popup login modal
+    openLoginModal() {
+      this.showLoginModal = true;
     },
     async createNewGuest() {
       await userLogin.createNewGuest()

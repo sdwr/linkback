@@ -82,7 +82,6 @@ export default {
       return this.user.id === this.storedUser.id && !this.storedUser.isGuest;
     },
     canUpgrade() {
-      console.log(this.storedUser)
       return this.user.id === this.storedUser.id && this.storedUser.isGuest;
     }
   },
@@ -96,11 +95,11 @@ export default {
       await this.loadLinks();
     },
     async onChangeName(newName) {
+      this.user.username = newName;
       await api.updateUser({ id: this.user.id, username: newName });
+      // user already saved to store
       // reload the user data
       this.user = await api.getUser(this.user.id);
-      // relload the user in the store
-      this.$store.dispatch('saveUser', this.user);
     },
     goToLink(link) {
       this.$router.push({ path: `/link/${link.id}`})

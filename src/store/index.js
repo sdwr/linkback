@@ -45,7 +45,7 @@ export default createStore({
     },
     actions: {
         //User actions
-        async loadUser({ commit }) {
+        loadUser({ commit }) {
             try {
                 // Load user data from localStorage
                 const userData = localStorage.getItem('user');
@@ -58,12 +58,13 @@ export default createStore({
                 console.error('load user failed:', error);
             }
         },
-        async saveUser({ commit }, user) {
+        saveUser({ commit }, user) {
             try {
+                commit('setUser', user);
+
                 // Save user data to localStorage
                 localStorage.setItem('user', JSON.stringify(user));
 
-                commit('setUser', user);
             } catch (error) {
                 console.error('Save user failed:', error);
             }
@@ -82,12 +83,13 @@ export default createStore({
             }
         },
 
-        async saveUserCredentials({ commit }, userCredentials) {
+        saveUserCredentials({ commit }, userCredentials) {
             try {
+                commit('setUserCredentials', userCredentials);
+
                 // Save user credentials to localStorage
                 localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
 
-                commit('setUserCredentials', userCredentials);
             } catch (error) {
                 console.error('Save user credentials failed:', error);
             }
@@ -122,7 +124,6 @@ export default createStore({
 
         //Toast message actions
         async saveToast({ commit }, message) {
-            console.log('saveToast:', message)
             commit('setToast', message);
         },
 

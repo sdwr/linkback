@@ -141,7 +141,10 @@ const api = {
     let user = await backendApi.updateUser(id, userDto);
     if(user) {
       store.dispatch('saveUser', user);
+      store.dispatch('saveToast', { text: `User ${user.username} updated`, type: TOAST_TYPE.SUCCESS });
       await api.addUserAction({ userId: user.id, actionType: EDITACCOUNT, itemId: user.id }); 
+    } else {
+      store.dispatch('saveToast', { text: `Failed to update user ${userDto.username}`, type: TOAST_TYPE.ERROR });
     }
     return user;
   },
