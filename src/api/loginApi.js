@@ -25,10 +25,10 @@ const loginApi = {
         },
         body: JSON.stringify(userDto)
       })
-      let data = await response.json()
-      if(data && data.errors) {
-        throw new Error(data.errors)
+      if(!response.ok) {
+        throw new Error('Failed to login')
       }
+      let data = await response.json()
 
       store.dispatch('saveToast', { text: `Logged in as ${data?.username}`, type: TOAST_TYPE.SUCCESS });
       return data
@@ -49,10 +49,10 @@ const loginApi = {
         },
         body: JSON.stringify(userDto)
       })
-      let data = await response.json()
-      if(data && data.errors) {
-        throw new Error(data.errors)
+      if(!response.ok) {
+        throw new Error('Failed to login')
       }
+      let data = await response.json()
 
       store.dispatch('saveToast', { text: `Logged in as guest ${data?.username}`, type: TOAST_TYPE.SUCCESS });
       return data
@@ -72,10 +72,11 @@ const loginApi = {
         },
         body: JSON.stringify(userDto)
       })
-      let data = await response.json()
-      if(data && data.errors) {
-        throw new Error(data.errors)
+      if(!response.ok) {
+        throw new Error('Failed to login')
       }
+      let data = await response.json()
+      
       store.dispatch('saveToast', { text: `Logged out`, type: TOAST_TYPE.SUCCESS });
       return data
     } catch (error) {

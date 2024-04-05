@@ -205,9 +205,9 @@ const backendApi = {
     try {
       const response = await fetch(url, {
         method: 'PUT',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': buildAuthHeader(),
         },
         body: JSON.stringify(userData)
       });

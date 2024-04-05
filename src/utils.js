@@ -33,15 +33,13 @@ export function assertHasProperties(obj, properties) {
 
 // backend API helpers
 export function buildAuthHeader() {
-    let user = store.getters.getUser;
-    if (!user) {
+    let creds = store.getters.getUserCredentials;
+    if (!creds) {
         return null;
     }
 
-    let username = user.username;
-    let password = user.password;
-
-    console.log('building auth header for user:', username, password)
+    let username = creds.username;
+    let password = creds.password;
 
     const base64Credentials = btoa(username + ':' + password);
 
