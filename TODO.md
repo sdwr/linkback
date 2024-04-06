@@ -2,31 +2,24 @@ TODO:
 -------------
 
 REWARDS:
-  MAKE SURE USER FUNCTIONALITY IS SOLID
-    -login flow:
-
-    - edge cases are:
-      - access site in multiple tabs
-      - access site for first time
-      - access site for first time on server restart
-
-      - what happens when failed to log in
-      - what happens when have saved user and failed to log in
-      - what happens when user creates and failed to log in (same as above?)
-      
   notification / score for # of views, votes, links, tags on uploaded content
+    - add view counter for each link (/tag?)
+    - unique + nonunique
+      - for unique, really need to make guest user automatically again
+      - just didn't like the "logout / login" functionality being spammable
+        -take out logout button, only have login for guest?
 
 STAGES:
   stage 1:
     make sure the youtube link clipper works standalone
-      - add loop toggle to clips, to stop looping NO
-      - change clip to HH:MM:S (NO) or allow text input to scrub sliders
-      - make sure the link page functions as a landing page
+      - clip controls - text input to scrub sliders
+        -means only scrubbing on enter or blur or slider movement (not on text entry)
       - pretty up the UI
-        -2 versions of clip page?
-          - hide all controls/data if coming from URL
-          - and show all if coming from within the site
-      - make sure guest user is created immediately on page load
+        - fix spacing on mobile
+          -top bar is cluttered (cut off when not logged in? replace buttons w icons?)
+          - clip controls are cut-off
+          - should hide bottom tabs by default
+          - add tag input should not be scrollable
   
   stage 2:
     make tag page work as "fan page" for subcommunities
@@ -196,6 +189,19 @@ USER:
 
     - to upgrade guest user
       * add email, change name, create password
+
+    MAKE SURE USER FUNCTIONALITY IS SOLID done
+    -login flow:
+
+    - edge cases are: BASICALLY DONE
+      - access site in multiple tabs DONE
+      - access site for first time DONE
+      - access site for first time on server restart
+
+      - what happens when failed to log in DONE 
+      - what happens when have saved user and failed to log in DONE
+      - what happens when user creates and failed to log in (same as above?) DONE?
+      
 
 
 HOSTING:

@@ -54,60 +54,17 @@
     <div v-if="showClipDuration" class="clip-duration">
       <div class="clip-duration-bar" :style="{width: clipProgress + '%'}"></div>
     </div>
-    <div class="main-content">
-      <div class="comments">
-        <div class="bottom-container-header">
-          <div>Comments</div>
-        </div>
-        <!-- List of comments here -->
-        <div v-for="comment in comments" :key="comment.id">
-          {{comment.content}}
-          <!-- Voting component for each comment -->
-        </div>
-        <!-- Form to add a new comment -->
-      </div>
-      <div class="other-links">
-        <div class="bottom-container-header">
-          <div>Related Links</div>
-        </div>
-        <!-- List of other links here -->
-        <div v-for="link in otherLinks" :key="link.id">
-          <!-- Link preview here -->
-          <!-- Voting component for each link -->
-        </div>
-        <!-- Form to add a new link -->
-      </div>
-      <div class="tags">
-        <div class="bottom-container-header">
-          <div>Tags</div>
-        </div>
-        <!-- List of tags here -->
-        <div class="tags-container">
-          <div
-            v-for="tag in tags" :key="tag.id">
-            <TagItem :tag="tag"></TagItem>
-          </div>
-        </div>
-        
-        <!-- Form to add a new tag -->
-        <AddTagForm
-          :user="user"
-          :link="link"
-          :existingTags="tags"
-          @addTag="onAddTag"
-        />
-      </div>
-    </div>
+
+    <BottomContent :link="link"></BottomContent> <!-- is fixed to bottom of screen, can be created anywhere -->
   </div>
   
 </template>
 <script>
 import VoteButton from '@/components/VoteButton.vue'
 import PlayerOverlay from '@/components/PlayerOverlay.vue'
-import TagItem from '@/components/TagItem.vue'
-import AddTagForm from '@/components/AddTagForm.vue'
 import EditTextField from './EditTextField.vue'
 import PageEmbedding from './PageEmbedding.vue'
+import BottomContent from './BottomContent.vue'
 
 import api from '@/api';
 import { createPlayer, playPlayer, restartPlayer, setStartTime, setEndTime, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
@@ -116,10 +73,9 @@ export default {
   components: {
     VoteButton,
     PlayerOverlay,
-    TagItem,
-    AddTagForm,
     EditTextField,
     PageEmbedding,
+    BottomContent,
   },
   data() {
     return {
@@ -136,9 +92,6 @@ export default {
         userId: null,
       },
       newTagName: '',
-      comments: [],
-      otherLinks: [],
-      tags: [],
       submittingUser: {
         username: '',
         userId: null,
@@ -146,7 +99,7 @@ export default {
       isClip: false, // Flag to check if it's the original video
       clipStart: 0, // Start time for the clip
       clipEnd: 0, // End time for the clip
-      loopClip: false, // Flag to check if the clip should loop
+      loopClip: true, // Flag to check if the clip should loop
       creatingClip: false, // Flag to check if the user is creating a clip,
       userSavedLink: false, // Flag to check if the user has saved the link
     }
@@ -178,6 +131,7 @@ export default {
     },
   },
   watch: {
+    //doesn't trigger on first load, need to set the value in created as well
     loopClip: function() {
       setIsLoop(this.loopClip);
     },
@@ -251,17 +205,9 @@ export default {
       } else if (parseInt(this.clipEnd) < parseInt(this.clipStart)) {
         this.clipStart = this.clipEnd;
       }
-      
-
-    },
-    async onAddTag(tag) {
-        this.tags = await api.getTagsByLink(this.link.id)
     },
     backToHome() {
       this.$router.push({ path:"/"})
-    },
-    goToTag(tag) {
-      this.$router.push({ path: `/tag/${tag.id}`})
     },
     playVideo() {
       playPlayer();
@@ -272,6 +218,7 @@ export default {
     async loadLink(linkId) {
       let link = await api.getLink(linkId);
       this.link = link;
+      this.clipEnd = link.duration || 0;
 
       this.$store.dispatch('savePageTitle', link.title)
     }
@@ -285,13 +232,15 @@ export default {
     await this.loadLink(id);
     this.submittingUser = await api.getUser(this.link.userId);
     this.userSavedLink = await api.checkUserSavedLink(this.user.id, this.link.id);
-    this.tags = await api.getTagsByLink(this.link.id);
 
     //load Youtube player
     this.youtubePlayer = await createPlayer(this.link.contentId, null);
     if (this.link.isClip) {
       setLoopTimes(this.link.startTime, this.link.endTime);
       setIsLoop(true);
+    } else {
+      setIsLoop(this.loopClip);
+      setEndTime(this.endTime);
     }
   },
   mounted() {
@@ -350,9 +299,11 @@ export default {
 }
 
 .clip-controls {
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
+  overflow: hidden;
 }
 
 .clip-controls-time-controls {
@@ -362,7 +313,8 @@ export default {
 }
 
 .clip-controls-title {
-  margin: 0px 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .clip-controls-text-input {
@@ -371,34 +323,6 @@ export default {
 
 .create-clip-button {
   margin: 10px;
-}
-
-.comments, .other-links, .tags {
-  border: 1px solid #ccc;
-  width: 33%;
-  height: 15vh;
-  overflow: hidden;
-}
-
-
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0px;
-}
-
-.bottom-container-header {
-  height: 30px;
-  font-size: 1.5em;
-  font-weight: bold;
-  padding-bottom: 10px;
-}
-
-.vote-button {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 80px;
 }
 
 @media (max-width: 600px) { /* For mobile devices */
