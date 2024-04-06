@@ -51,7 +51,7 @@ router.get('/users', [UserController, 'index'])
 router.post('/users', [UserController, 'create'])
 router.post('/users/createGuest', [UserController, 'createGuest'])
 router.put('/users/upgradeGuest/:id', [UserController, 'upgradeGuest'])
-router.put('/users/:id', [UserController, 'update']).use(middleware.auth())
+router.put('/users/:id', [UserController, 'update'])
 
 router.delete('/users/deleteAll', [UserController, 'deleteAll'])
 router.delete('/users/:id', [UserController, 'delete'])
@@ -74,7 +74,7 @@ router.get('/links/user/:userId/submitted', [LinkController, 'getSubmittedLinksB
 //query params: amount
 router.get('/links/new', [LinkController, 'getNewLinks'])
 //query params: amount
-router.get('/links/top', [LinkController, 'getTopLinks']).use(middleware.auth())
+router.get('/links/top', [LinkController, 'getTopLinks'])
 router.get('/links/tag/:tagId', [LinkController, 'getLinksByTag'])
 router.get('/links/:id', [LinkController, 'getOne'])
 router.get('/links', [LinkController, 'index'])
