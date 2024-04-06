@@ -36,7 +36,7 @@ export default class UserController {
 
     const user = await User.create(iUser)
     user.username = `guest${user.id}`
-    user.save();
+    await user.save();
 
     return response.json(user)
   }
@@ -51,7 +51,7 @@ export default class UserController {
     try {
       const user = await User.findOrFail(id)
       user.merge(iUser)
-      user.save()
+      await user.save()
       return response.json(user)
     } catch (error) {
       console.log(error)

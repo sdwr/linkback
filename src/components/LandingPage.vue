@@ -104,8 +104,8 @@ export default {
     async getTopLinks() {
       this.topLinks = [];
       try {
-        const tags = await api.getTopLinks();
-        this.topLinks = tags;
+        const topLinks = await api.getTopLinks();
+        this.topLinks = topLinks;
         this.currentTab = 'top';
         
       } catch (error) {

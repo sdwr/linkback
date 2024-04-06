@@ -97,7 +97,6 @@ export default createStore({
 
         //Login actions
         async saveIsLoggedIn({ commit }, isLoggedIn) {
-            console.log('saveIsLoggedIn:', isLoggedIn)
             commit('setIsLoggedIn', isLoggedIn);
         },
 

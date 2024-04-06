@@ -19,7 +19,6 @@ export default {
   },
   watch: {
     toastMessage(message) {
-      console.log('toastMessage', message)
       if(message.type === TOAST_TYPE.SUCCESS) {
         this.toast.success(message.text)
       } else if(message.type === TOAST_TYPE.ERROR) {

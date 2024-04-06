@@ -207,7 +207,6 @@ const backendApi = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': buildAuthHeader(),
         },
         body: JSON.stringify(userData)
       });
@@ -425,16 +424,15 @@ const backendApi = {
     let url = `${BACKEND_URL}${LINKS_PATH}/top`;
     url = url + '?amount=' + amount;
 
-    let authHeader = buildAuthHeader();
-
     try {
       const response = await fetch(url,
         {
           method: 'GET',
-          headers: authHeader
+          headers: {
+            'Content-Type': 'application/json',
+          }
         }
       );
-
       if (!response.ok) {
         throw new Error(`Failed to fetch top links, status code: ${response.status}`);
       }

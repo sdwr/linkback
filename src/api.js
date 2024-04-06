@@ -117,12 +117,15 @@ const api = {
       userDto.id = id;
   
       let user = await backendApi.upgradeGuestUser(id, userDto);
-      if(user) {
-        store.dispatch('saveUser', user);
-        await api.addUserAction({ userId: user.id, actionType: UPGRADEACCOUNT, itemId: user.id }); 
+      if(!user) {
+        throw new Error("upgradeGuestUser: failed to upgrade user");
       }
+      
+      store.dispatch('saveUser', user);
+      await api.addUserAction({ userId: user.id, actionType: UPGRADEACCOUNT, itemId: user.id }); 
       store.dispatch('saveToast', { text: 'User upgraded', type: TOAST_TYPE.SUCCESS });
       return user;
+
     } catch(error) {
       console.log("upgradeGuestUser: error", error);
       store.dispatch('saveToast', { text: 'Failed to upgrade user', type: TOAST_TYPE.ERROR });

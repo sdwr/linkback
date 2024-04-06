@@ -70,7 +70,6 @@ export function updateUserDto(data) {
 }
 
 export function upgradeGuestUserDto(data) {
-    console.log(data)
     assertHasProperties(data, ['id', 'email', 'password']);
     return {
         id: data.id,
