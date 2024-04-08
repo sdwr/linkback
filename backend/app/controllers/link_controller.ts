@@ -78,7 +78,7 @@ export default class LinkController {
   }
 
   //query params: amount
-  async getTopLinks({ request, response, auth }: HttpContext) {
+  async getTopLinks({ request, response }: HttpContext) {
     const amount = Number(request.input('amount', 10));
 
     const links = await Link.query()

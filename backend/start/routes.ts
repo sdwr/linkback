@@ -148,9 +148,9 @@ router.get('/savedlinks/:id', [SavedLinkController, 'getOne'])
 router.get('/savedlinks', [SavedLinkController, 'index'])
 
 router.post('/savedlinks', [SavedLinkController, 'create'])
-router.post('/savedlinks/delete', [SavedLinkController, 'deleteByUserAndLink'])
 
 router.put('/savedlinks/:id', [SavedLinkController, 'update'])
 
 router.delete('/savedlinks/deleteAll', [SavedLinkController, 'deleteAll'])
 router.delete('/savedlinks/:id', [SavedLinkController, 'delete'])
+router.delete('/savedlinks/user/:userId/link/:linkId', [SavedLinkController, 'deleteByUserAndLink'])

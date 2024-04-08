@@ -14,21 +14,9 @@ import {
 
   encodeURIComponent,
   buildAuthHeader,
+  requestWrapper,
 
 } from "@/utils"
-
-import { 
-  SUBMIT,
-  SAVE,
-  UNSAVE,
-  TAG,
-  CREATETAG,
-} from "@/consts"
-
-import {
-  mockLinkData,
-  mockUserData,
-} from "@/mockData";
 
 import { 
   OPEN_GRAPH_PATH, 
@@ -41,23 +29,6 @@ import {
   TAG_LINKS_PATH,
   SAVED_LINKS_PATH,
   } from "./api_routes";
-  
-
-
-let mockUsers = [];
-let mockLinks = [];
-let mockVotes = [];
-let mockComments = [];
-let mockSavedLinks = [];
-let mockTags = [];
-let mocktagLinks = [];
-let mockUserActions = [];
-
-let mockUser = {
-  id: 1,
-  username: "John Doe",
-  email: "test@test.com",
-}
 
 //load the backend url from environment variables
 let backendUrl;
@@ -76,7 +47,7 @@ const backendApi = {
   fetchImage: async (inputUrl) => {
     const url = `${BACKEND_URL}${OPEN_GRAPH_PATH}/fetchImage?url=${encodeURIComponent(inputUrl)}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch the OG image, status code: ${response.status}`);
       }
@@ -92,9 +63,7 @@ const backendApi = {
   deleteTableData: async (tableName) => {
     const url = `${BACKEND_URL}/${tableName}/deleteAll`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
       if (!response.ok) {
         throw new Error(`Failed to delete table data, status code: ${response.status}`);
       }
@@ -110,7 +79,7 @@ const backendApi = {
   getAllUsers: async () => {
     const url = `${BACKEND_URL}${USERS_PATH}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch users, status code: ${response.status}`);
       }
@@ -124,11 +93,7 @@ const backendApi = {
   getUserById: async (id) => {
     const url = `${BACKEND_URL}${USERS_PATH}/${id}`;
     try {
-      const response = await fetch(url,
-        {
-          credentials: 'include'
-        }
-        );
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch user, status code: ${response.status}`);
       }
@@ -141,14 +106,9 @@ const backendApi = {
   },
   createUser: async (userData) => {
     const url = `${BACKEND_URL}${USERS_PATH}`;
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createUserDto(userData))
-      });
+    let body = createUserDto(userData);
+    try {  
+      const response = await requestWrapper(url, "POST", body);  
       if (!response.ok) {
         throw new Error(`Failed to create user, status code: ${response.status}`);
       }
@@ -161,14 +121,9 @@ const backendApi = {
   },
   createGuestUser: async (userData) => {
     const url = `${BACKEND_URL}${USERS_PATH}/createGuest`;
+    let body = createGuestUserDto(userData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createGuestUserDto(userData))
-      });
+      const response = await requestWrapper(url, "POST", body);
       if (!response.ok) {
         store.dispatch('saveToast', { text: `Failed to create guest user`, type: TOAST_TYPE.ERROR });
         throw new Error(`Failed to create guest user, status code: ${response.status}`);
@@ -182,14 +137,9 @@ const backendApi = {
   },
   upgradeGuestUser: async (id, userData) => {
     const url = `${BACKEND_URL}${USERS_PATH}/upgradeGuest/${id}`;
+    let body = userData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to upgrade guest user, status code: ${response.status}`);
       }
@@ -202,14 +152,9 @@ const backendApi = {
   },
   updateUser: async (id, userData) => {
     const url = `${BACKEND_URL}${USERS_PATH}/${id}`;
+    let body = userData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to update user, status code: ${response.status}`);
       }
@@ -223,9 +168,7 @@ const backendApi = {
   deleteUser: async (id) => {
     const url = `${BACKEND_URL}${USERS_PATH}/${id}`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
       if (!response.ok) {
         throw new Error(`Failed to delete user, status code: ${response.status}`);
       }
@@ -240,7 +183,7 @@ const backendApi = {
   getAllUserActions: async () => {
     const url = `${BACKEND_URL}${USER_ACTIONS_PATH}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch user actions, status code: ${response.status}`);
       }
@@ -254,7 +197,7 @@ const backendApi = {
   getUserActionsById: async (id) => {
     const url = `${BACKEND_URL}${USER_ACTIONS_PATH}/${id}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch user action, status code: ${response.status}`);
       }
@@ -268,7 +211,7 @@ const backendApi = {
   getUserActionsByUserId: async (userId) => {
     const url = `${BACKEND_URL}${USER_ACTIONS_PATH}/user/${userId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch user actions, status code: ${response.status}`);
       }
@@ -281,14 +224,9 @@ const backendApi = {
   },
   createUserAction: async (userActionData) => {
     const url = `${BACKEND_URL}${USER_ACTIONS_PATH}`;
+    let body = createUserActionDto(userActionData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createUserActionDto(userActionData))
-      });
+      const response = await requestWrapper(url, "POST", body);
       if (!response.ok) {
         throw new Error(`Failed to create user action, status code: ${response.status}`);
       }
@@ -301,14 +239,9 @@ const backendApi = {
   },
   updateUserAction: async (id, userActionData) => {
     const url = `${BACKEND_URL}${USER_ACTIONS_PATH}/${id}`;
+    let body = userActionData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userActionData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to update user action, status code: ${response.status}`);
       }
@@ -322,9 +255,7 @@ const backendApi = {
   deleteUserAction: async (id) => {
     const url = `${BACKEND_URL}${USER_ACTIONS_PATH}/${id}`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
       if (!response.ok) {
         throw new Error(`Failed to delete user action, status code: ${response.status}`);
       }
@@ -340,7 +271,7 @@ const backendApi = {
   getAllLinks: async () => {
     const url = `${BACKEND_URL}${LINKS_PATH}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch links, status code: ${response.status}`);
       }
@@ -351,10 +282,11 @@ const backendApi = {
       return null;
     }
   },
+  //this will be the only request tracked for page views
   getLinkById: async (id) => {
     const url = `${BACKEND_URL}${LINKS_PATH}/${id}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch link, status code: ${response.status}`);
       }
@@ -368,7 +300,7 @@ const backendApi = {
   getSubmittedLinksByUserId: async (userId) => {
     const url = `${BACKEND_URL}${LINKS_PATH}/user/${userId}/submitted`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch links, status code: ${response.status}`);
       }
@@ -382,7 +314,7 @@ const backendApi = {
   getLinksByTag: async (tagId) => {
     const url = `${BACKEND_URL}${LINKS_PATH}/tag/${tagId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch links, status code: ${response.status}`);
       }
@@ -403,7 +335,7 @@ const backendApi = {
     url = url + '?amount=' + amount;
 
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch new links, status code: ${response.status}`);
       }
@@ -425,14 +357,7 @@ const backendApi = {
     url = url + '?amount=' + amount;
 
     try {
-      const response = await fetch(url,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-      );
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch top links, status code: ${response.status}`);
       }
@@ -445,14 +370,9 @@ const backendApi = {
   },
   createLink: async (linkData) => {
     const url = `${BACKEND_URL}${LINKS_PATH}`;
+    let body = createLinkDto(linkData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createLinkDto(linkData))
-      });
+      const response = await requestWrapper(url, "POST", body);
       if (!response.ok) {
         throw new Error(`Failed to create link, status code: ${response.status}`);
       }
@@ -465,14 +385,9 @@ const backendApi = {
   },
   updateLink: async (id, linkData) => {
     const url = `${BACKEND_URL}${LINKS_PATH}/${id}`;
+    let body = linkData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(linkData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to update link, status code: ${response.status}`);
       }
@@ -486,9 +401,8 @@ const backendApi = {
   deleteLink: async (id) => {
     const url = `${BACKEND_URL}${LINKS_PATH}/${id}`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
+
       if (!response.ok) {
         throw new Error(`Failed to delete link, status code: ${response.status}`);
       }
@@ -504,7 +418,7 @@ const backendApi = {
   getAllComments: async () => {
     const url = `${BACKEND_URL}${COMMENTS_PATH}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch comments, status code: ${response.status}`);
       }
@@ -518,7 +432,7 @@ const backendApi = {
   getCommentById: async (id) => {
     const url = `${BACKEND_URL}${COMMENTS_PATH}/${id}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch comment, status code: ${response.status}`);
       }
@@ -532,7 +446,7 @@ const backendApi = {
   getCommentsByUserId: async (userId) => {
     const url = `${BACKEND_URL}${COMMENTS_PATH}/user/${userId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch comments, status code: ${response.status}`);
       }
@@ -546,7 +460,7 @@ const backendApi = {
   getCommentsByLinkId: async (linkId) => {
     const url = `${BACKEND_URL}${COMMENTS_PATH}/link/${linkId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch comments, status code: ${response.status}`);
       }
@@ -559,14 +473,9 @@ const backendApi = {
   },
   createComment: async (commentData) => {
     const url = `${BACKEND_URL}${COMMENTS_PATH}`;
+    let body = createCommentDto(commentData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createCommentDto(commentData))
-      });
+      const response = await requestWrapper(url, "POST", body);
       if (!response.ok) {
         throw new Error(`Failed to create comment, status code: ${response.status}`);
       }
@@ -579,14 +488,9 @@ const backendApi = {
   },
   updateComment: async (id, commentData) => {
     const url = `${BACKEND_URL}${COMMENTS_PATH}/${id}`;
+    let body = commentData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(commentData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to update comment, status code: ${response.status}`);
       }
@@ -600,9 +504,8 @@ const backendApi = {
   deleteComment: async (id) => {
     const url = `${BACKEND_URL}${COMMENTS_PATH}/${id}`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
+
       if (!response.ok) {
         throw new Error(`Failed to delete comment, status code: ${response.status}`);
       }
@@ -618,7 +521,7 @@ const backendApi = {
   getAllTags: async () => {
     const url = `${BACKEND_URL}${TAGS_PATH}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tags, status code: ${response.status}`);
       }
@@ -637,7 +540,7 @@ const backendApi = {
     }
     const url = `${BACKEND_URL}${TAGS_PATH}/top?amount=${amount}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch top tags, status code: ${response.status}`);
       }
@@ -652,7 +555,7 @@ const backendApi = {
   getTagById: async (id) => {
     const url = `${BACKEND_URL}${TAGS_PATH}/${id}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tag, status code: ${response.status}`);
       }
@@ -666,7 +569,7 @@ const backendApi = {
   getTagsByLinkId: async (linkId) => {
     const url = `${BACKEND_URL}${TAGS_PATH}/link/${linkId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tags, status code: ${response.status}`);
       }
@@ -680,7 +583,7 @@ const backendApi = {
   getTagsByUserId: async (userId) => {
     const url = `${BACKEND_URL}${TAGS_PATH}/user/${userId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tags, status code: ${response.status}`);
       }
@@ -693,14 +596,10 @@ const backendApi = {
   },
   createTag: async (tagData) => {
     const url = `${BACKEND_URL}${TAGS_PATH}`;
+    let body = createTagDto(tagData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createTagDto(tagData))
-      });
+      const response = await requestWrapper(url, "POST", body);
+
       if (!response.ok) {
         throw new Error(`Failed to create tag, status code: ${response.status}`);
       }
@@ -713,14 +612,9 @@ const backendApi = {
   },
   updateTag: async (id, tagData) => {
     const url = `${BACKEND_URL}${TAGS_PATH}/${id}`;
+    let body = tagData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(tagData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to update tag, status code: ${response.status}`);
       }
@@ -734,9 +628,7 @@ const backendApi = {
   deleteTag: async (id) => {
     const url = `${BACKEND_URL}${TAGS_PATH}/${id}`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
       if (!response.ok) {
         throw new Error(`Failed to delete tag, status code: ${response.status}`);
       }
@@ -752,7 +644,7 @@ const backendApi = {
   getAllVotes: async () => {
     const url = `${BACKEND_URL}${VOTES_PATH}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch votes, status code: ${response.status}`);
       }
@@ -766,7 +658,7 @@ const backendApi = {
   getVoteById: async (id) => {
     const url = `${BACKEND_URL}${VOTES_PATH}/${id}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch vote, status code: ${response.status}`);
       }
@@ -780,7 +672,7 @@ const backendApi = {
   getVotesByLinkId: async (linkId) => {
     const url = `${BACKEND_URL}${VOTES_PATH}/link/${linkId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch votes, status code: ${response.status}`);
       }
@@ -794,7 +686,7 @@ const backendApi = {
   getVotesByUserId: async (userId) => {
     const url = `${BACKEND_URL}${VOTES_PATH}/user/${userId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch votes, status code: ${response.status}`);
       }
@@ -807,14 +699,10 @@ const backendApi = {
   },
   createVote: async (voteData) => {
     const url = `${BACKEND_URL}${VOTES_PATH}`;
+    let body = createVoteDto(voteData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createVoteDto(voteData))
-      });
+      const response = await requestWrapper(url, "POST", body);
+
       if (!response.ok) {
         throw new Error(`Failed to create vote, status code: ${response.status}`);
       }
@@ -827,14 +715,9 @@ const backendApi = {
   },
   createOrUpdateVote: async (voteData) => {
     const url = `${BACKEND_URL}${VOTES_PATH}/createOrUpdate`;
+    let body = createVoteDto(voteData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createVoteDto(voteData))
-      });
+      const response = await requestWrapper(url, "POST", body);
       if (!response.ok) {
         throw new Error(`Failed to create or update vote, status code: ${response.status}`);
       }
@@ -847,14 +730,9 @@ const backendApi = {
   },
   updateVote: async (id, voteData) => {
     const url = `${BACKEND_URL}${VOTES_PATH}/${id}`;
+    let body = voteData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(voteData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to update vote, status code: ${response.status}`);
       }
@@ -868,9 +746,8 @@ const backendApi = {
   deleteVote: async (id) => {
     const url = `${BACKEND_URL}${VOTES_PATH}/${id}`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
+
       if (!response.ok) {
         throw new Error(`Failed to delete vote, status code: ${response.status}`);
       }
@@ -886,7 +763,7 @@ const backendApi = {
   getAllTagLinks: async () => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tag links, status code: ${response.status}`);
       }
@@ -900,7 +777,7 @@ const backendApi = {
   getTagLinkById: async (id) => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}/${id}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tag link, status code: ${response.status}`);
       }
@@ -914,7 +791,7 @@ const backendApi = {
   getTagLinksByTagId: async (tagId) => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}/tag/${tagId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tag links, status code: ${response.status}`);
       }
@@ -928,7 +805,7 @@ const backendApi = {
   getTagLinksByLinkId: async (linkId) => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}/link/${linkId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tag links, status code: ${response.status}`);
       }
@@ -942,7 +819,7 @@ const backendApi = {
   getTagLinksByTagId: async (tagId) => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}/tag/${tagId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tag links, status code: ${response.status}`);
       }
@@ -956,7 +833,7 @@ const backendApi = {
   getTagLinksByUserId: async (userId) => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}/user/${userId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch tag links, status code: ${response.status}`);
       }
@@ -969,14 +846,9 @@ const backendApi = {
   },
   createTagLink: async (tagLinkData) => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}`;
+    let body = createTagLinkDto(tagLinkData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createTagLinkDto(tagLinkData))
-      });
+      const response = await requestWrapper(url, "POST", body);
       if (!response.ok) {
         throw new Error(`Failed to create tag link, status code: ${response.status}`);
       }
@@ -989,14 +861,9 @@ const backendApi = {
   },
   updateTagLink: async (id, tagLinkData) => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}/${id}`;
+    let body = tagLinkData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(tagLinkData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to update tag link, status code: ${response.status}`);
       }
@@ -1010,9 +877,7 @@ const backendApi = {
   deleteTagLink: async (id) => {
     const url = `${BACKEND_URL}${TAG_LINKS_PATH}/${id}`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
       if (!response.ok) {
         throw new Error(`Failed to delete tag link, status code: ${response.status}`);
       }
@@ -1028,7 +893,7 @@ const backendApi = {
   getAllSavedLinks: async () => {
     const url = `${BACKEND_URL}${SAVED_LINKS_PATH}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch saved links, status code: ${response.status}`);
       }
@@ -1042,7 +907,7 @@ const backendApi = {
   getSavedLinkById: async (id) => {
     const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/${id}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch saved link, status code: ${response.status}`);
       }
@@ -1056,7 +921,7 @@ const backendApi = {
   getSavedLinkByUserIdAndLinkId: async (userId, linkId) => {
     const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/user/${userId}/link/${linkId}`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (response.ok) {
         const data = await response.json();
         return data;
@@ -1073,7 +938,7 @@ const backendApi = {
   getSavedLinksByUserId: async (userId) => {
     const url = `${BACKEND_URL}${LINKS_PATH}/user/${userId}/saved`;
     try {
-      const response = await fetch(url);
+      const response = await requestWrapper(url, "GET");
       if (!response.ok) {
         throw new Error(`Failed to fetch saved links, status code: ${response.status}`);
       }
@@ -1086,14 +951,9 @@ const backendApi = {
   },
   createSavedLink: async (savedLinkData) => {
     const url = `${BACKEND_URL}${SAVED_LINKS_PATH}`;
+    let body = createSavedLinkDto(savedLinkData);
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(createSavedLinkDto(savedLinkData))
-      });
+      const response = await requestWrapper(url, "POST", body);
       if (!response.ok) {
         throw new Error(`Failed to create saved link, status code: ${response.status}`);
       }
@@ -1106,14 +966,9 @@ const backendApi = {
   },
   updateSavedLink: async (id, savedLinkData) => {
     const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/${id}`;
+    let body = savedLinkData;
     try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(savedLinkData)
-      });
+      const response = await requestWrapper(url, "PUT", body);
       if (!response.ok) {
         throw new Error(`Failed to update saved link, status code: ${response.status}`);
       }
@@ -1127,9 +982,7 @@ const backendApi = {
   deleteSavedLink: async (id) => {
     const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/${id}`;
     try {
-      const response = await fetch(url, {
-        method: 'DELETE'
-      });
+      const response = await requestWrapper(url, "DELETE");
       if (!response.ok) {
         throw new Error(`Failed to delete saved link, status code: ${response.status}`);
       }
@@ -1141,11 +994,9 @@ const backendApi = {
     }
   },
   deleteSavedLinkByUserAndLinkId: async (userId, linkId) => {
-    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/delete`;
+    const url = `${BACKEND_URL}${SAVED_LINKS_PATH}/user/${userId}/link/${linkId}`;
     try {
-      const response = await fetch(url, {
-        method: 'POST'
-      });
+      const response = await requestWrapper(url, "DELETE");
       if (!response.ok) {
         throw new Error(`Failed to delete saved link, status code: ${response.status}`);
       }

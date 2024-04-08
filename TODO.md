@@ -110,6 +110,7 @@ YOUTUBE PAGE:
 API
 - backend returns some errors are {errors: []} objects
   which are being accepted as valid responses by the frontend API
+- no authentication for updating/voting/deleting items on backend (need to get userId from session and compare vs owner)
 - save DB state as file, to import as test data
 - verify data doesn't already exist in DB 
   - link is checked already

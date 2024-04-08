@@ -46,7 +46,22 @@ export function buildAuthHeader() {
     return {
         'Authorization': 'Basic ' + base64Credentials
     };
-} 
+}
+
+//dont handle errors here, let the caller handle them
+export async function requestWrapper(url, method, data = null) {
+    let response = await fetch(url,
+        {
+            method: method,
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: data ? JSON.stringify(data) : null
+        
+        });
+    return response;
+}
 
 // create DTOs
 export function createUserDto(data) {
