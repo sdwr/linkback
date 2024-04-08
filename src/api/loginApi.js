@@ -2,6 +2,7 @@
 import { USER_SESSIONS_PATH } from "./api_routes"
 import store from "@/store";
 import { TOAST_TYPE } from "@/consts";
+import { requestWrapper } from "@/utils";
 
 //load the backend url from environment variables
 let backendUrl;
@@ -17,14 +18,9 @@ const BACKEND_URL = backendUrl;
 const loginApi = {
   login: async (userDto) => { 
     const url = `${BACKEND_URL}${USER_SESSIONS_PATH}/login`
+    let body = userDto
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userDto)
-      })
+      const response = await requestWrapper(url, 'POST', body)
       if(!response.ok) {
         throw new Error('Failed to login')
       }
@@ -41,14 +37,9 @@ const loginApi = {
 
   loginGuest: async (userDto) => {
     const url = `${BACKEND_URL}${USER_SESSIONS_PATH}/loginGuest`
+    let body = userDto
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userDto)
-      })
+      const response = await requestWrapper(url, 'POST', body)
       if(!response.ok) {
         throw new Error('Failed to login')
       }
@@ -64,14 +55,9 @@ const loginApi = {
 
   logout: async (userDto) => {
     const url = `${BACKEND_URL}${USER_SESSIONS_PATH}/logout`
+    let body = userDto
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userDto)
-      })
+      const response = await requestWrapper(url, 'POST', body)
       if(!response.ok) {
         throw new Error('Failed to login')
       }

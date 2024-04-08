@@ -1,12 +1,13 @@
 import { createLinkValidator, updateLinkValidator } from '#validators/link_validator';
 import type { HttpContext } from '@adonisjs/core/http'
+import PageViewService from '#services/pageView_service';
 
 
 import Link from '#models/link';
 import ILink from '#models/request_objects/iLink';
 
 export default class LinkController {
-  constructor() {}
+  constructor(protected pageViewService: PageViewService) {}
   //get all links
   async index({ response }: HttpContext) {
     const links = await Link.all();
@@ -14,7 +15,11 @@ export default class LinkController {
     return response.ok(links);
   }
   
-  async getOne({ request, response }: HttpContext) {
+  async getOne({ request, response, auth, session}: HttpContext) {
+    console.log(session.all(), 'session data in getOne')
+    console.log(session, 'session in getOne')
+    console.log(auth, 'auth in getOne')
+    console.log(auth.user, 'auth user in getOne')
     const id = request.param('id');
 
     const link = await Link.query()
@@ -23,6 +28,9 @@ export default class LinkController {
       .preload('tags')
       .first();
 
+    if(link) {
+      await this.pageViewService.addPageView(session, link.id, 'link');
+    }
     return response.ok(link);
   }
 
@@ -78,7 +86,8 @@ export default class LinkController {
   }
 
   //query params: amount
-  async getTopLinks({ request, response }: HttpContext) {
+  async getTopLinks({ request, response, session }: HttpContext) {
+    console.log(session.all(), 'session data in getTopLinks')
     const amount = Number(request.input('amount', 10));
 
     const links = await Link.query()
