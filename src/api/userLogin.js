@@ -75,7 +75,10 @@ const userLogin = {
     }
   },
   loadUserAndLogin: async () => {
-    await userLogin.loginFromStore();
+    let loggedIn = await userLogin.loginFromStore();
+    if(!loggedIn) {
+      await userLogin.createNewGuest();
+    }
   },
   createNewGuest: async () => {
     //clear out any existing user data

@@ -1,8 +1,11 @@
 <template>
-  <div id="app">
-  <PageHeader/>
-  <ToastNotification/>
-  <router-view :key="$route.path" />
+  <div v-if="isLoggedIn" id="app">
+    <PageHeader/>
+    <ToastNotification/>
+    <router-view :key="$route.path" />
+  </div>
+  <div v-else>
+    Oops! You are not logged in. There is nothing to see here.
   </div>
 </template>
 
@@ -21,6 +24,9 @@ export default {
   computed: {
     storedUser () {
       return this.$store.getters.getUser
+    },
+    isLoggedIn() {
+      return this.$store.getters.getIsLoggedIn
     },
   },
   methods: {
