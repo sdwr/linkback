@@ -6,13 +6,10 @@ export default class PageView extends BaseModel {
   declare id: number
 
   @column()
-  declare userId: number
+  declare userSessionId: number
 
   @column()
   declare linkId: number
-
-  @column()
-  declare itemType: string
 
   @column()
   declare date: string

@@ -120,7 +120,7 @@ const api = {
       if(!user) {
         throw new Error("upgradeGuestUser: failed to upgrade user");
       }
-      
+
       store.dispatch('saveUser', user);
       await api.addUserAction({ userId: user.id, actionType: UPGRADEACCOUNT, itemId: user.id }); 
       store.dispatch('saveToast', { text: 'User upgraded', type: TOAST_TYPE.SUCCESS });
@@ -391,6 +391,11 @@ const api = {
   getSavedLinks: async () => {
     let savedLinks = backendApi.getAllSavedLinks();
     return savedLinks;
+  },
+
+  getUserSessions: async () => {
+    let userSessions = backendApi.getAllUserSessions();
+    return userSessions;
   },
 
   getUserActions: async () => {

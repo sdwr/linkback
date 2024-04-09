@@ -21,6 +21,7 @@ import {
 import { 
   OPEN_GRAPH_PATH, 
   USERS_PATH,
+  USER_SESSIONS_PATH,
   USER_ACTIONS_PATH,
   COMMENTS_PATH,
   LINKS_PATH,
@@ -176,6 +177,21 @@ const backendApi = {
       return data;
     } catch (error) {
       console.error('Error deleting user:', error.message);
+      return null;
+    }
+  },
+  // User Session
+  getAllUserSessions: async () => {
+    const url = `${BACKEND_URL}${USER_SESSIONS_PATH}`;
+    try {
+      const response = await requestWrapper(url, "GET");
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user sessions, status code: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching user sessions:', error.message);
       return null;
     }
   },

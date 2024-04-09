@@ -8,7 +8,7 @@ export default class UserSessionsSchema extends BaseSchema {
       table.increments('id')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.string('session_token', 255).notNullable().unique()
-      table.string('device_ip', 255).notNullable()
+      table.string('device_ip', 255)
 
       table.dateTime('date').notNullable()
       table.timestamps(true)

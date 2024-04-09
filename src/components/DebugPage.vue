@@ -23,6 +23,7 @@ export default {
         comments: [],
         votes: [],
         users: [],
+        userSessions: [],
         useractions: [],
       }
     };
@@ -45,6 +46,7 @@ export default {
       this.apiData.savedlinks = await api.getSavedLinks();
       this.apiData.taglinks = await api.getTagLinks();
       this.apiData.users = await api.getUsers();
+      this.apiData.userSessions = await api.getUserSessions();
       this.apiData.useractions = await api.getUserActions();
       this.apiData.comments = await api.getComments();
       this.apiData.votes = await api.getVotes();

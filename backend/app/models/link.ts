@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
-import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
-import { BaseModel, column, belongsTo, manyToMany  } from '@adonisjs/lucid/orm'
+import type { BelongsTo, ManyToMany, HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, belongsTo, manyToMany, hasMany  } from '@adonisjs/lucid/orm'
 
 import User from '#models/user'
 import Tag from '#models/tag'
+import PageView from '#models/pageView'
 
 export default class Link extends BaseModel {
   @column({ isPrimary: true })
@@ -61,6 +62,12 @@ export default class Link extends BaseModel {
 
   @column()
   declare voteSum: number
+
+  @column()
+  declare totalViews: number
+
+  @hasMany(() => PageView)
+  declare pageViews: HasMany<typeof PageView>
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare createdAt: DateTime | null

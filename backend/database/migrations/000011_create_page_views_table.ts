@@ -6,12 +6,10 @@ export default class VotesSchema extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
-      //generic id, cannot reference table as it could be any type of item
-      table.integer('item_id').unsigned().notNullable()
-      table.string('item_type').notNullable()
+      table.integer('user_session_id').unsigned().notNullable().references('id').inTable('user_sessions').onDelete('CASCADE')
+      table.integer('link_id').unsigned().notNullable().references('id').inTable('links').onDelete('CASCADE')
       
-      table.unique(['user_id', 'item_id', 'item_type'])
+      table.unique(['user_session_id', 'link_id'])
 
       table.timestamp('date').notNullable()
       table.timestamps(true)

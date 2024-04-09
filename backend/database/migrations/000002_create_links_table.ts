@@ -19,6 +19,7 @@ export default class LinksSchema extends BaseSchema {
       table.text('description').nullable()
 
       table.integer('vote_sum').defaultTo(0)
+      table.integer('total_views').defaultTo(0)
 
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('original_link_id').unsigned().nullable().references('id').inTable('links')

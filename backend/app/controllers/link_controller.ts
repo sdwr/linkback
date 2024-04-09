@@ -1,11 +1,12 @@
 import { createLinkValidator, updateLinkValidator } from '#validators/link_validator';
 import type { HttpContext } from '@adonisjs/core/http'
 import PageViewService from '#services/pageView_service';
-
+import { inject } from '@adonisjs/core'
 
 import Link from '#models/link';
 import ILink from '#models/request_objects/iLink';
 
+@inject()
 export default class LinkController {
   constructor(protected pageViewService: PageViewService) {}
   //get all links
@@ -26,10 +27,14 @@ export default class LinkController {
       .where('id', id)
       .preload('user')
       .preload('tags')
+      .withCount('pageViews')
       .first();
 
     if(link) {
-      await this.pageViewService.addPageView(session, link.id, 'link');
+      //dont worry about race condition for totalViews
+      link.totalViews++
+      link.save()
+      await this.pageViewService.addPageView(session, link.id);
     }
     return response.ok(link);
   }
@@ -40,7 +45,8 @@ export default class LinkController {
     const links = await Link.query()
       .where('userId', userId)
       .preload('user')
-      .preload('tags');
+      .preload('tags')
+      .withCount('pageViews');
 
     return response.ok(links);
   }
