@@ -1,12 +1,14 @@
 import { createLinkValidator, updateLinkValidator } from '#validators/link_validator';
 import type { HttpContext } from '@adonisjs/core/http'
-
+import PageViewService from '#services/pageView_service';
+import { inject } from '@adonisjs/core'
 
 import Link from '#models/link';
 import ILink from '#models/request_objects/iLink';
 
+@inject()
 export default class LinkController {
-  constructor() {}
+  constructor(protected pageViewService: PageViewService) {}
   //get all links
   async index({ response }: HttpContext) {
     const links = await Link.all();
@@ -14,15 +16,26 @@ export default class LinkController {
     return response.ok(links);
   }
   
-  async getOne({ request, response }: HttpContext) {
+  async getOne({ request, response, auth, session}: HttpContext) {
+    console.log(session.all(), 'session data in getOne')
+    console.log(session, 'session in getOne')
+    console.log(auth, 'auth in getOne')
+    console.log(auth.user, 'auth user in getOne')
     const id = request.param('id');
 
     const link = await Link.query()
       .where('id', id)
       .preload('user')
       .preload('tags')
+      .withCount('pageViews')
       .first();
 
+    if(link) {
+      //dont worry about race condition for totalViews
+      link.totalViews++
+      link.save()
+      await this.pageViewService.addPageView(session, link.id);
+    }
     return response.ok(link);
   }
 
@@ -32,7 +45,8 @@ export default class LinkController {
     const links = await Link.query()
       .where('userId', userId)
       .preload('user')
-      .preload('tags');
+      .preload('tags')
+      .withCount('pageViews');
 
     return response.ok(links);
   }
@@ -78,7 +92,8 @@ export default class LinkController {
   }
 
   //query params: amount
-  async getTopLinks({ request, response }: HttpContext) {
+  async getTopLinks({ request, response, session }: HttpContext) {
+    console.log(session.all(), 'session data in getTopLinks')
     const amount = Number(request.input('amount', 10));
 
     const links = await Link.query()

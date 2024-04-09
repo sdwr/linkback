@@ -37,8 +37,8 @@ export default {
 
     },
   },
-  created() {
-    userLogin.loadUserAndLogin();
+  async created() {
+    await userLogin.loadUserAndLogin();
     //check if the user is on mobile
     this.$store.dispatch('saveIsOnMobile', isOnMobile())
     

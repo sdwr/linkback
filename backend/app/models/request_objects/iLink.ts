@@ -18,8 +18,11 @@ export default interface ILink {
   userId: number;
   originalLinkId?: number;
   
+  totalViews?: number;
+
   //generated fields
   voteSum?: number;
+  pageViews?: number;
   
   date: any;
   createdAt?: any;
