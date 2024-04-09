@@ -96,7 +96,6 @@ const userLogin = {
       return userLogin.loginAsGuest(user);
     } catch(error) {
       //nothing to clear here, as we didn't save anything
-      //anything that goes wrong in loginAsGuest will be handled there
       return false;
     }
   },

@@ -77,7 +77,6 @@ router.get('/links/new', [LinkController, 'getNewLinks'])
 router.get('/links/top', [LinkController, 'getTopLinks'])
 router.get('/links/tag/:tagId', [LinkController, 'getLinksByTag'])
 router.get('/links/:id', [LinkController, 'getOne'])
-  .use(middleware.auth())
 router.get('/links', [LinkController, 'index'])
 
 router.post('/links', [LinkController, 'createOrGet'])

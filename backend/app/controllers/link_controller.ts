@@ -16,22 +16,19 @@ export default class LinkController {
     return response.ok(links);
   }
   
-  async getOne({ request, response, auth, session}: HttpContext) {
-    console.log(session.all(), 'session data in getOne')
-    console.log(session, 'session in getOne')
-    console.log(auth, 'auth in getOne')
-    console.log(auth.user, 'auth user in getOne')
+  async getOne({ request, response, session}: HttpContext) {
     const id = request.param('id');
 
     const link = await Link.query()
       .where('id', id)
       .preload('user')
       .preload('tags')
-      .withCount('pageViews')
+      .preload('pageViews')
       .first();
 
+    //add to total views
     if(link) {
-      //dont worry about race condition for totalViews
+      // dont worry about race condition for totalViews
       link.totalViews++
       link.save()
       await this.pageViewService.addPageView(session, link.id);
@@ -46,7 +43,7 @@ export default class LinkController {
       .where('userId', userId)
       .preload('user')
       .preload('tags')
-      .withCount('pageViews');
+      .preload('pageViews')
 
     return response.ok(links);
   }
@@ -92,8 +89,7 @@ export default class LinkController {
   }
 
   //query params: amount
-  async getTopLinks({ request, response, session }: HttpContext) {
-    console.log(session.all(), 'session data in getTopLinks')
+  async getTopLinks({ request, response }: HttpContext) {
     const amount = Number(request.input('amount', 10));
 
     const links = await Link.query()

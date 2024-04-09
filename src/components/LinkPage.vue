@@ -13,8 +13,12 @@
             {{submittingUser.username}}
         </a>
       </span>
-      -
-      <a v-if="linkIsClip" :href="`/originalVideo`" @click.prevent="goToOriginal()">Original</a> <!-- Link to original video -->
+      <div v-if="linkIsClip"> 
+        <a v-if="linkIsClip" :href="`/originalVideo`" @click.prevent="goToOriginal()">Original</a> <!-- Link to original video -->
+      </div>
+      <div v-if="userIsOwner">
+        {{link.pageViews?.length}} unique / {{link.totalViews}} total
+      </div>
     </div>
 
     <div v-if="linkIsYoutube" class="content-preview">
@@ -288,6 +292,14 @@ export default {
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+
+.link-top-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
 }
 
 .link-top-buttons button{
