@@ -56,7 +56,8 @@ export default class LinkController {
       .innerJoin('saved_links', 'links.id', 'saved_links.link_id')
       .where('saved_links.user_id', userId)
       .preload('user')
-      .preload('tags');
+      .preload('tags')
+      .preload('pageViews');
 
     return response.ok(links);
   }
@@ -70,7 +71,8 @@ export default class LinkController {
       .leftJoin('tag_links', 'links.id', 'tag_links.link_id')
       .where('tag_links.tag_id', tagId)
       .preload('user')
-      .preload('tags');
+      .preload('tags')
+      .preload('pageViews');
 
     return response.ok(links);
   }
@@ -83,7 +85,8 @@ export default class LinkController {
       .orderBy('created_at', 'desc')
       .limit(amount)
       .preload('user')
-      .preload('tags');
+      .preload('tags')
+      .preload('pageViews');
 
     return response.ok(links);
   }
@@ -96,7 +99,9 @@ export default class LinkController {
       .orderBy('vote_sum', 'desc')
       .limit(amount)
       .preload('user')
-      .preload('tags');
+      .preload('tags')
+      .preload('pageViews');
+
 
     return response.ok(links);
   }

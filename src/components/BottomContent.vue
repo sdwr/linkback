@@ -1,6 +1,6 @@
 <template>
 <div class="bottom-bar-container">
-  <div class="bottom-bar-content">
+  <div v-if="showBottomContent" class="bottom-bar-content">
       <div v-if="showComments" class="comments">
         <div class="bottom-container-header">
           <div>Comments</div>
@@ -109,6 +109,9 @@ export default {
     user() {
       return this.$store.getters.getUser;
     },
+    showBottomContent() {
+      return this.showComments || this.showRelatedLinks || this.showTags;
+    }
   },
   methods: {
     // UI methods
