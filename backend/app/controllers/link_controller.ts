@@ -112,9 +112,11 @@ export default class LinkController {
 
     //verify that the link is unique
     //except for clips
+    
     if(!iLink.isClip) {
       const linkExists = await Link.query()
         .where('url', iLink.url)
+        .andWhere('isClip', false)
         .first();
       
       if (linkExists) {

@@ -3,26 +3,15 @@ TODO:
 
 REWARDS:
   notification / score for # of views, votes, links, tags on uploaded content
-    - add view counter for each link (/tag?)
-    - unique + nonunique
-      - for unique, really need to make guest user automatically again
-      - just didn't like the "logout / login" functionality being spammable
-        -take out logout button, only have login for guest?
 
 STAGES:
   stage 1:
-    make sure the youtube link clipper works standalone
-      - clip controls - text input to scrub sliders
-        -means only scrubbing on enter or blur or slider movement (not on text entry)
-      - pretty up the UI
-        - fix spacing on mobile
-          -top bar is cluttered (cut off when not logged in? replace buttons w icons?)
-          - clip controls are cut-off
-          - should hide bottom tabs by default
-          - add tag input should not be scrollable
+    youtube page clipper works standalone DONE
+    bonus:
+      -delete popup is ugly
   
   stage 2:
-    make tag page work as "fan page" for subcommunities
+    make tag page work as "fan page"
       - some way of sorting on tag page
         - change list to table, allow sorting by new / top
         - add voting on tag page for tags
@@ -34,10 +23,14 @@ STAGES:
 
 -------------------
 BUGS:
+  - trying to add a link that already exists updates the time of the link
+    (does it use updatedAt time, date time?)
+    - should only be querying so does updatedAt get updated when retrieved?
   - tried to delete link with ID of 1, failed because other clips reference it
   - youtube player sometimes is called before its instantiated
 
 
+-------------------
 
 PROJECT:
   - how to remove tags from link
@@ -237,7 +230,12 @@ LANDING PAGE:
 LINK PAGE:
 - feature parity with youtube page DONE
 - make title editable DONE
-
+- pretty up the UI DONE
+  - fix spacing on mobile KINDA DONE
+    -top bar is cluttered (cut off when not logged in? replace buttons w icons?) KINDA DONE
+    - clip controls are cut-off DONE
+    - should hide bottom tabs by default DONE
+    - add tag input should not be scrollable DONE
 
 YOUTUBE PAGE:
 - fix "create clip" to actually make a new link DONE
@@ -257,6 +255,10 @@ YOUTUBE PAGE:
 - have custom time bar for clips, hide controls DONE (can't hide controls?)
 - set clipEnd to 5 seconds after clipStart if clipStart is moved too close, prevent short loop happening by accident DONE (not fully tested)
 
+- clip controls - text input to scrub sliders DONE
+  -means only scrubbing on enter or blur or slider movement (not on text entry) DONE
+- confirm popup for delete DONE
+
 
 USER PAGE
 - make save / unsave icons work like landing page DONE
@@ -274,6 +276,16 @@ USER PAGE
 TAG PAGE:
   - show list of links DONE
 
+BUGS:
+  - youtube player does not set end time correctly when moved by start time DONE
+  (scattered logic for restarting loop vs skip to end)
+    - should scrub in 3 conditions
+      -1. clip reaches end time naturally (scrub to start)
+      -2. start time is changed (scrub to start) 
+      -3. end time is changed manually (scrub to a 5s before end, to test new endpoint)
+
+      -but should not scrub to end in the case when it moves because of the start time changing
+
 API
 - add test data that covers all the main cases (need to redo with new db fields)
 - debug page that shows DB data DONE
@@ -286,6 +298,10 @@ FEATURES
 - link items on landing/user page (title, url, duration, votes) DONE
 - check if videos are already saved, show save / unsave icon DONE
 - add tags DONE
+
+- add view counter for each link (/tag?) DONE
+- unique + nonunique DONE
+  - for unique, really need to make guest user automatically again DONE
 
 
 REAL STUFF:

@@ -98,7 +98,7 @@ export default {
   margin-top: 5px;
   display: flex;
   flex-direction: row;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .add-tag-left-wrapper {

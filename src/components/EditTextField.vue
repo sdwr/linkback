@@ -52,6 +52,7 @@ export default {
 <style scoped>
 .edit-text-field {
   display: flex;
+  width: 100%;
   align-items: center;
   padding-bottom: 5px;
 }
@@ -61,7 +62,6 @@ export default {
   flex-grow: 0;
   width: fit-content;
   max-width: 80%;
-  margin-right: 10px;
 
 }
 .pencil-icon {

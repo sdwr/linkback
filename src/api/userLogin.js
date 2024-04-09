@@ -99,6 +99,24 @@ const userLogin = {
       return false;
     }
   },
+  logout: async () => {
+    let user = store.state.user;
+    if(!user) {
+      console.log('No user to log out');
+      return true;
+    }
+
+    let loggedOut = await loginApi.logout(user);
+    if(loggedOut) {
+      store.dispatch('saveUser', null)
+      store.dispatch('saveUserCredentials', null)
+      store.dispatch('saveIsLoggedIn', false)
+      return true;
+    } else {
+      console.error('Error logging out');
+      return false;
+    }
+  },
 }
 
 export default userLogin;

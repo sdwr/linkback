@@ -90,7 +90,7 @@ export default {
       // UI state
       showComments: false,
       showRelatedLinks: false,
-      showTags: true,
+      showTags: false,
       // Data
       comments: [],
       otherLinks: [],
@@ -199,9 +199,9 @@ export default {
 
 /* For the content of the bottom bar */
 .comments, .other-links, .tags {
-  border: 1px solid #ccc;
+  border: 3px solid #ccc;
   width: 100%;
-  height: 15vh;
+  height: 20vh;
   overflow: hidden;
 }
 
@@ -216,7 +216,7 @@ export default {
   height: 30px;
   font-size: 1.5em;
   font-weight: bold;
-  padding-bottom: 10px;
+  padding: 10px 0;
 }
 
 .vote-button {
@@ -224,6 +224,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 80px;
+}
+
+@media (max-width: 600px) { /* For mobile devices */
 }
 
 </style>

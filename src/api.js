@@ -17,6 +17,7 @@ import {
   createTagLinkDto,
 
   encodeURIComponent,
+  stripTLD,
   
 } from "@/utils"
 
@@ -163,6 +164,11 @@ const api = {
     }
 
     store.dispatch('saveToast', { text: 'Link added', type: TOAST_TYPE.SUCCESS });
+    
+    //add domain as tag
+    if(link && link.domain) {
+      await api.addTagToLinkSilent(link.userId, link.id, stripTLD(link.domain));
+    }
     await api.addUserAction({ userId: link.userId, actionType: SUBMIT, itemId: link.id });
 
     return link;
@@ -184,6 +190,11 @@ const api = {
 
   deleteLink: async (id) => {
     let link = await backendApi.deleteLink(id);
+    if(!link) {
+      store.dispatch('saveToast', { text: 'Failed to delete link', type: TOAST_TYPE.ERROR });
+      return null;
+    }
+    store.dispatch('saveToast', { text: 'Link deleted', type: TOAST_TYPE.SUCCESS });
     return link;
   },
   //uses create or update so it will overwrite existing vote
@@ -310,6 +321,14 @@ const api = {
   //add tag to link - complexity here is that we need to create a new tag if it doesnt exist
   //means name must be unique
   addTagToLink: async (userId, linkId, tagName) => {
+    let tagLink = await api.addTagToLinkSilent(userId, linkId, tagName);
+    if(tagLink) {
+      store.dispatch('saveToast', { text: 'Tag added', type: TOAST_TYPE.SUCCESS });
+    }
+    return tagLink;
+  },
+
+  addTagToLinkSilent: async (userId, linkId, tagName) => {
     // create tag should return existing tag if it already exists
     let tag = await api.addTag({ userId, name: tagName });
     if (!tag) {
@@ -317,9 +336,6 @@ const api = {
       return null;
     }
     const tagLink = await api.addTagLink({ userId, linkId, tagId: tag.id });
-    if(tagLink) {
-      store.dispatch('saveToast', { text: 'Tag added', type: TOAST_TYPE.SUCCESS });
-    }
     return tagLink;
   },
 

@@ -7,7 +7,6 @@
       <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUserPage()">{{user.username}}</a></div>
       <div class="user-link"><a :href="`/user/test`" @click.prevent="goToUserPage()">{{user.id}}</a></div>
     </div>
-    <button class="logout-button" @click="logout">Logout</button>
   </div>
   <div v-else>
     <button @click="openLoginModal()">Login</button>
@@ -52,12 +51,6 @@ export default {
     },
     async createNewGuest() {
       await userLogin.createNewGuest()
-    },
-    async logout() {
-      await loginApi.logout(this.user);
-      this.$store.dispatch('saveUser', null)
-      this.$store.dispatch('saveUserCredentials', null)
-      this.$store.dispatch('saveIsLoggedIn', false)
     },
   },
 };

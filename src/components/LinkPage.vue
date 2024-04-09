@@ -1,11 +1,14 @@
 <template>
   <div class="linkpage">
-    <EditTextField :value="link.title" :canEdit="canEditTitle" @edit="onChangeTitle"></EditTextField>
+    <div class="link-title">
+      <EditTextField :value="link.title" :canEdit="canEditTitle" @edit="onChangeTitle"></EditTextField>
+    </div>
     <div class="link-top-buttons">
       <button v-if="!userSavedLink" @click="saveToLinks()">Save</button> <!-- Save to links button -->
       <button v-if="userSavedLink" @click="unsaveToLinks()">Unsave</button> <!-- Saved button -->
       <button v-if="linkIsYoutube" @click="restartVideo()">Restart</button>
       <button v-if="userIsOwner" @click="deleteLink()">Delete</button> <!-- Delete button -->
+      <DeleteModal v-if="showDeleteModal" :link="link" @close="showDeleteModal = false"></DeleteModal>
       <span class="author-link">
         Added by: <a 
           :href="`/user`" 
@@ -34,26 +37,25 @@
 
     <div v-if="showClipControls" class="clip-controls">
       <!-- Clip Controls -->
-      <div class="clip-controls-title">
-        <h2>Create Clip: </h2>
-      </div>
 
       <!-- Range Sliders -->
       <div class="clip-controls-time-controls">
         <input type="range" v-model="clipStart" @input="adjustStartTime" min="0" :max="link.duration" step="1">
-        <input class="clip-controls-text-input" type="text" disabled="true" v-model="clipStart">
+        <input class="clip-controls-text-input" type="text" 
+          v-model="clipStart" @keyup.enter="adjustStartTime" @blur="adjustStartTime">
       
         <input type="range" v-model="clipEnd" @input="adjustEndTime" :min="0" :max="link.duration" step="1">
-        <input class="clip-controls-text-input" type="text" disabled="true" v-model="clipEnd">
+        <input class="clip-controls-text-input" type="text" 
+          v-model="clipEnd" @keyup.enter="adjustEndTime" @blur="adjustEndTime">
       </div>
       
       <!-- Loop Input-->
       <div>
         <input type="checkbox" v-model="loopClip">
         <label for="loop">Loop</label>
+      <button class="create-clip-button" @click="createClip">Create Clip</button>
       </div>
 
-      <button class="create-clip-button" @click="createClip">Create Clip</button>
     </div>
     <div v-if="showClipDuration" class="clip-duration">
       <div class="clip-duration-bar" :style="{width: clipProgress + '%'}"></div>
@@ -69,6 +71,7 @@ import PlayerOverlay from '@/components/PlayerOverlay.vue'
 import EditTextField from './EditTextField.vue'
 import PageEmbedding from './PageEmbedding.vue'
 import BottomContent from './BottomContent.vue'
+import DeleteModal from './DeleteModal.vue'
 
 import api from '@/api';
 import { createPlayer, playPlayer, restartPlayer, setStartTime, setEndTime, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
@@ -80,6 +83,7 @@ export default {
     EditTextField,
     PageEmbedding,
     BottomContent,
+    DeleteModal,
   },
   data() {
     return {
@@ -106,6 +110,9 @@ export default {
       loopClip: true, // Flag to check if the clip should loop
       creatingClip: false, // Flag to check if the user is creating a clip,
       userSavedLink: false, // Flag to check if the user has saved the link
+
+      // Modal flags
+      showDeleteModal: false,
     }
   },
   computed: {
@@ -156,10 +163,7 @@ export default {
     },
 
     async deleteLink() {
-      let result = await api.deleteLink(this.link.id);
-      if(result) {
-        this.$router.push({ path: "/"})
-      }
+      this.showDeleteModal = true;
     },
 
     async createClip() {
@@ -175,7 +179,7 @@ export default {
         userId: this.user.id,
       })
       if(clip && clip.id) {
-        let tagLink = await api.addTagToLink(this.user.id, clip.id, 'clip')
+        let tagLink = await api.addTagToLinkSilent(this.user.id, clip.id, 'clip')
       }
       this.creatingClip = false;
       this.goToLink(clip);
@@ -203,11 +207,16 @@ export default {
       this.adjustRanges();
       setEndTime(this.clipEnd);
     },
+    //changing both times at once would cause problems
+    //but they only both change when the user changes the start time to be greater than the end time
+    //so it works out the same
     adjustRanges() {
       if (parseInt(this.clipStart) > parseInt(this.clipEnd)) {
         this.clipEnd = this.clipStart;
+        setEndTime(this.clipEnd);
       } else if (parseInt(this.clipEnd) < parseInt(this.clipStart)) {
         this.clipStart = this.clipEnd;
+        setStartTime(this.clipStart);
       }
     },
     backToHome() {
@@ -258,6 +267,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.link-title {
+  max-width: 80%;
 }
 
 .content-preview {
@@ -314,6 +327,7 @@ export default {
   max-width: 100%;
   display: flex;
   flex-direction: row;
+  padding-top: 10px;
   align-items: center;
   overflow: hidden;
 }
@@ -345,6 +359,10 @@ export default {
     margin: 0;
     width: 100%;
     height: 400px;
+  }
+
+  .clip-controls {
+    flex-direction: column;
   }
 }
 </style>

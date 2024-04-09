@@ -220,6 +220,11 @@ export function createArchiveLink(link) {
     return archiveUrl;
 }
 
+export function stripTLD(url) {
+    url = url || '';
+    return url.replace(/\.[^/.]+$/, '');
+}
+
 // bonus processing functions
 
 export function extractDomain(link) {

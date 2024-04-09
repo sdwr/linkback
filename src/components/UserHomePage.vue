@@ -1,9 +1,13 @@
 <template>
   <div class="user-home">
     <div class="user-title">
+      <div class="blank"></div>
       <EditTextField :value="user.username" :canEdit="canEdit" @edit="onChangeName"></EditTextField>
-      <button v-if="canUpgrade" @click="showUpgradeModal = true">Upgrade</button>
+    </div>
+    <div class="user-title-buttons">
+      <button v-if="canUpgrade" @click="showUpgradeModal = true">Register</button>
       <UpgradeModal v-if="showUpgradeModal" @close="showUpgradeModal = false"></UpgradeModal>
+      <button v-if="isOwner" @click="logout">Logout</button>
     </div>
     <div class="sections">
       <div class="section-container">
@@ -53,6 +57,7 @@ import EditTextField from '@/components/EditTextField.vue';
 import UpgradeModal from '@/components/UpgradeModal.vue';
 
 import {ACTION} from '@/consts'
+import userLogin from '@/api/userLogin';
 export default {
   data() {
     return {
@@ -78,6 +83,9 @@ export default {
     storedUser () {
       return this.$store.getters.getUser
     },
+    isOwner() {
+      return this.user.id === this.storedUser.id;
+    },
     canEdit() {
       return this.user.id === this.storedUser.id && !this.storedUser.isGuest;
     },
@@ -100,6 +108,9 @@ export default {
       // user already saved to store
       // reload the user data
       this.user = await api.getUser(this.user.id);
+    },
+    async logout() {
+      await userLogin.logout();
     },
     goToLink(link) {
       this.$router.push({ path: `/link/${link.id}`})
@@ -166,12 +177,17 @@ export default {
 }
 
 .user-title {
-  display: flex;
-  flex-direction: row;
+  width: 100%;
+  display:grid;
+  grid-template-columns: 25% 50% 25%;
   margin-bottom: 10px;
-  align-items: center;
-  justify-content: center;
 
+}
+
+.user-title-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .sections .section-container {
