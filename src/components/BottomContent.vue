@@ -37,6 +37,7 @@
         
         <!-- Form to add a new tag -->
         <AddTagForm
+          class="add-tag-form"
           :user="user"
           :link="link"
           :existingTags="tags"
@@ -202,6 +203,10 @@ export default {
   border: 3px solid #ccc;
   width: 100%;
   height: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 30px;
   overflow: hidden;
 }
 
@@ -210,6 +215,10 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 0px;
+}
+
+.add-tag-form {
+  margin-top: 20px;
 }
 
 .bottom-container-header {

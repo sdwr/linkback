@@ -7,7 +7,9 @@
     <div class="user-title-buttons">
       <button v-if="canUpgrade" @click="showUpgradeModal = true">Register</button>
       <UpgradeModal v-if="showUpgradeModal" @close="showUpgradeModal = false"></UpgradeModal>
-      <button v-if="isOwner" @click="logout">Logout</button>
+      <button v-if="canUpgrade" @click="showLoginModal = true">Login</button>
+      <LoginModal v-if="showLoginModal" @close="showLoginModal = false"></LoginModal>
+      <button v-if="isRegistered" @click="logout">Logout</button>
     </div>
     <div class="sections">
       <div class="section-container">
@@ -55,6 +57,7 @@ import api from '@/api';
 import LinkItem from '@/components/LinkItem.vue';
 import EditTextField from '@/components/EditTextField.vue';
 import UpgradeModal from '@/components/UpgradeModal.vue';
+import LoginModal from '@/components/LoginModal.vue';
 
 import {ACTION} from '@/consts'
 import userLogin from '@/api/userLogin';
@@ -68,6 +71,7 @@ export default {
       submittedLinks: [],
       savedLinks: [],
       showUpgradeModal: false,
+      showLoginModal: false,
 
       showHistory: true,
       showSubmitted: true,
@@ -78,6 +82,7 @@ export default {
     LinkItem,
     EditTextField,
     UpgradeModal,
+    LoginModal,
   },
   computed: {
     storedUser () {
@@ -91,6 +96,9 @@ export default {
     },
     canUpgrade() {
       return this.user.id === this.storedUser.id && this.storedUser.isGuest;
+    },
+    isRegistered() {
+      return this.storedUser.id && !this.storedUser.isGuest;
     }
   },
   methods: {

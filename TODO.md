@@ -8,6 +8,8 @@ STAGES:
   stage 1:
     youtube page clipper works standalone DONE
     bonus:
+      -center bottom tags DONE
+      -show full title if there is space
       -delete popup is ugly
   
   stage 2:

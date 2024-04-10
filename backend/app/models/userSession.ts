@@ -18,7 +18,7 @@ export default class UserSession extends BaseModel {
   @column()
   declare date: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: false})
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })

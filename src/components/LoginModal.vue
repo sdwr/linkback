@@ -44,6 +44,7 @@ export default {
       let successfulLogin = await userLogin.loginWithCredentials(userCredentials);
       if (successfulLogin) {
         this.$emit('login');
+        this.$router.push({ path: `/user/${this.user.id}`})
         this.close();
       } else {
         // show error toast in api instead

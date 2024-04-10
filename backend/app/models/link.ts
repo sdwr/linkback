@@ -69,7 +69,7 @@ export default class Link extends BaseModel {
   @hasMany(() => PageView)
   declare pageViews: HasMany<typeof PageView>
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: false })
   declare createdAt: DateTime | null
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
