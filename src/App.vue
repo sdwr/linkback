@@ -15,6 +15,8 @@ import ToastNotification from '@/components/ToastNotification.vue';
 import { isOnMobile } from '@/utils'
 import userLogin from '@/api/userLogin';
 
+import {stopPlayer } from '@/youtubeplayerapi';
+
 export default {
   name: 'App',
   components: {
@@ -33,9 +35,9 @@ export default {
     handleResize() {
       this.$store.dispatch('saveIsOnMobile', isOnMobile())
     },
-    async loadUser() {
-
-    },
+    handleLostFocus() {
+      stopPlayer();
+    }
   },
   async created() {
     await userLogin.loadUserAndLogin();
@@ -45,9 +47,11 @@ export default {
   },
   mounted() {
     window.addEventListener('resize', this.handleResize)
+    window.addEventListener('blur', this.handleLostFocus)
   },
   destroyed() {
     window.removeEventListener('resize', this.handleResize)
+    window.removeEventListener('blur', this.handleLostFocus)
   },
 }
 </script>

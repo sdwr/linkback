@@ -3,6 +3,15 @@ TODO:
 
 REWARDS:
   notification / score for # of views, votes, links, tags on uploaded content
+    - unique / total views show for link owner DONE
+    - toast notifications for 10 / 100 / 1000 unique views
+      - need message queue on backend
+      - when a link is updated, check for new milestones
+      - then add them to a message queue for the user
+      - when that user:
+        - logs in (easier)
+        - makes a request (needs middleware?)
+      - deliver the messages, then delete from queue
 
 STAGES:
   stage 1:
@@ -18,9 +27,28 @@ STAGES:
         - change list to table, allow sorting by new / top
         - add voting on tag page for tags
           - negative score removes the tag from the item
+      - sort by clip/youtube
         
+      - try tag page as tiled grid
+        - preview links on mouseover (add 1s delay to avoid spam?)
+        - mobile interface would be hold to preview, let go to enter, move off to deselect
+        
+        - need to make sure youtubeplayer fn works with multiple (or 1 that keeps remaking?) 
+        - how does it work for links and not videos? (tiny archive, autoscroll on mobile?)
+
       - related links functionality on link page
         - need some way to add links easily (search bar that searches title, url, tags, my links)
+
+  stage 2 bonus:
+    - find some way of making links permanent/unique
+      - auto-incrementing IDs sucks for server restarts or "unique" link feel
+      - wikipedia-style is perfect, maybe tag URLs are by name?
+      - authentic hashes would be too long (same length as actual URLs)
+        - compressed hash? 
+          most URL characters are lowercase letters
+
+      - add title to URL? 
+        even after hash as decoration
 
 
 -------------------

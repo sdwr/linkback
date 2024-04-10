@@ -1,7 +1,7 @@
 import store from "@/store";
 
 
-let player;
+let player = null;
 let startTime = 0;
 let endTime = -1;
 
@@ -22,12 +22,14 @@ const CHECK_INTERVAL = 250;
 //external functions
 export async function createPlayer(videoId, playerOptions) {
   resetPlayerVars();
+  destroyPlayer();
   store.dispatch('saveClipProgress', 0);
   return new Promise((resolve, reject) => {
     try {
       player = new window.YT.Player(
         'iframe',
         {
+          playerVars: playerOptions,
           videoId,
           height: '100%',
           width: '100%',
@@ -50,14 +52,32 @@ export async function createPlayer(videoId, playerOptions) {
 //so mute it to avoid sound at the beginning
 // temporary fix??
 export function playPlayer() {
+  if(!player) return;
+
   player.mute();
   player.playVideo();
   setTimeout(() => {
+    if(!player) return;
     player.unMute();
   }, 500)
 }
 
+export function stopPlayer() {
+  if(!player) return;
+
+  player.stopVideo();
+}
+
+export function destroyPlayer() {
+  if(!player) return;
+
+  player.destroy();
+  player = null;
+}
+
 export function scrubPlayerTo(time) {
+  if(!player) return;
+
   player.seekTo(time);
   player.mute();
   player.playVideo();
@@ -69,6 +89,8 @@ export function scrubPlayerTo(time) {
 //do the same thing to avoid audio hiccup
 //in the future, respect the user's volume settings?
 export function restartPlayer() {
+  if(!player) return;
+
   player.seekTo(startTime);
   player.mute();
   player.playVideo();
@@ -152,6 +174,8 @@ function shouldScrubPlayer() {
 }
 
 function calculateProgress() {
+  if(!player) return;
+
   let currentTime = player.getCurrentTime();
   let duration = endTime - startTime;
   let progress = (currentTime - startTime) / duration;

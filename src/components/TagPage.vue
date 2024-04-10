@@ -4,6 +4,7 @@
   <h1 class="tag-title">{{tag.name}}</h1>
     <div class="main-content">
       <div class="links">
+        <LinkTiles :links="links"></LinkTiles>
         <div v-for="link in links" :key="link.id">
           <LinkItem :link="link" 
             @onClick="goToLink"
@@ -17,10 +18,12 @@
 </template>
 <script>
 import api from '@/api';
+import LinkTiles from '@/components/LinkTiles.vue';
 import LinkItem from '@/components/LinkItem.vue';
 
 export default {
   components: {
+    LinkTiles,
     LinkItem,
   },
   data() {
