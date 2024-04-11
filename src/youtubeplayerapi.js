@@ -95,6 +95,7 @@ export function restartPlayer() {
   player.mute();
   player.playVideo();
   setTimeout(() => {
+    if(!player) return;
     player.unMute();
   }, 500)
 }

@@ -12,8 +12,10 @@
     <img class="tile-image" :src="thumbnail" alt="thumbnail">
   </div>
   <div class="loading-overlay" v-if="isLoading">
-    <div>Loading...</div>
+    <div class="spinner"></div>
   </div>
+  <!-- Click overlay is at highest z-level.
+      Eats the clicks and passes scrolls through to pageEmbedding -->
   <div class="click-overlay" @click.prevent="goToLink"></div>
 </div>
 </template>
@@ -167,6 +169,24 @@ export default {
   width: 100%;
   height: 100%;
 }
+.spinner {
+  border: 12px solid rgba(255, 255, 255, 0.3); /* Semi-transparent white border */
+  border-top: 12px solid #fff; /* Solid white for the spinner top */
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite; 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Keep the spinner centered */
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 .click-overlay {
   position: absolute;
   z-index: 4;

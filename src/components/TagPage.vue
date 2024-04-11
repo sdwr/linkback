@@ -1,16 +1,30 @@
 <template>
   <div class="linkpage">
-  <button @click="goBack()"> &lt; Go Back</button>
   <h1 class="tag-title">{{tag.name}}</h1>
+  <div class="header-tabs">
+    <div class="header-tab-button" @click="openList"
+      :class="{'selected': showList }">
+      <div>List</div>
+      <i class="fas" :class="{'fa-chevron-up': showList, 'fa-chevron-down': !showList}"></i>
+
+    </div>
+    <div class="header-tab-button" @click="openTiles"
+      :class="{'selected': showTiles }">
+      <div>Tiles</div>
+      <i class="fas" :class="{'fa-chevron-up': showTiles, 'fa-chevron-down': !showTiles}"></i>
+    </div>
+  </div>
     <div class="main-content">
       <div class="links">
-        <LinkTiles :links="links"></LinkTiles>
-        <div v-for="link in links" :key="link.id">
-          <LinkItem :link="link" 
-            @onClick="goToLink"
-            @onSave="saveLink"
-            @onUnsave="unsaveLink"
-          ></LinkItem>
+        <LinkTiles v-if="showTiles" :links="links"></LinkTiles>
+        <div v-if="showList" class="list-wrapper">
+          <div v-for="link in links" :key="link.id">
+            <LinkItem :link="link" 
+              @onClick="goToLink"
+              @onSave="saveLink"
+              @onUnsave="unsaveLink"
+            ></LinkItem>
+          </div>
         </div>
       </div>
     </div>
@@ -31,6 +45,10 @@ export default {
       tagId: null,
       tag: {name: ""},
       links: [],
+
+      //show/hide list and tiles
+      showList: true,
+      showTiles: false,
     }
   },
   computed: {
@@ -39,6 +57,15 @@ export default {
     }
   },
   methods: {
+    // UI state
+    openList() {
+      this.showList = true;
+      this.showTiles = false;
+    },
+    openTiles() {
+      this.showList = false;
+      this.showTiles = true;
+    },
     goToLink(link) {
       this.$router.push({ path: `/link/${link.id}`})
     },
@@ -90,8 +117,42 @@ export default {
   justify-content: center;
 }
 
+.links {
+  width: 100%;
+}
+
 .tag-title {
   
+}
+
+.header-tabs {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+}
+
+.header-tab-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 33.33%;
+  height: 100%;
+  border-right: 1px solid #e0e0e0;
+  background-color: #f8f8f8;
+  border: 1px solid #e0e0e0;
+}
+
+.header-tab-button:hover {
+  background-color: #ececec;
+}
+
+.header-tab-button.selected {
+  background-color: #e0e0e0;
+}
+
+.header-tab-button i {
+  margin-left: 5px;
 }
 
 </style>

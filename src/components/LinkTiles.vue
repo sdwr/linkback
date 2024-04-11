@@ -36,13 +36,13 @@ export default {
 .tiles-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
   width: 100%;
   height: 100%;
+  align-content: flex-start;
 }
 .tile {
   width: 200px;
   height: 200px;
-  margin: 10px;
+  margin: 5px;
 }
 </style>
