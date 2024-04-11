@@ -79,6 +79,9 @@ BUGS:
     - nginx entry for www.sdwr.ca?
     - https?
     - blocked IP?
+  - being rate limited by archive.is
+    - remove preview for tiles?
+    - replace preview with thumbnail if fails to load
   - still getting cookie spam (just locally, probably per server restart)
     - looks like login makes 1 additional hash-named cookie
     - clear site cookies before login?
