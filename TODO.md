@@ -3,6 +3,15 @@ TODO:
 
 REWARDS:
   notification / score for # of views, votes, links, tags on uploaded content
+    - unique / total views show for link owner DONE
+    - toast notifications for 10 / 100 / 1000 unique views
+      - need message queue on backend
+      - when a link is updated, check for new milestones
+      - then add them to a message queue for the user
+      - when that user:
+        - logs in (easier)
+        - makes a request (needs middleware?)
+      - deliver the messages, then delete from queue
 
 STAGES:
   stage 1:
@@ -18,16 +27,64 @@ STAGES:
         - change list to table, allow sorting by new / top
         - add voting on tag page for tags
           - negative score removes the tag from the item
+      - sort by clip/youtube
         
+      - try tag page as tiled grid
+        - preview links on mouseover (add 1s delay to avoid spam?) DONE
+        - mobile interface would be hold to preview, let go to enter, move off to deselect
+          (easier to test mobile when deployed)
+        
+        - need to make sure youtubeplayer fn works with multiple (or 1 that keeps remaking?) DONE 
+        - how does it work for links and not videos? (tiny archive, autoscroll on mobile?)
+          - need to pass scroll through the overlay into the embedding
+
+      - proper thumbnails:
+        - the individual thumbnail load is working very rarely right now
+        - need 2 resolutions, 1 for linkItem and 1 for linkPage (when embed doesn't load)
+        - save on server instead of fetching from link?
+          - async fetch on creating link
+            -
+          - if fails, retry:
+            - on load (needs lastTried, only retry once per hour/day )
+            - or periodically (need script running on server)
+          - sources:
+            - youtube can get from API
+            - others use openGraph (but most sites don't have??)
+            - worst case have 
+          - store in folder on server
+
+      - add opengraph images to pages, so it shows up on reddit etc
+        - should use thumbnail from actual site for link pages, maybe with watermark
+
       - related links functionality on link page
         - need some way to add links easily (search bar that searches title, url, tags, my links)
+
+  stage 2 bonus:
+
+    - find some way of making links permanent/unique
+      - auto-incrementing IDs sucks for server restarts or "unique" link feel
+      - wikipedia-style is perfect, maybe tag URLs are by name?
+      - authentic hashes would be too long (same length as actual URLs)
+        - compressed hash? 
+          most URL characters are lowercase letters
+
+      - add title to URL? 
+        even after hash as decoration
 
 
 -------------------
 BUGS:
-  - trying to add a link that already exists updates the time of the link
-    (does it use updatedAt time, date time?)
-    - should only be querying so does updatedAt get updated when retrieved?
+  - can't access site from bell cellular data
+    - does it want a DNS entry for www.sdwr.ca?
+    - nginx entry for www.sdwr.ca?
+    - https?
+    - blocked IP?
+  - being rate limited by archive.is
+    - remove preview for tiles?
+    - replace preview with thumbnail if fails to load
+  - still getting cookie spam (just locally, probably per server restart)
+    - looks like login makes 1 additional hash-named cookie
+    - clear site cookies before login?
   - tried to delete link with ID of 1, failed because other clips reference it
   - youtube player sometimes is called before its instantiated
 
@@ -279,6 +336,9 @@ TAG PAGE:
   - show list of links DONE
 
 BUGS:
+  - trying to add a link that already exists updates the time of the link DONE
+    (does it use updatedAt time, date time?)
+    - should only be querying so does updatedAt get updated when retrieved?
   - youtube player does not set end time correctly when moved by start time DONE
   (scattered logic for restarting loop vs skip to end)
     - should scrub in 3 conditions
