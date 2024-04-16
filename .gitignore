@@ -9,6 +9,9 @@ package-lock.json
 .env.*.local
 .hosting.*
 
+# thumbnail storage
+/backend/thumbnails
+
 # Log files
 npm-debug.log*
 yarn-debug.log*

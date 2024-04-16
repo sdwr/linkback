@@ -74,6 +74,9 @@ STAGES:
 
 -------------------
 BUGS:
+  - change delete to be soft-delete (links especially)
+    - ruins related links
+    - and thumbnails will be to hard-coded IDs
   - can't access site from bell cellular data
     - does it want a DNS entry for www.sdwr.ca?
     - nginx entry for www.sdwr.ca?

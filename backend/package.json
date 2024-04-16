@@ -60,6 +60,7 @@
     "cheerio": "^1.0.0-rc.12",
     "luxon": "^3.4.4",
     "pg": "^8.11.3",
+    "puppeteer": "^22.6.5",
     "reflect-metadata": "^0.2.1"
   },
   "eslintConfig": {
