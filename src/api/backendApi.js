@@ -18,8 +18,7 @@ import {
 
 } from "@/utils"
 
-import { 
-  OPEN_GRAPH_PATH, 
+import {
   USERS_PATH,
   USER_SESSIONS_PATH,
   USER_ACTIONS_PATH,
@@ -29,6 +28,7 @@ import {
   VOTES_PATH,
   TAG_LINKS_PATH,
   SAVED_LINKS_PATH,
+  THUMBNAIL_PATH,
   } from "./api_routes";
 
 //load the backend url from environment variables
@@ -44,16 +44,20 @@ const BACKEND_URL = backendUrl;
 
 const backendApi = {
 
-  // Open Graph
-  fetchImage: async (inputUrl) => {
-    const url = `${BACKEND_URL}${OPEN_GRAPH_PATH}/fetchImage?url=${encodeURIComponent(inputUrl)}`;
+  // Thumbnails
+  fetchImage: async (id) => {
+    const url = `${BACKEND_URL}${THUMBNAIL_PATH}/getOrFetch/${id}`;
     try {
-      const response = await requestWrapper(url, "GET");
+      const response = await requestWrapper(url, "GET", null, 'image/png');
       if (!response.ok) {
         throw new Error(`Failed to fetch the OG image, status code: ${response.status}`);
       }
-      const data = await response.json();
-      return data.image;
+      let data = await response.blob();
+      //turn the blob into a data url
+      let urlCreator = window.URL || window.webkitURL;
+      let imageUrl = urlCreator.createObjectURL(data);
+
+      return imageUrl;
     } catch (error) {
       console.error('Error fetching OG image:', error.message);
       return null;

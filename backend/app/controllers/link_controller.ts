@@ -1,6 +1,7 @@
 import { createLinkValidator, updateLinkValidator } from '#validators/link_validator';
 import type { HttpContext } from '@adonisjs/core/http'
 import PageViewService from '#services/pageView_service';
+import ThumbnailService from '#services/thumbnail_service';
 import { inject } from '@adonisjs/core'
 
 import Link from '#models/link';
@@ -8,7 +9,9 @@ import ILink from '#models/request_objects/iLink';
 
 @inject()
 export default class LinkController {
-  constructor(protected pageViewService: PageViewService) {}
+  constructor(protected pageViewService: PageViewService,
+              protected thumbnailService: ThumbnailService,
+              ) {}
   //get all links
   async index({ response }: HttpContext) {
     const links = await Link.all();
@@ -125,24 +128,8 @@ export default class LinkController {
     }
     
     const link = await Link.create(iLink);
-
-    return response.ok(link);
-  }
-    
-  async create({ request, response }: HttpContext) {
-    const validatedLink = await request.validateUsing(createLinkValidator);
-    const iLink = validatedLink as ILink;
-
-    //verify that the link is unique
-    const linkExists = await Link.query()
-      .where('url', iLink.url)
-      .first();
-    
-    if (linkExists) {
-      return response.badRequest('Link already exists');
-    }
-    
-    const link = await Link.create(iLink);
+    //dont have to await, just fire and forget
+    this.thumbnailService.getOrFetchThumbnail(link.url, link.id);
 
     return response.ok(link);
   }

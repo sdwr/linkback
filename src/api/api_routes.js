@@ -1,4 +1,4 @@
-export const OPEN_GRAPH_PATH = '/opengraph';
+export const THUMBNAIL_PATH = '/thumbnails';
 
 export const USER_SESSIONS_PATH = '/usersessions';
 

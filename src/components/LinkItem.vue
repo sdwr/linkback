@@ -137,7 +137,7 @@ export default {
   async created() {
     // Fetch the thumbnail for the link
     // For example, using a service or API
-    this.OGthumbnail = await backendApi.fetchImage(this.link.url);
+    this.OGthumbnail = await backendApi.fetchImage(this.link.id);
   },
 };
 </script>

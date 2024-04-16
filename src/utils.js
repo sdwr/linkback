@@ -49,13 +49,13 @@ export function buildAuthHeader() {
 }
 
 //dont handle errors here, let the caller handle them
-export async function requestWrapper(url, method, data = null) {
+export async function requestWrapper(url, method, data = null, contentType = 'application/json') {
     let response = await fetch(url,
         {
             method: method,
             credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': contentType,
             },
             body: data ? JSON.stringify(data) : null
         

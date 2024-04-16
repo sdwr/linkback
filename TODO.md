@@ -38,21 +38,6 @@ STAGES:
         - how does it work for links and not videos? (tiny archive, autoscroll on mobile?)
           - need to pass scroll through the overlay into the embedding
 
-      - proper thumbnails:
-        - the individual thumbnail load is working very rarely right now
-        - need 2 resolutions, 1 for linkItem and 1 for linkPage (when embed doesn't load)
-        - save on server instead of fetching from link?
-          - async fetch on creating link
-            -
-          - if fails, retry:
-            - on load (needs lastTried, only retry once per hour/day )
-            - or periodically (need script running on server)
-          - sources:
-            - youtube can get from API
-            - others use openGraph (but most sites don't have??)
-            - worst case have 
-          - store in folder on server
-
       - add opengraph images to pages, so it shows up on reddit etc
         - should use thumbnail from actual site for link pages, maybe with watermark
 
@@ -74,6 +59,10 @@ STAGES:
 
 -------------------
 BUGS:
+  - change delete to be soft-delete (links especially)
+    - ruins related links
+    - and thumbnails will be to hard-coded IDs
+    - related, delete thumbnail on deleting link
   - can't access site from bell cellular data
     - does it want a DNS entry for www.sdwr.ca?
     - nginx entry for www.sdwr.ca?
@@ -331,6 +320,12 @@ USER PAGE
 - have single point of signon that connects to store DONE-ish
 - and fns that verify on frontend if user can modify data (username, link name) DONE
 - verify it works on backend DONE
+
+LINK ITEM:
+  - proper thumbnails:
+    - save on server instead of fetching from link? DONE
+      - async fetch on creating link, and fetch when trying to load thumbnail
+      - store in folder on server
 
 TAG PAGE:
   - show list of links DONE

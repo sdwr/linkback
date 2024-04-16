@@ -22,6 +22,7 @@
 <script>
 import defaultThumbnail from '@/assets/tiny-default-thumbnail.png';
 import PageEmbedding from '@/components/PageEmbedding.vue';
+import backendApi from '@/api/backendApi';
 
 import { createPlayer, playPlayer, destroyPlayer, restartPlayer, setStartTime, setEndTime, setLoopTimes, setIsLoop } from '@/youtubeplayerapi';
 
@@ -45,6 +46,7 @@ export default {
       showOther: false,
       
       youtubePlayer: null,
+      thumb: null,
     }
   },
   computed: {
@@ -55,7 +57,7 @@ export default {
       return this.link && this.link.domain === 'youtube.com';
     },
     thumbnail() {
-      return this.link.thumbnail || defaultThumbnail;
+      return this.thumb || defaultThumbnail;
     },
   },
   methods: {
@@ -114,6 +116,9 @@ export default {
       console.log('going to link')
       this.$router.push({ path: `/link/${this.link.id}`});
     },
+  },
+  async created() {
+    this.thumb = await backendApi.fetchImage(this.link.id);
   },
 }
 </script>
