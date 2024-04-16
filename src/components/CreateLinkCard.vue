@@ -2,11 +2,13 @@
   <div class="create-link-card">
     <div class="create-link-card-content">
       <h2>Create a new link:</h2>
-      <div class="create-link-card-buttons">
-        <input type="text" v-model="url" placeholder="URL" />
-        <input type="text" v-model="title" placeholder="Title (optional)" />
-        <button @click="createLink()" :disabled="disableCreateLink">Create Link</button>
-      </div>
+      <form @submit.prevent="createLink">
+        <div class="create-link-card-buttons">
+          <input type="text" v-model="url" placeholder="URL" />
+          <input type="text" v-model="title" placeholder="Title (optional)" />
+          <button type="submit" :disabled="disableCreateLink">Create Link</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>

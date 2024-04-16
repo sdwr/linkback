@@ -9,7 +9,6 @@
 
 import router from '@adonisjs/core/services/router'
 
-import OpenGraphController from '#controllers/open_graph_controller'
 import UserSessionController from '#controllers/userSession_controller'
 import UserController from '#controllers/user_controller'
 import LinkController from '#controllers/link_controller'
@@ -21,6 +20,7 @@ import TagLinkController from '#controllers/tagLink_controller'
 import SavedLinkController from '#controllers/savedLink_controller'
 
 import { middleware } from '#start/kernel'
+import ThumbnailController from '#controllers/thumbnail_controller'
 
 router.get('/', async () => {
   return `<html>
@@ -34,7 +34,7 @@ router.get('/', async () => {
 
 
 // opengraph routers
-router.get('/opengraph/fetchImage', [OpenGraphController, 'fetchImage'])
+router.get('/thumbnails/getOrFetch/:id', [ThumbnailController, 'getOrFetch'])
 
 // user session routes
 router.post('/usersessions/logout', [UserSessionController, 'logout'])

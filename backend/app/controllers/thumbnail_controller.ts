@@ -1,9 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import ThumbnailService from '#services/thumbnail_service';
-import app from '@adonisjs/core/services/app'
-const fs = require('fs/promises');
 
+import Link from '#models/link';
 
 @inject()
 export default class ThumbnailController {
@@ -15,47 +14,37 @@ export default class ThumbnailController {
 
 
   //try to get from folder, if not there, create it
-  async getOne({ request, response }: HttpContext) {
-    const id = request.param('id');
-    if (!id || Number.isNaN(id) {
-      return response.badRequest('No id provided');
-    }
-
-    let path = app.makePath('thumbnails/' + id + '.png');
-    return response.download(path);
-  }
-
-  async createOrOverwrite({ request, response }: HttpContext) {
-    let thumbnail = request.file('thumbnail', {
-      size: '2mb',
-      extnames: ['png'],
-    });
-    if (!thumbnail) {
-      return response.badRequest('No thumbnail provided');
-    }
-    if (!thumbnail.isValid) {
-      return response.badRequest({message: 'Invalid thumbnail', errors: thumbnail.errors});
-    }
-
+  async getOrFetch({ request, response }: HttpContext) {
     const id = request.param('id');
     if (!id || Number.isNaN(id)) {
       return response.badRequest('No id provided');
     }
 
-    await this.thumbnailService.createOrOverwrite(id,  thumbnail);
+    let link = await Link.find(id);
+    
+    if(!link || !link.url) {
+      return response.status(400).json({ message: 'Could not find link in DB' });
+    }
 
-    return response.ok('Thumbnail created or overwritten');
-
+    let image =  await this.thumbnailService.getOrFetchThumbnail(link.url, id);
+    if(!image) {
+      return response.notFound('Thumbnail not found');
+    }
+    //response.setHeader('Content-Type', 'image/png');
+    response.send(image);
   }
-  
+
+
   async delete({ request, response }: HttpContext) {
     const id = request.param('id');
-    if (!id || Number.isNaN(id) {
+    if (!id || Number.isNaN(id)) {
       return response.badRequest('No id provided');
     }
 
-    let path = app.makePath('thumbnails/' + id + '.png');
-    await fs.unlink(path);
+    let deleted = await this.thumbnailService.deleteThumbnail(id);
+    if (!deleted) {
+      return response.notFound('Thumbnail not found');
+    }
 
     return response.ok('Thumbnail deleted');
   }
