@@ -54,6 +54,7 @@ export default {
   display: flex;
   width: 100%;
   align-items: center;
+  justify-content: center;
   padding-bottom: 5px;
 }
 .edit-field-input {
@@ -68,6 +69,7 @@ export default {
   cursor: pointer;
 }
 input[readonly] {
+  width: 80%;
   border: none;
   outline: none;
   background-color: transparent;

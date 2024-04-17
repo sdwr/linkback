@@ -270,7 +270,8 @@ export default {
 }
 
 .link-title {
-  max-width: 80%;
+  width: 80%;
+  align-items: center;
 }
 
 .content-preview {

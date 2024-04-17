@@ -10,7 +10,7 @@
 
     <!-- Thumbnail -->
     <div class="thumbnail">
-      <img class="thumbnail-img" :src="thumbnail" alt="thumbnail" style="height: 80px;">
+      <img class="thumbnail-img" :src="thumbnail" alt="thumbnail">
     </div>
 
     <!-- Link Details -->

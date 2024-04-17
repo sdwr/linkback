@@ -28,9 +28,10 @@ STAGES:
         - add voting on tag page for tags
           - negative score removes the tag from the item
       - sort by clip/youtube
-        
+      - allow multiple tags (clip + subject)
       - try tag page as tiled grid
         - preview links on mouseover (add 1s delay to avoid spam?) DONE
+        - zoom youtube links in on tiles, to remove black bars
         - mobile interface would be hold to preview, let go to enter, move off to deselect
           (easier to test mobile when deployed)
         
@@ -102,10 +103,6 @@ FEATURES:
     - fallback to fullsize thumbnail instead of empty archive page (click goes to actual page?)
     - keep track of what has saved pages / does not in DB
     - BONUS: fix scrolling (cut size of page, no double scroll bars)
-
-  AND FIX THUMBNAILS
-    -get 2 previews
-      thumbnail size and full size
 
 
 - add votes KINDA DONE

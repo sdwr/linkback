@@ -28,6 +28,8 @@ export default {
   emits: ['play'],
   methods: {
     play() {
+      if(!this.isReady) return;
+      
       this.$emit('play');
       this.hideOverlay = true;
     },

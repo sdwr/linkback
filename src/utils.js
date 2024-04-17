@@ -123,6 +123,7 @@ export function createBlankUserDto() {
 
 export function createLinkDto(data) {
     assertHasProperties(data, ['url', 'userId']);
+    
     let link = {
         url: data.url,
         domain: null,
