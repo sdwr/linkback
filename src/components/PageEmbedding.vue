@@ -32,6 +32,16 @@ export default {
       thumb: null,
     }
   },
+  watch: {
+    link: {
+      handler: async function() {
+        if(this.link && this.link.id) {
+          this.thumb = await backendApi.fetchImage(this.link.id);
+        }
+      },
+      deep: true,
+    }
+  },
   computed: {
     // choose what to display based on:
     // - if the link is embeddable
@@ -59,9 +69,6 @@ export default {
       if(!this.link) return null;
       return createArchiveLink(this.link);
     },
-  },
-  async created() {
-    this.thumb = await backendApi.fetchImage(this.link.id);
   },
 }
 </script>

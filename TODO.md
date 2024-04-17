@@ -60,6 +60,7 @@ STAGES:
 
 -------------------
 BUGS:
+  - not getting thumbnails on prod
   - change delete to be soft-delete (links especially)
     - ruins related links
     - and thumbnails will be to hard-coded IDs
