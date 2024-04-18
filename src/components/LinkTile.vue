@@ -68,7 +68,7 @@ export default {
       //only load content after user has hovered for a second
       setTimeout(() => {
         this.loadContent();
-      }, 1000);
+      }, 300);
     },
     handleMouseleave() {
 
@@ -113,7 +113,6 @@ export default {
       this.showOther = true;
     },
     goToLink() {
-      console.log('going to link')
       this.$router.push({ path: `/link/${this.link.id}`});
     },
   },

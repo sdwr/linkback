@@ -156,12 +156,19 @@ export default class LinkController {
   }
 
   async delete({ request, response }: HttpContext) {
-    const id = request.param('id');
-
-    const link = await Link.findOrFail(id);
-    await link.delete();
-
-    return response.ok(link);
+    try {
+      const id = request.param('id');
+  
+      const link = await Link.findOrFail(id);
+      await link.delete();
+  
+      //delete thumbnail
+      this.thumbnailService.deleteThumbnail(id);
+  
+      return response.ok(link);
+    } catch (error) {
+      return response.internalServerError('Failed to delete link');
+    }
   }
 
   async deleteAll({ response }: HttpContext) {

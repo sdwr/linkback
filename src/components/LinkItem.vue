@@ -156,12 +156,18 @@ export default {
   padding: 0 10px;
 }
 .thumbnail {
+  display: flex;
   padding: 0 5px;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  position: relative;
+  justify-content: center;
+  align-items: center;
 }
 .thumbnail-img {
-  height: 80px;
-  width: 80px;
-  overflow:hidden;
+  height: 120px;
+  width: 120px;
 }
 .details {
   flex: 1;

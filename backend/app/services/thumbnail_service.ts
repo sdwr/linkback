@@ -24,8 +24,16 @@ export default class ThumbnailService {
   }
 
   async fetchThumbnail(url: string, id: number) {
-    //try OG first
-    let image = await this.fetchOGThumbnail(url);
+    let image = null
+
+    //if youtube, get thumbnail from youtube
+    if(url.toLowerCase().includes('youtube.com')) {
+      image = await this.fetchYoutubeThumbnail(url);
+    }
+    //try OG
+    if(!image) {
+      image = await this.fetchOGThumbnail(url);
+    }
 
     //if no OG, try screenshot
     if(!image) {
@@ -40,6 +48,21 @@ export default class ThumbnailService {
   }
 
   //fetching functions
+
+  //duplicates extracting the contentID from the url
+  //but its fine
+  //note that all youtube urls are converted to embed urls in the frontend
+  //and have query parameters removed
+  async fetchYoutubeThumbnail(url: string) {
+    let contentId = url.split('embed/')[1];
+    if(!contentId) {
+      return null;
+    }
+
+    let imageUrl = `https://img.youtube.com/vi/${contentId}/0.jpg`;
+    let image = await this.fetchImageFromUrl(imageUrl);
+    return image;
+  }
   async fetchOGThumbnail(url: string) {
     let imageUrl = await this.fetchOGUrl(url);
     if(!imageUrl) {
@@ -51,7 +74,11 @@ export default class ThumbnailService {
 
   async fetchPageScreenshot(url: string) {
     try {
-      const browser = await puppeteer.launch();
+      //launch puppeteer
+      //insecure mode for now
+      const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      });
       const page = await browser.newPage();
       await page.goto(url);
 
@@ -73,8 +100,6 @@ export default class ThumbnailService {
 
   //internal functions
   async saveImage(imageBuffer: any, id: number) {
-    console.log('saving image', imageBuffer)
-    console.log(typeof imageBuffer)
     try {
       //save image to file
       let path = this.getThumbnailPath(id);
@@ -129,11 +154,12 @@ export default class ThumbnailService {
       // Fetch the HTML content of the page
       const { data } = await axios.get(url);
   
+
       // Load the HTML content into cheerio
       const $ = cheerio.load(data);
   
       // Extract the og:url content
-      let ogUrl = $('meta[property="og:url"]').attr('content');
+      let ogUrl = $('meta[property="og:image"]').attr('content');
       
       return ogUrl;
 
@@ -149,7 +175,7 @@ export default class ThumbnailService {
         method: 'GET',
         responseType: 'arraybuffer'
       });
-
+      
       return response.data;
 
     } catch (error) {

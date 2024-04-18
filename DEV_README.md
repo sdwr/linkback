@@ -159,3 +159,16 @@ reattaching to restart a process
 
   screen -r <Screen #>
 
+## Thumbnail storage
+
+thumbnails are stored in backend/thumbnails, as
+
+  {linkId}.png
+
+getting thumbnails uses headless puppeteer to take a screenshot of the page (if OG image doesn't exist)
+
+for puppeteer to work, the system needs chrome dependencies:
+
+  sudo apt-get install wget xdg-utils libxcomposite1 libxcursor1 libxi6 libxtst6 libcups2 libxss1 libxrandr2 libasound2 libpangocairo-1.0-0 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0
+
+and the backend needs to be running as a non-root user (or with --no-sandbox mode [very insecure])

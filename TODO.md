@@ -16,10 +16,6 @@ REWARDS:
 STAGES:
   stage 1:
     youtube page clipper works standalone DONE
-    bonus:
-      -center bottom tags DONE
-      -show full title if there is space
-      -delete popup is ugly
   
   stage 2:
     make tag page work as "fan page"
@@ -60,7 +56,6 @@ STAGES:
 
 -------------------
 BUGS:
-  - not getting thumbnails on prod
   - change delete to be soft-delete (links especially)
     - ruins related links
     - and thumbnails will be to hard-coded IDs

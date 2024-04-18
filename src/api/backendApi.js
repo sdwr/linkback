@@ -59,7 +59,7 @@ const backendApi = {
 
       return imageUrl;
     } catch (error) {
-      console.error('Error fetching OG image:', error.message);
+      console.error('Error fetching thumbnail:', error.message);
       return null;
     }
   },
