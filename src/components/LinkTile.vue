@@ -1,22 +1,23 @@
 <template>
-<div class="link-tile" 
-  @mouseover="handleMouseover"
-  @mouseleave="handleMouseleave">
+<div class="link-tile">
 
-  <div class="tile-content" v-if="showContent">
-    <div v-if="showYoutube" class="iframe" id="iframe"></div>
-    <PageEmbedding v-if="showOther" class="content-preview" :link="link"></PageEmbedding>
+  <div class="tile-content" v-if="showYoutube">
+    <div class="iframe" id="iframe"></div>
   </div>
-
-  <div class="tile-overlay" v-if="!showContent">
+  <div class="tile-overlay" v-if="!showYoutube">
     <img class="tile-image" :src="thumbnail" alt="thumbnail">
   </div>
   <div class="loading-overlay" v-if="isLoading">
     <div class="spinner"></div>
   </div>
-  <!-- Click overlay is at highest z-level.
-      Eats the clicks and passes scrolls through to pageEmbedding -->
-  <div class="click-overlay" @click.prevent="goToLink"></div>
+  <div class="click-overlay"
+    @mouseover="handleMouseover"
+    @mouseleave="handleMouseleave"
+    @touchstart="handleTouchstart"
+    @touchend="handleTouchend"
+    @touchcancel="handleTouchend"
+    @click.prevent="goToLink"
+  ></div>
 </div>
 </template>
 <script>
@@ -43,16 +44,12 @@ export default {
       isLoading: false,
 
       showYoutube: false,
-      showOther: false,
       
       youtubePlayer: null,
       thumb: null,
     }
   },
   computed: {
-    showContent() {
-      return this.showYoutube || this.showOther;
-    },
     linkIsYoutube() {
       return this.link && this.link.domain === 'youtube.com';
     },
@@ -61,13 +58,36 @@ export default {
     },
   },
   methods: {
+
+    //differentiate between long touch (preview) and short touch (go to link)
+    //interwoven with hover, because we want the preview loading spinner to show up right away
+    //but convert to a click if the touch is short enough
+    handleTouchstart(event) {
+      console.log('touchstart');
+      event.preventDefault();
+  
+      this.handleMouseover();
+    },
+    handleTouchend(event) {
+      console.log('touchend');
+      event.preventDefault();
+
+      //use isLoading to differentiate between long touch and short touch
+      //if the spinner is still showing, then it was a short touch
+      if(this.isLoading) {
+        this.goToLink();
+      }
+
+      this.handleMouseleave();
+    },
     handleMouseover() {
+
       this.isHovered = true;
       this.isLoading = true;
 
-      //only load content after user has hovered for a second
+      //only load content after user has hovered for 300ms
       setTimeout(() => {
-        this.loadContent();
+        this.loadYoutube();
       }, 300);
     },
     handleMouseleave() {
@@ -80,21 +100,19 @@ export default {
       this.isHovered = false;
       this.isLoading = false;
       this.showYoutube = false;
-      this.showOther = false;
-    },
-    loadContent() {
-      this.isLoading = false;
-
-      if (!this.isHovered) return;
-      if (this.showContent) return;
-
-      if (this.linkIsYoutube) {
-        this.loadYoutube();
-      } else {
-        this.loadOther();
-      }
     },
     async loadYoutube() {
+      //turn off loading spinner
+      //this is used to show content, but also to differentiate between long touch and short touch
+      this.isLoading = false;
+
+      //if not a youtube link, don't load content
+      if (!this.linkIsYoutube) return;
+      //if not still hovered, don't load content
+      if (!this.isHovered) return;
+      //if content is already showing, don't load it again
+      if (this.showYoutube) return;
+
       this.showYoutube = true;
 
       await this.$nextTick();
@@ -108,9 +126,6 @@ export default {
         setEndTime(this.endTime);
       }
       playPlayer();
-    },
-    loadOther() {
-      this.showOther = true;
     },
     goToLink() {
       this.$router.push({ path: `/link/${this.link.id}`});
@@ -148,18 +163,10 @@ export default {
   height: 100%;
 }
 
-.content-preview {
-  position: relative;
-  z-index: 3;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
 
 .tile-overlay {
   position: absolute;
-  z-index: 0;
+  z-index: 4;
   top: 0;
   left: 0;
   width: 100%;
@@ -167,7 +174,7 @@ export default {
 }
 .loading-overlay {
   position: absolute;
-  z-index: 1;
+  z-index: 5;
   top: 0;
   left: 0;
   width: 100%;
@@ -193,7 +200,7 @@ export default {
 
 .click-overlay {
   position: absolute;
-  z-index: 4;
+  z-index: 100;
   top: 0;
   left: 0;
   width: 100%;
